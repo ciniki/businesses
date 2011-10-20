@@ -1,0 +1,76 @@
+#
+# Description
+# -----------
+# This table stores the businesses for this install of sIT.  
+#
+# Fields
+# ------
+# id:			The internal database ID of the company.
+#
+# modules:		The modules which are turned on for this business.
+#
+#				0x01 - Customers
+#				0x02 - Products
+#				0x04 - Inventory
+#				0x08 - Website
+#				0x10 - POS
+#				0x20 - Manufacturing
+#				0x40 - Mailing Lists/Newsletters
+#				0x80 - Security Cameras
+#				0x0100 - Scheduling
+#				0x0200 - Online Surveys
+#				0x0400 - Event Management
+#				0x0800 - Bug Tracking
+#				0x1000 - Feature Requests
+#				0x2000 - Questions
+#				0x4000 - FAQ
+#				0x8000 - Customer Service
+#				0x010000 - Toolbox
+#				0x020000 - Friends
+#				0x040000 - Media
+#				0x080000 - Documents
+#				0x100000 - Appearances
+#				0x200000 - Wine Production
+#				0x400000 - Subscriptions
+#				0x800000 - Task Management
+#				0x01000000 - 
+#				0x02000000 - 
+#				0x04000000 -
+#				0x08000000 -
+#				0x10000000 -
+#				0x20000000 -
+#				0x40000000 -
+#				0x80000000 -
+#
+#
+# name: 		The official name of the business
+#
+# description: 	A description of the business, for internal use.
+#
+# status:    0 - unknown
+#			 1 - active
+#			90 - archived - inactive
+#			99 - locked
+#
+# db_prefix: Not sure if this will get used, but is a 
+#				placeholder for now to allow certain
+#				tables to be in their own database.
+#				This may be done for security.
+#	
+# date_added:	The date and time the business was created in the database.
+# last_updated:	The date and time the business record was last updated.
+#
+create table businesses (
+	id int not null auto_increment,
+	uuid binary(16) not null,
+	modules int unsigned not null,			# 4 bytes, 32 bits
+	name varchar(150) not null,				# The common name for the company, used on marketing material
+	tagline varchar(255) not null,			# The tagline for the business, just a 1 liner to be used in headers
+	description text not null,
+	status tinyint unsigned not null,
+	db_prefix varchar(10) not null,
+	date_added datetime not null,
+	last_updated datetime not null,
+	primary key (id),
+	index (last_updated)
+) ENGINE=InnoDB, COMMENT='v1.03';

@@ -1,0 +1,6 @@
+#
+# This file will upgrade the database table businesses to version 1.03.
+#
+ALTER TABLE businesses ADD COLUMN uuid char(36) not null after id;
+UPDATE businesses SET uuid = uuid();
+ALTER TABLE businesses COMMENT='v1.03';

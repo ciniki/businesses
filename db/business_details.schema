@@ -1,0 +1,62 @@
+#
+# Description
+# -----------
+# The business_details table stores extra information for a
+# business such as configuration, options, and other values
+# required.  This table provides the 
+# flexibility to store only what is required for each business.
+#
+# The commonly used information is stored directly in the 
+# businesses table for fast indexing and searching.
+#
+# Some examples:
+# - config.cameras.enable = (yes|no)
+# - config.inventory.enable = (yes|no)
+# - config.business.year_end = <number> (date of their fiscal year end)
+#
+# - bugs.options.scope = (internal|external) default: internal
+# - bugs.options.
+#
+# - bugs.options.submit = (employees|users|customers) (owners)
+# - bugs.options.admin = <number> bitmask based on business_users.groups field
+# - bugs.options.view = <number> bitmask based on business_users.groups field
+# - bugs.options.followup = <number> bitmask based on business_users.groups field
+# - bugs.options.close = <number> bitmask based on business_users.groups field
+#
+# - contact.address.street = <string>
+# - contact.address.city = <string>
+# - contact.address.province = <string>
+# - contact.address.postal = <string>
+# - contact.address.country = <string>
+# - contact.person.name = <string> optional name of the contact person
+# - contact.phone.number = <string>
+# - contact.tollfree.number = <string>
+# - contact.tollfree.restrictions = <string>
+# - contact.fax.number = <string>
+# - contact.email = <string>
+# - social.twitter = <string>
+# - social.facebook = <string>
+# - social.flickr = <string>
+#
+# - mossi.theme = <string>
+# - custom.name = <string> (custom fields created by user)
+#
+# *note* business config information might need it's own table or module.
+#
+# Fields
+# ------
+# business_id:	The id of the business the detail is for.
+# detail_key:	The unique key for the detail.
+# detail_value:	The value stored for this key.
+# date_added:	The date and time the entry was created in the database.
+# last_updated:	The date and time the entry was last updated.
+#
+create table business_details (
+	business_id int not null,
+	detail_key varchar(50) not null,
+	detail_value varchar(255) not null,
+	date_added datetime not null,
+	last_updated datetime not null,
+	primary key (business_id, detail_key),
+	index (last_updated)
+) ENGINE=InnoDB, COMMENT='v1.01';

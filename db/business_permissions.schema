@@ -1,0 +1,30 @@
+#
+# Description
+# -----------
+# This table will store permissions for modules/methods for businesses.  This will
+# allow the restrictions of each module to be determined from this table.
+#
+# Some examples:
+# 	moss.bugs.add - 0xFF, anybody who has an account on the system can open
+#					open a bug.  This means any business owner, customer, etc.
+#
+# Fields
+# ------
+# business_id:				The id of the business the permissions is for.
+#
+# module:					The module the ruleset will apply to.
+#
+# ruleset:					The ruleset name from the modules private/getRulesets.php file.
+#
+# date_added:	The date and time the entry was created in the database.
+# last_updated:	The date and time the entry was last updated.
+#
+create table business_permissions (
+	business_id int not null,
+	module varchar(50) not null,
+	ruleset varchar(50) not null,
+	date_added datetime not null,
+	last_updated datetime not null,
+	primary key (business_id, module),
+	index (last_updated)
+) ENGINE=InnoDB, COMMENT='v1.01';

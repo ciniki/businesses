@@ -1,0 +1,5 @@
+#
+# This file will upgrade the database table businesses to version 1.02.
+#
+ALTER TABLE businesses MODIFY COLUMN modules int unsigned not null;
+ALTER TABLE businesses COMMENT='v1.02';
