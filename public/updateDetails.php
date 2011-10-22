@@ -109,7 +109,7 @@ function ciniki_businesses_updateDetails($ciniki) {
 		'contact.tollfree.number',
 		'contact.fax.number',
 		'contact.email.address',
-		'cinikii.theme',
+		'manage.theme',
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {

@@ -42,17 +42,17 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
 		$strsql = "SELECT id, modules, name, business_users.groups, "
-			. "d1.detail_value AS cinikii_theme "
+			. "d1.detail_value AS manage_theme "
 			. "FROM businesses "
 			. "LEFT JOIN business_users ON (businesses.id = business_users.business_id "
 				. "AND business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
-			. "LEFT JOIN business_details AS d1 ON (businesses.id = d1.business_id AND d1.detail_key = 'cinikii.theme') "
+			. "LEFT JOIN business_details AS d1 ON (businesses.id = d1.business_id AND d1.detail_key = 'manage.theme') "
 			. "ORDER BY businesses.status, businesses.name ";
 	} else {
 		$strsql = "SELECT id, modules, name, business_users.groups, "
-			. "d1.detail_value AS cinikii_theme "
+			. "d1.detail_value AS manage_theme "
 			. "FROM business_users, businesses "
-			. "LEFT JOIN business_details AS d1 ON (businesses.id = d1.business_id AND d1.detail_key = 'cinikii.theme') "
+			. "LEFT JOIN business_details AS d1 ON (businesses.id = d1.business_id AND d1.detail_key = 'manage.theme') "
 			. "WHERE business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 			. "AND business_users.status = 1 "
 			. "AND business_users.business_id = businesses.id "

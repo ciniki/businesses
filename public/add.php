@@ -65,7 +65,7 @@ function ciniki_businesses_add($ciniki) {
 	//
 	$strsql = "INSERT INTO businesses (uuid, modules, name, tagline, status, date_added, last_updated) VALUES ("
 		. "UUID(), "
-		. "'255', '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "' "
+		. "247, '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "' "
 		. ", 1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
