@@ -63,6 +63,6 @@ function ciniki_businesses_removeOwner($ciniki) {
 		return array('stat'=>'ok');
 	}
 
-	return array('stat'=>'fail', 'err'=>array('code'=>'156', 'msg'=>'Unable to remove owner'));
+	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove owner'));
 }
 ?>

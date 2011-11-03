@@ -30,7 +30,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		|| !isset($ciniki['session']['user'])
 		|| !isset($ciniki['session']['user']['id'])
 		|| $ciniki['session']['user']['id'] < 1 ) {
-		return array('stat'=>'fail', 'err'=>array('code'=>'43', 'msg'=>'User not authenticated'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'43', 'msg'=>'User not authenticated'));
 	}
 	
 	//
@@ -66,7 +66,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.updateModuleRulesets',
 		);
 	if( !in_array($method, $available_methods) ) {
-		return array('stat'=>'fail', 'err'=>array('code'=>'57', 'msg'=>'Access denied'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'57', 'msg'=>'Access denied'));
 	}
 
 	//
@@ -83,7 +83,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 			. "AND type = 1 "		// This is a business owner
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
-		$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'perms', 'perm', array('stat'=>'fail', 'err'=>array('code'=>'50', 'msg'=>'Access denied')));
+		$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'perms', 'perm', array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'50', 'msg'=>'Access denied')));
 		if( $rsp['stat'] != 'ok' ) {
 			return $rsp;
 		}
@@ -97,6 +97,6 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	//
 	// By default fail
 	//
-	return array('stat'=>'fail', 'err'=>array('code'=>'45', 'msg'=>'Access denied'));
+	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'45', 'msg'=>'Access denied'));
 }
 ?>

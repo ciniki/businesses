@@ -75,7 +75,7 @@ function ciniki_businesses_add($ciniki) {
 	}
 	if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
 		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
-		return array('stat'=>'fail', 'err'=>array('code'=>'159', 'msg'=>'Unable to add business'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'159', 'msg'=>'Unable to add business'));
 	}
 	$business_id = $rc['insert_id'];
 	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'businesses', '', 'name', $args['business.name']);
@@ -83,7 +83,7 @@ function ciniki_businesses_add($ciniki) {
 
 	if( $business_id < 1 ) {
 		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
-		return array('stat'=>'fail', 'err'=>array('code'=>'161', 'msg'=>'Unable to add business'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'161', 'msg'=>'Unable to add business'));
 	}
 
 	//

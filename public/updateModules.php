@@ -53,7 +53,7 @@ function ciniki_businesses_updateModules($ciniki) {
 		return $rc;
 	}
 	if( $rc['num_rows'] != 1 ) {
-		return array('stat'=>'fail', 'err'=>array('code'=>'199', 'msg'=>'No business found'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'199', 'msg'=>'No business found'));
 	}
 	$business_modules = $rc['rows'][0]['modules'];
 

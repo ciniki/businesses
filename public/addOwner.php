@@ -62,6 +62,6 @@ function ciniki_businesses_addOwner($ciniki) {
 	if( $rc['num_affected_rows'] > 0 ) {
 		return array('stat'=>'ok', 'id'=>$rc['insert_id']);
 	}
-	return array('stat'=>'fail', 'err'=>array('code'=>'166', 'msg'=>'Unable to add owner'));
+	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'166', 'msg'=>'Unable to add owner'));
 }
 ?>
