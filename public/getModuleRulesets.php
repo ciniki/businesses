@@ -41,8 +41,10 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 		return $ac;
 	}
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
-	$strsql = "SELECT modules FROM ciniki_businesses WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
+/*	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
+	$strsql = "SELECT package, module, status, ruleset "
+		. "FROM ciniki_business_modules "
+		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', '');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -51,14 +53,15 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'211', 'msg'=>'No business found'));
 	}
 	$business_modules = $rc['rows'][0]['modules'];
-
+*/
 	//
 	// Get the list of modules and permissions for the business
 	//
-	$strsql = "SELECT package, module, status, ruleset FROM ciniki_business_modules "
+	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, status, ruleset "
+		. "FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
-	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'module');
+	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'name');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -68,7 +71,11 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	// Get the list of available modules
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/getModuleList.php');
-	$mod_list = ciniki_core_getModuleList($ciniki);
+	$rc = ciniki_core_getModuleList($ciniki);
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	$mod_list = $rc['modules'];
 
 	$modules = array();
 	$count = 0;
@@ -76,20 +83,22 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 		//
 		// Only add modules to the list that have been installed, and turned on for the business
 		//
-		if( $module['name'] != '' && $module['installed'] == 'Yes' && (($business_modules & $module['bits']) == $module['bits']) ) {
-			$modules[$count] = array('module'=>array('name'=>$module['name'], 'label'=>$module['label']));
+		$name = $module['package'] . '.' . $module['name'];
+		if( $module['name'] != '' && $module['installed'] == 'Yes' 
+			&& isset($module_rulesets[$name]) && $module_rulesets[$name]['status'] == 1 ) {
+			$modules[$count] = array('module'=>array('name'=>$module['package'] . '.' . $module['name'], 'label'=>$module['label']));
 			//
 			// Check for the current ruleset selected
 			//
-			if( isset($module_rulesets[$module['name']]) ) {
-				$modules[$count]['module']['ruleset'] = $module_rulesets[$module['name']]['ruleset'];
+			if( isset($module_rulesets[$name]) ) {
+				$modules[$count]['module']['ruleset'] = $module_rulesets[$name]['ruleset'];
 			}
 
 			//
 			// Check for any rulesets for this module
 			//
-			if( file_exists($ciniki['config']['core']['modules_dir'] . '/' . $module['name'] . '/private/getRulesets.php') ) {
-				require_once($ciniki['config']['core']['modules_dir'] . '/' . $module['name'] . '/private/getRulesets.php');
+			if( file_exists($ciniki['config']['core']['root_dir'] . '/' . $module['package'] . '-api/' . $module['name'] . '/private/getRulesets.php') ) {
+				require_once($ciniki['config']['core']['root_dir'] . '/' . $module['package'] . '-api/' . $module['name'] . '/private/getRulesets.php');
 				$func = "ciniki_" . $module['name'] . "_getRulesets";
 				$rulesets = $func($ciniki);
 				$i = 0;
@@ -104,8 +113,6 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 			$count++;
 		}
 	}
-
-
 
 	return array('stat'=>'ok', 'modules'=>$modules);
 }

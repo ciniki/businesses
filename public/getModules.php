@@ -69,14 +69,13 @@ function ciniki_businesses_getModules($ciniki) {
 	$modules = array();
 	$count = 0;
 	foreach($mod_list as $module) {
-		if( $module['label'] != '' && $module['installed'] == 'Yes' ) {
+		if( $module['label'] != '' && $module['installed'] == 'Yes' && (!isset($module['optional']) || $module['optional'] == 'yes') ) {
 			$modules[$count] = array('module'=>array('label'=>$module['label'], 'package'=>$module['package'], 
 				'name'=>$module['name'], 'active'=>'No'));
 			if( isset($business_modules[$module['package'] . '.' . $module['name']]) 
 				&& $business_modules[$module['package'] . '.' . $module['name']]['status'] == 1 ) {
 				$modules[$count]['module']['active'] = 'Yes';
 			}
-				// 'active'=>((($business_modules & $module['bits']) == $module['bits']) ? 'Yes' : 'No')));
 			$count++;
 		}
 	}
