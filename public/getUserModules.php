@@ -46,7 +46,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND status = 1 "
 		. "";
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'modules', 'module', array('modules'=>array()));
+	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
 	return $rc;
 }
