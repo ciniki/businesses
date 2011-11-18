@@ -44,7 +44,9 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	//
 	// The following functions don't require any checks, any authenticated user can access them
 	//
-	if( $method == 'ciniki.businesses.getUserBusinesses' ) {
+	if( $method == 'ciniki.businesses.getUserBusinesses' 
+		|| $method == 'ciniki.businesses.getUserModules' 
+		) {
 		return array('stat'=>'ok');
 	}
 
