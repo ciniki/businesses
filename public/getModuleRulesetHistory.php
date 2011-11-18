@@ -52,6 +52,6 @@ function ciniki_businesses_getModuleRulesetHistory($ciniki) {
 	}
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetChangeLog.php');
-	return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'business_permissions', $args['field'], 'ruleset', 'businesses');
+	return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'business_modules', $args['field'], 'ruleset', 'businesses');
 }
 ?>

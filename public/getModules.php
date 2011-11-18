@@ -64,7 +64,7 @@ function ciniki_businesses_getModules($ciniki) {
 	$count = 0;
 	foreach($mod_list as $module) {
 		if( $module['label'] != '' && $module['installed'] == 'Yes' ) {
-			$modules[$count] = array('module'=>array('label'=>$module['label'], 'name'=>$module['name'], 
+			$modules[$count] = array('module'=>array('label'=>$module['label'], 'name'=>$module['name'], 'package'=>$module['package'],
 				'active'=>((($business_modules & $module['bits']) == $module['bits']) ? 'Yes' : 'No')));
 			$count++;
 		}

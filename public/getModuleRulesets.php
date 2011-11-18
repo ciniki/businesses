@@ -59,7 +59,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	//
 	// Get the list of modules and permissions for the business
 	//
-	$strsql = "SELECT module, ruleset FROM business_permissions "
+	$strsql = "SELECT package, module, status, ruleset FROM business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'module');
