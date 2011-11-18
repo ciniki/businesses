@@ -3,10 +3,6 @@
 // Description
 // -----------
 //
-// Info
-// ----
-// Status: beta
-//
 // Arguments
 // ---------
 // api_key:
@@ -46,7 +42,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	}
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
-	$strsql = "SELECT modules FROM businesses WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
+	$strsql = "SELECT modules FROM ciniki_businesses WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', '');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -59,7 +55,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	//
 	// Get the list of modules and permissions for the business
 	//
-	$strsql = "SELECT package, module, status, ruleset FROM business_modules "
+	$strsql = "SELECT package, module, status, ruleset FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'module');

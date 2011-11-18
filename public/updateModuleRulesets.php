@@ -46,7 +46,7 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
-	$strsql = "SELECT package, module, status, ruleset FROM business_modules "
+	$strsql = "SELECT package, module, status, ruleset FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'module');
@@ -84,7 +84,7 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 		if( isset($ciniki['request']['args'][$name]) ) {
 			$new_ruleset = $ciniki['request']['args'][$name];
 			if( isset($db_modules[$name]) && $db_modules[$name] != $new_ruleset ) {
-				$strsql = "UPDATE business_modules "
+				$strsql = "UPDATE ciniki_business_modules "
 					. "SET ruleset = '" . ciniki_core_dbQuote($ciniki, $new_ruleset) . "', "
 					. "last_updated=UTC_TIMESTAMP() "
 					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
@@ -96,14 +96,14 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 					return $rc;
 				} 
 				if( $rc['num_affected_rows'] > 0 ) {
-					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'business_modules', "$package-$name", 'ruleset', $new_ruleset);
+					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_modules', "$package-$name", 'ruleset', $new_ruleset);
 				} else {
 					ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'212', 'msg'=>'Error occured during update'));
 				}
 			}
 			if( !isset($db_modules[$name]) && $new_ruleset != '') {
-				$strsql = "INSERT INTO business_modules (business_id, package, module, status, ruleset, date_added, last_updated) VALUES ("
+				$strsql = "INSERT INTO ciniki_business_modules (business_id, package, module, status, ruleset, date_added, last_updated) VALUES ("
 					. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 					. "'" . ciniki_core_dbQuote($ciniki, $package) . "', "
 					. "'" . ciniki_core_dbQuote($ciniki, $name) . "', "
@@ -116,8 +116,8 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 					return $rc;
 				} 
 				if( $rc['num_affected_rows'] > 0 ) {
-					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'business_modules', "$package-$name", 'status', $status);
-					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'business_modules', "$package-$name", 'ruleset', $new_ruleset);
+					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_modules', "$package-$name", 'status', $status);
+					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_modules', "$package-$name", 'ruleset', $new_ruleset);
 				} else {
 					ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'213', 'msg'=>'Error occured during update'));

@@ -49,7 +49,7 @@ function ciniki_businesses_addOwner($ciniki) {
 	//
 	// Remove the user from the business_users table
 	//
-	$strsql = "INSERT INTO business_users (business_id, user_id, groups, type, status, date_added, last_updated) VALUES ("
+	$strsql = "INSERT INTO ciniki_business_users (business_id, user_id, groups, type, status, date_added, last_updated) VALUES ("
 		. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "', "
 		. "1, 1, 1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";

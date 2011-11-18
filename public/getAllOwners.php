@@ -39,11 +39,12 @@ function ciniki_businesses_getAllOwners($ciniki) {
 	// FIXME: Add other types besides Owner
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery3.php');
-	$strsql = "SELECT businesses.id, businesses.name, "
-		. "business_users.user_id, business_users.business_id FROM businesses, business_users "
-		. "WHERE businesses.id = business_users.business_id "
-		. "AND business_users.type = 1 "
-		. "ORDER BY business_users.user_id, businesses.name ";
+	$strsql = "SELECT ciniki_businesses.id, ciniki_businesses.name, "
+		. "ciniki_business_users.user_id, ciniki_business_users.business_id "
+		. "FROM ciniki_businesses, ciniki_business_users "
+		. "WHERE ciniki_businesses.id = ciniki_business_users.business_id "
+		. "AND ciniki_business_users.type = 1 "
+		. "ORDER BY ciniki_business_users.user_id, ciniki_businesses.name ";
 	$rc = ciniki_core_dbHashIDQuery3($ciniki, $strsql, 'businesses', 'users', 'user_id', 'user', 'businesses', 'business_id', 'business');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -58,7 +59,7 @@ function ciniki_businesses_getAllOwners($ciniki) {
 		$user_businesses[$user['id']] = $user['businesses'];
 	}
 
-	$strsql = "SELECT id, email, firstname, lastname, display_name FROM users "
+	$strsql = "SELECT id, email, firstname, lastname, display_name FROM ciniki_users "
 		. "WHERE id IN (" . ciniki_core_dbQuote($ciniki, implode(',', array_keys($user_businesses))) . ") ORDER BY lastname, firstname";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
 	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'users', 'users', 'user', array('stat'=>'ok', 'users'=>array()));

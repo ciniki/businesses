@@ -63,7 +63,7 @@ function ciniki_businesses_add($ciniki) {
 	//
 	// Add the business to the database
 	//
-	$strsql = "INSERT INTO businesses (uuid, modules, name, tagline, status, date_added, last_updated) VALUES ("
+	$strsql = "INSERT INTO ciniki_businesses (uuid, modules, name, tagline, status, date_added, last_updated) VALUES ("
 		. "UUID(), "
 		. "247, '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "' "
@@ -78,8 +78,8 @@ function ciniki_businesses_add($ciniki) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'159', 'msg'=>'Unable to add business'));
 	}
 	$business_id = $rc['insert_id'];
-	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'businesses', '', 'name', $args['business.name']);
-	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'businesses', '', 'tagline', $args['business.tagline']);
+	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'name', $args['business.name']);
+	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'tagline', $args['business.tagline']);
 
 	if( $business_id < 1 ) {
 		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
@@ -104,7 +104,7 @@ function ciniki_businesses_add($ciniki) {
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {
-			$strsql = "INSERT INTO business_details (business_id, detail_key, detail_value, date_added, last_updated) "
+			$strsql = "INSERT INTO ciniki_business_details (business_id, detail_key, detail_value, date_added, last_updated) "
 				. "VALUES ('" . ciniki_core_dbQuote($ciniki, $business_id) . "', "
 				. "'" . ciniki_core_dbQuote($ciniki, $arg_name) . "', "
 				. "'" . ciniki_core_dbQuote($ciniki, $arg_value) . "', "
@@ -114,7 +114,7 @@ function ciniki_businesses_add($ciniki) {
 				ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 				return $rc;
 			}
-			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'business_details', $arg_name, 'detail_value', $arg_value);
+			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
 		}
 	}
 

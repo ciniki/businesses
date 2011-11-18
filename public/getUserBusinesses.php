@@ -36,28 +36,28 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 
 	// 
 	// Check the database for user and which businesses they have access to.  If they
-	// are a MOSS Admin, they have access to all businesses.
+	// are a ciniki-manage, they have access to all businesses.
 	// Link to the business_users table to grab the groups the user belongs to for that business.
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		$strsql = "SELECT id, modules, name, business_users.groups, "
+		$strsql = "SELECT id, modules, name, ciniki_business_users.groups, "
 			. "d1.detail_value AS css "
-			. "FROM businesses "
-			. "LEFT JOIN business_users ON (businesses.id = business_users.business_id "
-				. "AND business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
-			. "LEFT JOIN business_details AS d1 ON (businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
-			. "ORDER BY businesses.status, businesses.name ";
+			. "FROM ciniki_businesses "
+			. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id "
+				. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
+			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
+			. "ORDER BY ciniki_businesses.status, ciniki_businesses.name ";
 	} else {
-		$strsql = "SELECT id, modules, name, business_users.groups, "
+		$strsql = "SELECT id, modules, name, ciniki_business_users.groups, "
 			. "d1.detail_value AS css "
-			. "FROM business_users, businesses "
-			. "LEFT JOIN business_details AS d1 ON (businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
-			. "WHERE business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
-			. "AND business_users.status = 1 "
-			. "AND business_users.business_id = businesses.id "
-			. "AND businesses.status = 1 "
-			. "ORDER BY businesses.name ";
+			. "FROM ciniki_business_users, ciniki_businesses "
+			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
+			. "WHERE ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+			. "AND ciniki_business_users.status = 1 "
+			. "AND ciniki_business_users.business_id = ciniki_businesses.id "
+			. "AND ciniki_businesses.status = 1 "
+			. "ORDER BY ciniki_businesses.name ";
 	}	
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
 

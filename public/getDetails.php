@@ -66,7 +66,7 @@ function ciniki_businesses_getDetails($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDetailsQuery.php');
 	foreach($detail_keys as $detail_key) {
 		if( $detail_key == 'business' ) {
-			$strsql = "SELECT name, tagline FROM businesses "
+			$strsql = "SELECT name, tagline FROM ciniki_businesses "
 				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
 			$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'details', 'business');
 			if( $rc['stat'] != 'ok' ) {
@@ -75,7 +75,7 @@ function ciniki_businesses_getDetails($ciniki) {
 			$rsp['details']['business.name'] = $rc['business']['name'];
 			$rsp['details']['business.tagline'] = $rc['business']['tagline'];
 		} elseif( in_array($detail_key, array('contact', 'ciniki')) ) {
-			$rc = ciniki_core_dbDetailsQuery($ciniki, 'business_details', 
+			$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_business_details', 
 				'business_id', $args['business_id'], 'businesses', 'details', $detail_key);
 			if( $rc['stat'] != 'ok' ) {
 				return $rc;

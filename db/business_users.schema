@@ -60,7 +60,7 @@
 #
 # last_login: 	The date and time the user last logged into the admin section.
 #
-create table business_users (
+create table ciniki_business_users (
 	business_id int not null,
 	user_id int not null,
 	groups smallint unsigned not null,

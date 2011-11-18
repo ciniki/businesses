@@ -50,7 +50,7 @@ function ciniki_businesses_removeOwner($ciniki) {
 	//
 	// Remove the user from the business_users table
 	//
-	$strsql = "DELETE FROM business_users "
+	$strsql = "DELETE FROM ciniki_business_users "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDelete.php');

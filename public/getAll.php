@@ -38,9 +38,10 @@ function ciniki_businesses_getAll($ciniki) {
 	// Query for the business users
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery4.php');
-	$strsql = "SELECT businesses.id as business_id, businesses.name, business_users.user_id FROM businesses "
-		. "LEFT JOIN business_users ON (businesses.id = business_users.business_id AND business_users.type = 1) "
-		. "ORDER BY businesses.name ";
+	$strsql = "SELECT ciniki_businesses.id as business_id, ciniki_businesses.name, ciniki_business_users.user_id "
+		. "FROM ciniki_businesses "
+		. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id AND ciniki_business_users.type = 1) "
+		. "ORDER BY ciniki_businesses.name ";
 	$rsp = ciniki_core_dbHashIDQuery4($ciniki, $strsql, 'businesses',
 		array('container'=>'businesses', 'fname'=>'business_id', 'name'=>'business', 'fields'=>array('name')), 
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 'fields'=>array())
@@ -59,7 +60,7 @@ function ciniki_businesses_getAll($ciniki) {
 		}
 	}
 
-	$strsql = "SELECT id, email, firstname, lastname, display_name FROM users "
+	$strsql = "SELECT id, email, firstname, lastname, display_name FROM ciniki_users "
 		. "WHERE id IN (" . ciniki_core_dbQuote($ciniki, implode(',', array_keys($users))) . ") ORDER BY lastname, firstname";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$urc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'users', 'users', 'id');

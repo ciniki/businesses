@@ -43,29 +43,40 @@ function ciniki_businesses_getModules($ciniki) {
 		return $ac;
 	}
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
-	$strsql = "SELECT modules FROM businesses WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', '');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
+	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, status, ruleset "
+		. "FROM ciniki_business_modules "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
+	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'name');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	if( $rc['num_rows'] != 1 ) {
+	if( !isset($rc['modules']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'195', 'msg'=>'No business found'));
 	}
-	$business_modules = $rc['rows'][0]['modules'];
+	$business_modules = $rc['modules'];
 
 	//
 	// Get the list of available modules
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/getModuleList.php');
-	$mod_list = ciniki_core_getModuleList($ciniki);
+	$rc = ciniki_core_getModuleList($ciniki);
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	$mod_list = $rc['modules'];
 
 	$modules = array();
 	$count = 0;
 	foreach($mod_list as $module) {
 		if( $module['label'] != '' && $module['installed'] == 'Yes' ) {
-			$modules[$count] = array('module'=>array('label'=>$module['label'], 'name'=>$module['name'], 'package'=>$module['package'],
-				'active'=>((($business_modules & $module['bits']) == $module['bits']) ? 'Yes' : 'No')));
+			$modules[$count] = array('module'=>array('label'=>$module['label'], 'package'=>$module['package'], 
+				'name'=>$module['name'], 'active'=>'No'));
+			if( isset($business_modules[$module['package'] . '.' . $module['name']]) 
+				&& $business_modules[$module['package'] . '.' . $module['name']]['status'] == 1 ) {
+				$modules[$count]['module']['active'] = 'Yes';
+			}
+				// 'active'=>((($business_modules & $module['bits']) == $module['bits']) ? 'Yes' : 'No')));
 			$count++;
 		}
 	}

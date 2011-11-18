@@ -50,7 +50,7 @@ function ciniki_businesses_getOwners($ciniki) {
 	// Query for the business users
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
-	$strsql = "SELECT user_id FROM business_users "
+	$strsql = "SELECT user_id FROM ciniki_business_users "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND type = 1 ";
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'users', 'business');
@@ -62,7 +62,7 @@ function ciniki_businesses_getOwners($ciniki) {
 	}
 
 	$user_id_list = array();
-	$strsql = "SELECT id, email, firstname, lastname, display_name FROM users "
+	$strsql = "SELECT id, email, firstname, lastname, display_name FROM ciniki_users "
 		. "WHERE id IN (";
 	$comma = '';
 	foreach($rc['rows'] as $i) {

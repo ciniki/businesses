@@ -18,6 +18,6 @@
 //
 function ciniki_businesses_getModuleOptions($ciniki, $module) {
 
-	return ciniki_core_dbDetailsQueryHash($ciniki, 'business_details', 'business_id', $business_id, $module . '_options', $module);
+	return ciniki_core_dbDetailsQueryHash($ciniki, 'ciniki_business_details', 'business_id', $business_id, $module . '_options', $module);
 }
 ?>
