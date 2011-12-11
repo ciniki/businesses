@@ -16,8 +16,8 @@
 // Returns
 // -------
 // <businesses>
-//		<business id='4592' name='Temporary Test Business' modules='bitmask' />
-//		<business id='20719' name='Old Test Business' modules='bitmask' />
+//		<business id='4592' name='Temporary Test Business' />
+//		<business id='20719' name='Old Test Business' />
 // </businesses>
 //
 function ciniki_businesses_getUserBusinesses($ciniki) {
@@ -41,7 +41,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		$strsql = "SELECT id, modules, name, ciniki_business_users.groups, "
+		$strsql = "SELECT id, name, ciniki_business_users.groups, "
 			. "d1.detail_value AS css "
 			. "FROM ciniki_businesses "
 			. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id "
@@ -49,7 +49,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
 			. "ORDER BY ciniki_businesses.status, ciniki_businesses.name ";
 	} else {
-		$strsql = "SELECT id, modules, name, ciniki_business_users.groups, "
+		$strsql = "SELECT id, name, ciniki_business_users.groups, "
 			. "d1.detail_value AS css "
 			. "FROM ciniki_business_users, ciniki_businesses "
 			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
