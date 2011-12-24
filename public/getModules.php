@@ -18,7 +18,7 @@
 // Returns
 // -------
 // <modules>
-//		<module label='Products' name='products' active='Yes|No' />
+//		<module label='Products' name='products' status='On|Off' />
 // </modules>
 //
 function ciniki_businesses_getModules($ciniki) {
@@ -71,10 +71,10 @@ function ciniki_businesses_getModules($ciniki) {
 	foreach($mod_list as $module) {
 		if( $module['label'] != '' && $module['installed'] == 'Yes' && (!isset($module['optional']) || $module['optional'] == 'yes') ) {
 			$modules[$count] = array('module'=>array('label'=>$module['label'], 'package'=>$module['package'], 
-				'name'=>$module['name'], 'active'=>'No'));
+				'name'=>$module['name'], 'status'=>'Off'));
 			if( isset($business_modules[$module['package'] . '.' . $module['name']]) 
 				&& $business_modules[$module['package'] . '.' . $module['name']]['status'] == 1 ) {
-				$modules[$count]['module']['active'] = 'Yes';
+				$modules[$count]['module']['status'] = 'On';
 			}
 			$count++;
 		}

@@ -10,12 +10,12 @@
 // api_key:
 // auth_token:
 // business_id:			The ID of the business to get the module list for.
-// MODULE_NAME:			The name of the module, and the value if it's Yes or No.
+// MODULE_NAME:			The name of the module, and the value if it's On or Off.
 //
 // Returns
 // -------
 // <modules>
-//		<module name='Products' active='Yes|No' />
+//		<module name='Products' active='On|Off' />
 // </modules>
 //
 function ciniki_businesses_updateModules($ciniki) {
@@ -83,7 +83,7 @@ function ciniki_businesses_updateModules($ciniki) {
 				&& isset($business_modules[$module['package'] . '.' . $module['name']]['status']) ) {
 				$status = $business_modules[$module['package'] . '.' . $module['name']]['status'];
 			}
-			if( $ciniki['request']['args'][$name] == 'Yes' && $status != 1 ) {
+			if( $ciniki['request']['args'][$name] == 'On' && $status != 1 ) {
 				$strsql = "INSERT INTO ciniki_business_modules "
 					. "(business_id, package, module, status, ruleset, date_added, last_updated) "
 					. "VALUES ('" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
@@ -98,9 +98,9 @@ function ciniki_businesses_updateModules($ciniki) {
 					ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 					return $rc;
 				} 
-				ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', $name, 'modules', 'Yes');
+				ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', $name, 'modules', 'On');
 			}
-			elseif( $ciniki['request']['args'][$name] == 'No' && $status != 0 ) {
+			elseif( $ciniki['request']['args'][$name] == 'Off' && $status != 0 ) {
 				$strsql = "INSERT INTO ciniki_business_modules "
 					. "(business_id, package, module, status, ruleset, date_added, last_updated) "
 					. "VALUES ('" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
@@ -115,7 +115,7 @@ function ciniki_businesses_updateModules($ciniki) {
 					ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 					return $rc;
 				} 
-				ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', $name, 'modules', 'No');
+				ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', $name, 'modules', 'Off');
 			}
 		}
 	}
