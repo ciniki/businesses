@@ -9,7 +9,7 @@
 #
 # uuid:			The unique ID for the business, which is unique across all database instances.
 #
-# modules:		The modules which are turned on for this business.
+# modules:		The modules which are turned on for this business. (NO LONGER USED)
 #
 #				0x01 - Customers
 #				0x02 - Products
