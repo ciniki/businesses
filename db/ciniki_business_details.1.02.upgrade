@@ -1,0 +1,5 @@
+#
+# This file will upgrade the database table businesses to version 1.02.
+#
+ALTER TABLE ciniki_business_details MODIFY COLUMN detail_value varchar(6000) not null;
+ALTER TABLE ciniki_business_details COMMENT='v1.02';
