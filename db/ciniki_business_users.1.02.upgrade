@@ -1,0 +1,9 @@
+#
+# This file will upgrade the database table businesses to version 1.02.
+#
+ALTER TABLE ciniki_business_users ADD COLUMN package varchar(50) not null AFTER user_id;
+ALTER TABLE ciniki_business_users ADD COLUMN permissions_group varchar(50) not null AFTER package;
+UPDATE ciniki_business_users SET package = 'ciniki', permissions_group = 'owners' WHERE groups = 1;
+ALTER TABLE ciniki_business_users DROP PRIMARY KEY;
+ALTER TABLE ciniki_business_users ADD PRIMARY KEY (business_id, user_id, package, permissions_group);
+ALTER TABLE ciniki_business_users COMMENT='v1.02';
