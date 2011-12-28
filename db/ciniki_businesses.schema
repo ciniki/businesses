@@ -74,5 +74,6 @@ create table ciniki_businesses (
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),
-	index (last_updated)
-) ENGINE=InnoDB, COMMENT='v1.03';
+	index (last_updated),
+	unique index (uuid)
+) ENGINE=InnoDB, COMMENT='v1.04';
