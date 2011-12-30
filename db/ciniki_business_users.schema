@@ -10,7 +10,7 @@
 #
 # package:		The package the user is part of, default 'ciniki'.
 #
-# permissions_group:		The group the user is a part of. (owners, employees), future roles (sysadmin, accountant, assistant, etc)
+# permission_group:		The group the user is a part of. (owners, employees), future roles (sysadmin, accountant, assistant, etc)
 # 
 # groups:		Users can be part of one or more groups, which (TO BE REMOVED)
 #				restrict what they have access to in the API.
@@ -53,7 +53,7 @@
 #				102 - custom 2 (future)
 #				125 - custom 25 (future)
 #
-# status:		0 - unknown
+# status:		0 - unknown (future)
 # 				1 - active
 #				2 - locked
 #				3 - deleted
@@ -68,12 +68,12 @@ create table ciniki_business_users (
 	business_id int not null,
 	user_id int not null,
 	package varchar(50) not null,
-	permissions_group varchar(50) not null,
+	permission_group varchar(50) not null,
 	groups smallint unsigned not null,
 	type tinyint unsigned not null,
 	status tinyint unsigned not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	last_login datetime not null,
-	primary key (business_id, user_id, package, permissions_group)
+	primary key (business_id, user_id, package, permission_group)
 ) ENGINE=InnoDB, COMMENT='v1.02';

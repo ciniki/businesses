@@ -19,7 +19,7 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_removeOwner($ciniki) {
+function ciniki_businesses_userRemove($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
@@ -28,6 +28,8 @@ function ciniki_businesses_removeOwner($ciniki) {
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		'user_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No user specified'), 
+		'package'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No package specified'), 
+		'permission_group'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No permission specified'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -38,7 +40,7 @@ function ciniki_businesses_removeOwner($ciniki) {
 	// Check access to business_id as owner, or sys admin
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.removeOwner');
+	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.userRemove');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
@@ -52,7 +54,10 @@ function ciniki_businesses_removeOwner($ciniki) {
 	//
 	$strsql = "DELETE FROM ciniki_business_users "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'";
+		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'"
+		. "AND package = '" . ciniki_core_dbQuote($ciniki, $args['package']) . "'"
+		. "AND permission_group = '" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "'"
+		. "";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDelete.php');
 	$rc = ciniki_core_dbDelete($ciniki, $strsql, 'businesses');
 	if( $rc['stat'] != 'ok' ) {
@@ -63,6 +68,6 @@ function ciniki_businesses_removeOwner($ciniki) {
 		return array('stat'=>'ok');
 	}
 
-	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove owner'));
+	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove user'));
 }
 ?>
