@@ -31,7 +31,7 @@ function ciniki_businesses_userList($ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.userList', $args['id']);
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.userList');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

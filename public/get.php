@@ -36,7 +36,7 @@ function ciniki_businesses_get($ciniki) {
 	// Check access, should only be accessible by sysadmin
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.get', $args['id']);
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.get');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

@@ -4,10 +4,6 @@
 // -----------
 // This function will lock a business, preventing further access or updates.
 //
-// Info
-// ----
-// status:			beta
-// 
 // Arguments
 // ---------
 // api_key:
@@ -35,7 +31,7 @@ function ciniki_businesses_lock($ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.lock', $args['id']);
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.lock');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

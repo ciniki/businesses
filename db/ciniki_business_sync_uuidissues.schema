@@ -1,0 +1,34 @@
+#
+# Description
+# -----------
+# Any time there is a problem with a UUID during syncronization, it will be tagged
+# in this table for review by a person.  Most likely, this entry should exist on 
+# both the local and remote.
+# 
+# Fields
+# ------
+# sync_id:				The ID of the syncronization which the issue occured in.
+#
+# package:				The package the issue occured in.
+#
+# module:				The module the issue occured in.
+#
+# uuid:					The uuid with the issue.
+#
+# issue:				0 - unknown
+#						1 - error
+#
+# date_added:			The UTC date and time the record was created.
+# 
+# last_updated:			The UTC date and time the record was last updated.
+#
+create table ciniki_business_sync_uuidissues (
+	sync_id int not null,
+	package varchar(50) not null,
+	module varchar(50) not null,
+	uuid binary(16) not null,
+	issue tinyint unsigned not null,
+	date_added datetime not null,
+	last_updated datetime not null,
+	primary key (sync_id, package, module, uuid)
+) ENGINE=InnoDB, COMMENT='v1.01';

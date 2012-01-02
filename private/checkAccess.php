@@ -26,7 +26,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	// Sysadmins are allowed full access
 	//
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		return array('stat'=>'ok', 'modules'=>$modules);
+		return array('stat'=>'ok');
 	}
 
 	//

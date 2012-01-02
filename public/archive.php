@@ -31,7 +31,7 @@ function ciniki_businesses_archive($ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.archive', $args['id']);
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.archive');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

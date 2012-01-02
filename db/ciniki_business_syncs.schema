@@ -1,0 +1,54 @@
+#
+# Description
+# -----------
+# This table stores the syncronizations for the local instance.  All syncronizations must be
+# listed in each instance.
+# 
+# Fields
+# ------
+# id:					The id of the sync
+# business_id: 			The id of the business.
+#
+# flags:				The
+#
+#						0x01 - Push to the remote
+#						0x02 - Pull from the remote
+#
+# status:				0 - unknown
+#						10 - active
+#						20 - paused
+#						60 - stopped
+# 
+# local_private_key:	The local key for this connection to unencrypt response messages.
+#
+# remote_url:			The URL to connect to the remote sync system, typically 
+#						will be https://<instance>.ciniki.ca/ciniki-sync.php
+#
+# remote_uuid:			The remote business Universal Unique ID.
+#
+# remote_public_key:	The encryption password for the remote system.  All request arguments
+#						must be encrypted with this password before being sent.
+#
+# date_added:			The UTC date and time the record was created.
+# 
+# last_updated:			The UTC date and time the record was last updated.
+#
+# last_sync: 			The UTC date and time the last sync was initialized.
+#
+create table ciniki_business_syncs (
+	id int not null auto_increment,
+	business_id int not null,
+	flags tinyint unsigned not null,
+	status tinyint unsigned not null,
+	local_private_key varchar(5000) not null,
+	remote_name varchar(100) not null,
+	remote_uuid binary(16) not null,
+	remote_url varchar(200) not null,
+	remote_public_key varchar(5000) not null,
+	date_added datetime not null,
+	last_updated datetime not null,
+	last_sync datetime not null,
+	primary key (id),
+	index (business_id),
+	unique index (business_id, remote_url, remote_uuid)
+) ENGINE=InnoDB, COMMENT='v1.01';

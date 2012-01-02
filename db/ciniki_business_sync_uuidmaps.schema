@@ -1,0 +1,38 @@
+#
+# Description
+# -----------
+# This table stores the uuid maps between instances.  This was initially designed 
+# to store the user uuid maps between systems.  Users should be able to be mapped
+# by their email address, but won't officially until added into this table.
+#
+# When a user is created in the remote system as an employee, they will be added
+# to the local system with the same uuid.  The owner who sets up the sync, will 
+# have to already exist on either instance, but will different UUID's.  This table
+# will provide the mappings between instance UUID's.
+# 
+# Fields
+# ------
+# sync_id:				The ID of the syncronization the uuidmap is for.
+#
+# package:				The package of the uuid.
+#
+# module:				The module of the uuid.
+#
+# remote_uuid:			The remote uuid which will be changed to the local_uuid when inserting.
+#
+# local_uuid:			The local_uuid which should be substituted for the remote_uuid when
+#						inserted into this instance.
+#
+# date_added:			The UTC date and time the record was created.
+# 
+# last_updated:			The UTC date and time the record was last updated.
+#
+create table ciniki_business_sync_uuidmaps (
+	sync_id int not null,
+	package varchar(50) not null,
+	module varchar(50) not null,
+	remote_uuid binary(16) not null,
+	local_uuid binary(16) not null,
+	primary key (sync_id, package, module, remote_uuid),
+	unique index (sync_id, package, module, local_uuid)
+) ENGINE=InnoDB, COMMENT='v1.01';
