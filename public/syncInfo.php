@@ -71,6 +71,15 @@ function ciniki_businesses_syncInfo($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
+	foreach($rc['syncs'] as $i => $sync) {
+		if( ($sync['sync']['flags']&0x01) == 0x01 ) {
+			$rc['syncs'][$i]['sync']['type'] = 'push';
+		} elseif( ($sync['sync']['flags']&0x02) == 0x02 ) {
+			$rc['syncs'][$i]['sync']['type'] = 'pull';
+		} elseif( ($sync['sync']['flags']&0x03) == 0x03 ) {
+			$rc['syncs'][$i]['sync']['type'] = 'bi';
+		}
+	}
 	
 	return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$rc['syncs']);
 }
