@@ -62,7 +62,7 @@ function ciniki_businesses_get($ciniki) {
 		return $rc;
 	}
 	if( !isset($rc['business']) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'512', 'msg'=>'Unable to find business'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'513', 'msg'=>'Unable to find business'));
 	}
 	$business = $rc['business'];
 
