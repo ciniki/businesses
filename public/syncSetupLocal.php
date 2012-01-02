@@ -149,7 +149,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	);
 	$rc = ciniki_core_cinikiAPIGet($ciniki, $api, 'ciniki.businesses.syncActivateRemote', $remote_args);
 	if( $rc['stat'] != 'ok' ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'528', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'518', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
 	}
 
 	$rc = ciniki_core_cinikiAPIGet($ciniki, $api, 'ciniki.users.logout', array());
