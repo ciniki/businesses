@@ -64,7 +64,7 @@
 #
 create table ciniki_businesses (
 	id int not null auto_increment,
-	uuid binary(16) not null,
+	uuid char(36) not null,
 	modules int unsigned not null,			# 4 bytes, 32 bits
 	name varchar(150) not null,				# The common name for the company, used on marketing material
 	tagline varchar(255) not null,			# The tagline for the business, just a 1 liner to be used in headers
