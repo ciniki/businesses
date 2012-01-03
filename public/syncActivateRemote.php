@@ -32,6 +32,7 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
 
 	//
 	// Lookup the business id
@@ -47,7 +48,7 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 	if( !isset($rc['business']) || !isset($rc['business']['id']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'528', 'msg'=>'Access denied'));
 	}
-	$args['business_id']  = $rc['business']['id']
+	$args['business_id']  = $rc['business']['id'];
 
 	//
 	// Check access 
@@ -60,8 +61,8 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 
 	$strsql = "UPDATE ciniki_business_syncs SET status = 10 "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND url = '" . ciniki_core_dbQuote($ciniki, $args['url']) . "' "
-		. "AND uuid = '" . ciniki_core_dbQuote($ciniki, $args['uuid']) . "' "
+		. "AND remote_url = '" . ciniki_core_dbQuote($ciniki, $args['url']) . "' "
+		. "AND remote_uuid = '" . ciniki_core_dbQuote($ciniki, $args['uuid']) . "' "
 		. "";
 	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 	if( $rc['stat'] != 'ok' ) {

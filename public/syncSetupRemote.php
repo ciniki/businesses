@@ -38,10 +38,12 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
 
 	//
 	// Lookup the business id
 	//
+	error_log('uuid: ' . $args['business_uuid']);
 	$strsql = "SELECT id "
 		. "FROM ciniki_businesses "
 		. "WHERE ciniki_businesses.uuid = '" . ciniki_core_dbQuote($ciniki, $args['business_uuid']) . "' "
@@ -53,7 +55,7 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 	if( !isset($rc['business']) || !isset($rc['business']['id']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'524', 'msg'=>'Access denied'));
 	}
-	$args['business_id']  = $rc['business']['id']
+	$args['business_id']  = $rc['business']['id'];
 
 	//
 	// Check access 
@@ -96,10 +98,10 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 		. ", '" . ciniki_core_dbQuote($ciniki, $flags) . "' "
 		. ", 0 "
 		. ", '" . ciniki_core_dbQuote($ciniki, $private_str) . "' "
-		. ", ' . ciniki_core_dbQuote($ciniki, $args['name']) . "' "
-		. ", ' . ciniki_core_dbQuote($ciniki, $args['uuid']) . "' "
-		. ", ' . ciniki_core_dbQuote($ciniki, $args['url']) . "' "
-		. ", ' . ciniki_core_dbQuote($ciniki, $args['public_key']) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $args['name']) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $args['uuid']) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $args['url']) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $args['public_key']) . "' "
 		. ", UTC_TIMESTAMP(), UTC_TIMESTAMP() "
 		. ")"; 
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
