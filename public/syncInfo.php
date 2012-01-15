@@ -58,7 +58,7 @@ function ciniki_businesses_syncInfo($ciniki) {
 	$uuid = $rc['business']['uuid'];
 
 	//
-	// Get the list of users who have access to this business
+	// Get the list of syncs setup for this business
 	//
 	$strsql = "SELECT id, business_id, flags, status, "
 		. "remote_name, remote_url, remote_uuid, "
