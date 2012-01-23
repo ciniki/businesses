@@ -43,7 +43,6 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 	//
 	// Lookup the business id
 	//
-	error_log('uuid: ' . $args['business_uuid']);
 	$strsql = "SELECT id "
 		. "FROM ciniki_businesses "
 		. "WHERE ciniki_businesses.uuid = '" . ciniki_core_dbQuote($ciniki, $args['business_uuid']) . "' "

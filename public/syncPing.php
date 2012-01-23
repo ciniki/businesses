@@ -48,7 +48,6 @@ function ciniki_businesses_syncPing($ciniki) {
 		return $rc;
 	}
 	if( !isset($rc['sync']) || !is_array($rc['sync']) ) {
-		error_log(print_r($rc, true));
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'546', 'msg'=>'Invalid sync'));
 	}
 	$sync = $rc['sync'];

@@ -58,7 +58,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	}
 
 	//
-	// Check the session user is a business owner
+	// Check the session user is a business owner or employee
 	//
 	if( $business_id > 0 ) {
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');

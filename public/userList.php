@@ -37,7 +37,6 @@ function ciniki_businesses_userList($ciniki) {
 	}
 
 	//
-	// FIXME: Add query to get the 
 	// Get the list of users who have access to this business
 	//
 	$strsql = "SELECT ciniki_business_users.user_id, "
