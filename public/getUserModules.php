@@ -46,8 +46,32 @@ function ciniki_businesses_getUserModules($ciniki) {
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND status = 1 "
 		. "";
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
+	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
-	return $rc;
+	//
+	// Check for any modules which should have some stats with them
+	//
+	if( $rsp['stat'] == 'ok' ) {
+		foreach($rsp['modules'] as $i => $module) {
+			if( $module['module']['name'] == 'ciniki.tasks' ) {
+				$strsql = "SELECT 'numtasks', COUNT(ciniki_tasks.id) "
+					. "FROM ciniki_tasks, ciniki_task_users "
+					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "AND ciniki_tasks.id = ciniki_task_users.task_id "
+					. "AND ciniki_task_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+					. "AND ciniki_tasks.status = 1 "
+					. "AND (ciniki_task_users.perms&0x04) = 0x04 "
+					. "";
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
+				$rc = ciniki_core_dbCount($ciniki, $strsql, 'tasks', 'tasks');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+				$rsp['modules'][$i]['module']['count'] = $rc['tasks']['numtasks'];
+			}
+		}
+	}
+
+	return $rsp;
 }
 ?>
