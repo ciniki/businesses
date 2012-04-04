@@ -46,7 +46,9 @@ function ciniki_businesses_getModules($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, status, ruleset "
 		. "FROM ciniki_business_modules "
-		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "ORDER BY name "
+		. "";	
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'name');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
