@@ -64,11 +64,27 @@ function ciniki_businesses_getUserModules($ciniki) {
 					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
-				$rc = ciniki_core_dbCount($ciniki, $strsql, 'tasks', 'tasks');
+				$rc = ciniki_core_dbCount($ciniki, $strsql, 'atdo', 'atdo');
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
-				$rsp['modules'][$i]['module']['count'] = $rc['tasks']['numtasks'];
+				$rsp['modules'][$i]['module']['task_count'] = $rc['atdo']['numtasks'];
+				$strsql = "SELECT 'nummessages', COUNT(ciniki_atdos.id) "
+					. "FROM ciniki_atdos, ciniki_atdo_users "
+					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "AND ciniki_atdos.type = 6 "	// Tasks
+					. "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
+					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+					. "AND ciniki_atdos.status = 1 "
+					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
+					. "AND (ciniki_atdo_users.perms&0x08) = 0x08 "
+					. "";
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
+				$rc = ciniki_core_dbCount($ciniki, $strsql, 'atdo', 'atdo');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+				$rsp['modules'][$i]['module']['message_count'] = $rc['atdo']['nummessages'];
 			}
 		}
 	}
