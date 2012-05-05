@@ -28,7 +28,7 @@
 //		</contact>
 // </details>
 //
-function ciniki_businesses_webContact($ciniki, $business_id) {
+function ciniki_businesses_web_contact($ciniki, $business_id) {
 	
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDetailsQuery.php');

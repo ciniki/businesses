@@ -21,7 +21,7 @@
 //		<business name='' tagline='' />
 // </details>
 //
-function ciniki_businesses_webDetails($ciniki, $business_id) {
+function ciniki_businesses_web_details($ciniki, $business_id) {
 	$rsp = array('stat'=>'ok', 'details'=>array());
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
