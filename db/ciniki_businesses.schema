@@ -47,6 +47,11 @@
 #
 # name: 		The official name of the business
 #
+# tagline:		The brief one line business description.
+#
+# sitename:		The unique name of the business website.  Used in web delivery, and must be
+#				only lowercase letters, numbers, underscore (_) and dash (-).
+#
 # description: 	A description of the business, for internal use.
 #
 # status:    0 - unknown
@@ -67,6 +72,7 @@ create table ciniki_businesses (
 	uuid char(36) not null,
 	modules int unsigned not null,			# 4 bytes, 32 bits
 	name varchar(150) not null,				# The common name for the company, used on marketing material
+	sitename varchar(150) not null,			# The unique sitename for the business, used in web delivery
 	tagline varchar(255) not null,			# The tagline for the business, just a 1 liner to be used in headers
 	description text not null,
 	status tinyint unsigned not null,
@@ -75,5 +81,6 @@ create table ciniki_businesses (
 	last_updated datetime not null,
 	primary key (id),
 	index (last_updated),
-	unique index (uuid)
-) ENGINE=InnoDB, COMMENT='v1.04';
+	unique index (uuid),
+	unique index (sitename)
+) ENGINE=InnoDB, COMMENT='v1.05';

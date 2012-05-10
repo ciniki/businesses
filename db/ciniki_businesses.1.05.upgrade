@@ -1,0 +1,7 @@
+#
+# This file will upgrade the database table businesses to version 1.05.
+#
+ALTER TABLE ciniki_businesses ADD COLUMN sitename varchar(150) not null AFTER name;
+UPDATE ciniki_businesses SET sitename = REPLACE(LOWER(name), ' ', '-');
+CREATE UNIQUE INDEX sitename ON ciniki_businesses (sitename);
+ALTER TABLE ciniki_businesses COMMENT='v1.05';

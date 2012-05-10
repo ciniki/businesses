@@ -54,6 +54,8 @@ function ciniki_businesses_getDetailHistory($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetChangeLog.php');
 	if( $args['field'] == 'business.name' ) {
 		return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', '', 'name', 'businesses');
+	} elseif( $args['field'] == 'business.sitename' ) {
+		return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', '', 'sitename', 'businesses');
 	} elseif( $args['field'] == 'business.tagline' ) {
 		return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', '', 'tagline', 'businesses');
 	}

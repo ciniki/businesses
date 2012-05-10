@@ -41,6 +41,7 @@ function ciniki_businesses_updateDetails($ciniki) {
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		'business.name'=>array('required'=>'no', 'blank'=>'no', 'errmsg'=>'No name specified'), 
+		'business.sitename'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No sitename specified'), 
 		'business.tagline'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No tagline specified'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
@@ -56,6 +57,14 @@ function ciniki_businesses_updateDetails($ciniki) {
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
+
+	//
+	// Check the sitename is proper format
+	//
+	if( isset($args['business.sitename']) && preg_match('/[^a-z0-9\-_]/', $args['business.sitename']) ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'162', 'msg'=>'Illegal characters in sitename.  It can only contain lowercase letters, numbers, underscores (_) or dash (-)'));
+	}
+	
 
 	//
 	// Turn off autocommit
@@ -79,6 +88,10 @@ function ciniki_businesses_updateDetails($ciniki) {
 	if( isset($args['business.name']) && $args['business.name'] != '' ) {
 		$strsql .= ", name = '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "'";
 		ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', '', 'name', $args['business.name']);
+	}
+	if( isset($args['business.sitename']) ) {
+		$strsql .= ", sitename = '" . ciniki_core_dbQuote($ciniki, $args['business.sitename']) . "'";
+		ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
 	}
 	if( isset($args['business.tagline']) ) {
 		$strsql .= ", tagline = '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "'";

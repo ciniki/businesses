@@ -26,6 +26,7 @@ function ciniki_businesses_add($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business.name'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business name specified'), 
+		'business.sitename'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', ' errmsg'=>'No business sitename specified'), 
 		'business.tagline'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', ' errmsg'=>'No business tagline specified'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
@@ -41,9 +42,16 @@ function ciniki_businesses_add($ciniki) {
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
+
+	//
+	// Check the sitename is proper format
+	//
+	if( preg_match('/[^a-z0-9\-_]/', $args['business.sitename']) ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'162', 'msg'=>'Illegal characters in sitename.  It can only contain lowercase letters, numbers, underscores (_) or dash (-)'));
+	}
 	
 	//
-	// Check if name or tagline was specified
+	// Load required functions
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
@@ -63,9 +71,10 @@ function ciniki_businesses_add($ciniki) {
 	//
 	// Add the business to the database
 	//
-	$strsql = "INSERT INTO ciniki_businesses (uuid, modules, name, tagline, status, date_added, last_updated) VALUES ("
+	$strsql = "INSERT INTO ciniki_businesses (uuid, modules, name, sitename, tagline, status, date_added, last_updated) VALUES ("
 		. "UUID(), "
 		. "247, '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $args['business.sitename']) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "' "
 		. ", 1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
@@ -80,6 +89,7 @@ function ciniki_businesses_add($ciniki) {
 	$business_id = $rc['insert_id'];
 	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'name', $args['business.name']);
 	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'tagline', $args['business.tagline']);
+	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
 
 	if( $business_id < 1 ) {
 		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
