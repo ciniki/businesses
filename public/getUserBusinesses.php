@@ -41,23 +41,30 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		$strsql = "SELECT id, name, ciniki_business_users.groups, "
-			. "d1.detail_value AS css "
+		$strsql = "SELECT id, name "
 			. "FROM ciniki_businesses "
-			. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id "
-				. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
-			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
+//			. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id "
+//				. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
+			. "WHERE ciniki_businesses.status < 60 "
+//			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
 			. "ORDER BY ciniki_businesses.status, ciniki_businesses.name ";
 	} else {
-		$strsql = "SELECT id, name, ciniki_business_users.groups, "
-			. "d1.detail_value AS css "
+		$strsql = "SELECT DISTINCT id, name "
 			. "FROM ciniki_business_users, ciniki_businesses "
-			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
 			. "WHERE ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 			. "AND ciniki_business_users.status = 1 "
 			. "AND ciniki_business_users.business_id = ciniki_businesses.id "
-			. "AND ciniki_businesses.status = 1 "
+			. "AND ciniki_businesses.status < 60 "	// Allow suspended businesses to be listed, so user can login and update billing/unsuspend
 			. "ORDER BY ciniki_businesses.name ";
+//		$strsql = "SELECT DISTINCT id, name, ciniki_business_users.permission_group, "
+//			. "d1.detail_value AS css "
+//			. "FROM ciniki_business_users, ciniki_businesses "
+//			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
+//			. "WHERE ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+//			. "AND ciniki_business_users.status = 1 "
+//			. "AND ciniki_business_users.business_id = ciniki_businesses.id "
+//			. "AND ciniki_businesses.status < 60 "	// Allow suspended businesses to be listed, so user can login and update billing/unsuspend
+//			. "ORDER BY ciniki_businesses.name ";
 	}	
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
 

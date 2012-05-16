@@ -85,8 +85,16 @@ function ciniki_businesses_getUserModules($ciniki) {
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
-				$rsp['modules'][$i]['module']['message_count'] = 0 + $rc['atdo']['6']['num_items'];
-				$rsp['modules'][$i]['module']['notes_count'] = 0 + $rc['atdo']['5']['num_items'];
+				if( isset($rc['atdo']['6']['num_items']) ) {
+					$rsp['modules'][$i]['module']['message_count'] = 0 + $rc['atdo']['6']['num_items'];
+				} else {
+					$rsp['modules'][$i]['module']['message_count'] = 0;
+				}
+				if( isset($rc['atdo']['5']['num_items']) ) {
+					$rsp['modules'][$i]['module']['message_count'] = 0 + $rc['atdo']['5']['num_items'];
+				} else {
+					$rsp['modules'][$i]['module']['message_count'] = 0;
+				}
 			}
 		}
 	}

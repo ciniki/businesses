@@ -56,8 +56,9 @@
 #
 # status:    0 - unknown
 #			 1 - active
-#			90 - archived - inactive
-#			99 - locked
+#			50 - suspended (Owners can login, but can't access or edit information)
+#			     Website still works.
+#			60 - deleted
 #
 # db_prefix: Not sure if this will get used, but is a 
 #				placeholder for now to allow certain

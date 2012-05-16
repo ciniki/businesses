@@ -2,19 +2,19 @@
 //
 // Description
 // -----------
-// This function will lock a business, preventing further access or updates.
+// This function will suspend a business.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id: 			The ID of the business to lock.
+// id: 			The ID of the business to archive.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_lock($ciniki) {
+function ciniki_businesses_suspend($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
@@ -31,14 +31,14 @@ function ciniki_businesses_lock($ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.lock');
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.suspend');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuoteRequestArg.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-	$strsql = "UPDATE ciniki_businesses SET status = 99 "
+	$strsql = "UPDATE ciniki_businesses SET status = 50 "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'";
 	return ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 }

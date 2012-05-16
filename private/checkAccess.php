@@ -49,6 +49,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.getModuleRulesetHistory',
 		'ciniki.businesses.getModuleRulesets',
 		'ciniki.businesses.getModules',
+		'ciniki.businesses.getUserSettings',
 		'ciniki.businesses.getOwners',
 		'ciniki.businesses.employees',
 		'ciniki.businesses.updateDetails',

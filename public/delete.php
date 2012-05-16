@@ -2,19 +2,19 @@
 //
 // Description
 // -----------
-// This function will archive a business, allowing access.
+// This function will mark a business as deleted, but not remove any information.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// id: 			The ID of the business to archive.
+// business_id: 			The ID of the business to lock.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_archive($ciniki) {
+function ciniki_businesses_lock($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
@@ -31,14 +31,14 @@ function ciniki_businesses_archive($ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.archive');
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.delete');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuoteRequestArg.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-	$strsql = "UPDATE ciniki_businesses SET status = 90 "
+	$strsql = "UPDATE ciniki_businesses SET status = 60 "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'";
 	return ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 }
