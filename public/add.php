@@ -5,10 +5,6 @@
 // This function will add a new business.  You must be a sys admin to 
 // be authorized to add a business.
 //
-// Info
-// ----
-// Status: beta
-//
 // Arguments
 // ---------
 // api_key:
@@ -26,8 +22,8 @@ function ciniki_businesses_add($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business.name'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business name specified'), 
-		'business.sitename'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', ' errmsg'=>'No business sitename specified'), 
-		'business.tagline'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', ' errmsg'=>'No business tagline specified'), 
+		'business.sitename'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', 'errmsg'=>'No business sitename specified'), 
+		'business.tagline'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', 'errmsg'=>'No business tagline specified'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
