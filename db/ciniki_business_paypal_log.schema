@@ -1,0 +1,30 @@
+#
+# Description
+# -----------
+# This table stores the IPN information posted from paypal.
+# 
+# Fields
+# ------
+# business_id: 	The id of the business.
+#
+# date_added:	The UTC date and time the record was created.
+# 
+create table ciniki_business_paypal_log (
+	id int not null auto_increment,
+	business_id int not null,
+	txn_type varchar(100) not null,
+	subscr_id varchar(100) not null,
+	first_name varchar(100) not null,
+	last_name varchar(100) not null,
+	payer_id varchar(100) not null,
+	payer_email varchar(250) not null,
+	item_name varchar(250) not null,
+	item_number varchar(250) not null,
+	mc_currency varchar(20) not null,
+	mc_fee varchar(20) not null,
+	mc_gross varchar(20) not null,
+	serialized_args varchar(2500) not null,
+	date_added datetime not null,
+	primary key (id),
+	index (business_id)
+) ENGINE=InnoDB, COMMENT='v1.01';
