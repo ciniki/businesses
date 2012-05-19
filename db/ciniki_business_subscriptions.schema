@@ -9,13 +9,26 @@
 # id:					The subscription id.
 # business_id: 			The id of the business.
 #
+# status:				The current status of the subscription.
+#
+#						 0 - unknown
+#						 1 - Pending user action
+#						 2 - Trial
+#						10 - Active
+#						50 - Suspended
+#						60 - Cancelled
+#
 # signup_date:			The UTC date and time the business was created in the system.  
 #						This is used to calculated the trail period.
 #
 # currency:				USD, CAD - The currency the business pays in.
-# monthly:				The monthly amount to be payed
+# monthly:				The monthly amount to be payed.
 # discount_percent:		The discount to be applied in a percentage.
 # payment_type:			Must be 'paypal', but others might be allowed in the future.
+# paypal_subscr_id:		The subscr_id from paypal that submitted the payment.
+# paypal_payer_email:	The paypal payer_email who submitted the payment.
+# paypal_payer_id:		The payer_id from paypal of who submitted the payment.
+# paypal_amount:		The amount set in the subscription at paypal, updated from IPN.
 #
 # last_payment_date:	The UTC date and time the last payment was received.
 # date_added:			The UTC date and time the record was created.
@@ -24,6 +37,7 @@
 create table ciniki_business_subscriptions (
 	id int not null auto_increment,
 	business_id int not null,
+	status tinyint unsigned not null,
 	currency varchar(20) not null,
 	monthly decimal(10,2) not null,
 	discount_percent int not null,
@@ -32,9 +46,10 @@ create table ciniki_business_subscriptions (
 	paypal_subscr_id varchar(100) not null,
 	paypal_payer_email varchar(250) not null,
 	paypal_payer_id varchar(100) not null,
+	paypal_amount decimal(10,2) not null,
 	last_payment_date datetime not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),
-	index (business_id)
+	unique index (business_id)
 ) ENGINE=InnoDB, COMMENT='v1.01';
