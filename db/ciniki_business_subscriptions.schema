@@ -12,14 +12,15 @@
 # status:				The current status of the subscription.
 #
 #						 0 - unknown
-#						 1 - Pending user action
+#						 1 - payment information required
 #						 2 - Trial
 #						10 - Active
 #						50 - Suspended
 #						60 - Cancelled
 #
 # signup_date:			The UTC date and time the business was created in the system.  
-#						This is used to calculated the trail period.
+#						This is used to calculated the trial period.
+# trial_days:			The number of days the trial should last.
 #
 # currency:				USD, CAD - The currency the business pays in.
 # monthly:				The monthly amount to be payed.
@@ -38,6 +39,8 @@ create table ciniki_business_subscriptions (
 	id int not null auto_increment,
 	business_id int not null,
 	status tinyint unsigned not null,
+	signup_date datetime not null,
+	trial_days int not null,
 	currency varchar(20) not null,
 	monthly decimal(10,2) not null,
 	discount_percent int not null,
