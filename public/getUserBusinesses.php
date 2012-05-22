@@ -41,13 +41,14 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		$strsql = "SELECT id, name "
+		$strsql = "SELECT id, name, "
+			. "IF(id='" . ciniki_core_dbQuote($ciniki, $ciniki['config']['core']['master_business_id']) . "', 'yes', 'no') AS ismaster "
 			. "FROM ciniki_businesses "
 //			. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id "
 //				. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
 			. "WHERE ciniki_businesses.status < 60 "
 //			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
-			. "ORDER BY ciniki_businesses.status, ciniki_businesses.name ";
+			. "ORDER BY ismaster DESC, ciniki_businesses.status, ciniki_businesses.name ";
 	} else {
 		$strsql = "SELECT DISTINCT id, name "
 			. "FROM ciniki_business_users, ciniki_businesses "

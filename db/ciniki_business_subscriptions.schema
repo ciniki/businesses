@@ -12,8 +12,8 @@
 # status:				The current status of the subscription.
 #
 #						 0 - unknown
-#						 1 - payment information required
-#						 2 - Trial
+#						 1 - Update required at paypal
+#						 2 - Trial persion, Payment information required
 #						10 - Active
 #						50 - Suspended
 #						60 - Cancelled
