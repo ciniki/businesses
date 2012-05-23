@@ -52,11 +52,11 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 	//
 	// Lookup the business_id for the IPN
 	//
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	$strsql = "SELECT id, status, name "
 		. "FROM ciniki_businesses "
 		. "WHERE uuid = '" . ciniki_core_dbQuote($ciniki, $args['item_number']) . "' "
 		. "";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'business');
 	if( $rc['stat'] != 'ok') {
@@ -80,7 +80,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		. "item_name, item_number, "
 		. "mc_currency, mc_fee, mc_gross, mc_amount3, "
 		. "serialized_args, "
-		. "notes, date_added, last_updated) VALUES ("
+		. "date_added, last_updated) VALUES ("
 		. "'" . ciniki_core_dbQuote($ciniki, $business_id) . "', "
 		. "0, "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['txn_type']) . "', "
@@ -144,7 +144,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		//
 		if( $business_status == 50 ) {
 			$strsql = "UPDATE ciniki_businesses SET status = 1 "
-				. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 				. "AND status = 50 ";
 			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 			if( $rc['stat'] != 'ok' ) {
@@ -188,7 +188,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		//
 		if( $business_status == 50 ) {
 			$strsql = "UPDATE ciniki_businesses SET status = 1 "
-				. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 				. "AND status = 50 ";
 			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 			if( $rc['stat'] != 'ok' ) {
@@ -241,7 +241,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		//
 		if( $business_status == 1 ) {
 			$strsql = "UPDATE ciniki_businesses SET status = 50 "
-				. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 				. "AND status = 1 ";
 			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 			if( $rc['stat'] != 'ok' ) {

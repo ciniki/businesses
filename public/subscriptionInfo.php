@@ -40,11 +40,13 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	//
 	// Get the billing information from the subscription table
 	//
-	$strsql = "SELECT status, signup_date, trial_days, currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
-		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(date_added, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
-		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(date_added))/86400) AS trial_remaining "
-		. "FROM ciniki_business_subscriptions "
-		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+	$strsql = "SELECT ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
+		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
+		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.date_added, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
+		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.date_added))/86400) AS trial_remaining "
+		. "FROM ciniki_business_subscriptions, ciniki_businesses "
+		. "WHERE ciniki_business_subscriptions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND ciniki_business_subscriptions.business_id = ciniki_businesses.id "
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
@@ -75,6 +77,11 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	// Get the history
 	//
 
-	return array('stat'=>'ok', 'subscription'=>$subscription);
+	return array('stat'=>'ok', 'subscription'=>$subscription, 'paypal'=>array(
+		'url'=>$ciniki['config']['businesses']['paypal.url'],
+		'business'=>$ciniki['config']['businesses']['paypal.business'],
+		'prefix'=>$ciniki['config']['businesses']['paypal.item_name.prefix'],
+		'ipn'=>$ciniki['config']['businesses']['paypal.ipn']),
+		);
 }
 ?>
