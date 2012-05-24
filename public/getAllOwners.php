@@ -33,41 +33,21 @@ function ciniki_businesses_getAllOwners($ciniki) {
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
-	
-	//
-	// Query for the business users
-	// FIXME: Add other types besides Owner
-	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery3.php');
-	$strsql = "SELECT ciniki_businesses.id, ciniki_businesses.name, "
-		. "ciniki_business_users.user_id, ciniki_business_users.business_id "
-		. "FROM ciniki_businesses, ciniki_business_users "
-		. "WHERE ciniki_businesses.id = ciniki_business_users.business_id "
-		. "AND ciniki_business_users.type = 1 "
-		. "ORDER BY ciniki_business_users.user_id, ciniki_businesses.name ";
-	$rc = ciniki_core_dbHashIDQuery3($ciniki, $strsql, 'businesses', 'users', 'user_id', 'user', 'businesses', 'business_id', 'business');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	if( $rc['num_rows'] < 1 ) {
-		return array('stat'=>'ok', 'users'=>array());
-	}
 
-	$user_businesses = array();
-	foreach($rc['users'] as $userNUM => $u) {
-		$user = $u['user'];
-		$user_businesses[$user['id']] = $user['businesses'];
-	}
-
-	$strsql = "SELECT id, email, firstname, lastname, display_name FROM ciniki_users "
-		. "WHERE id IN (" . ciniki_core_dbQuote($ciniki, implode(',', array_keys($user_businesses))) . ") ORDER BY lastname, firstname";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
-	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'users', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
-	
-	foreach($rsp['users'] as $userNUM => $u) {
-		$rsp['users'][$userNUM]['user']['businesses'] = $user_businesses[$u['user']['id']];
-	}
-
-	return $rsp;
+	$strsql = "SELECT ciniki_users.id AS user_id, email, firstname, lastname, display_name, "
+		. "ciniki_businesses.id AS business_id, ciniki_businesses.name "
+		. "FROM ciniki_users "
+		. "LEFT JOIN ciniki_business_users ON (ciniki_users.id = ciniki_business_users.user_id) "
+		. "LEFT JOIN ciniki_businesses ON (ciniki_business_users.business_id = ciniki_businesses.id) "
+		. "ORDER BY ciniki_users.lastname, ciniki_users.firstname, ciniki_businesses.name "
+		. "";
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQueryTree.php');
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user',
+			'fields'=>array('id'=>'user_id', 'display_name', 'firstname', 'lastname', 'email')),
+		array('container'=>'businesses', 'fname'=>'business_id', 'name'=>'business',
+			'fields'=>array('id'=>'business_id', 'name')),
+		));
+	return $rc;
 }
 ?>
