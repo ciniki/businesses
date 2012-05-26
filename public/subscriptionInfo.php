@@ -23,7 +23,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
         return $rc;
     }   
     $args = $rc['args'];
-    
+
     //  
     // Make sure this module is activated, and
     // check permission to run this function for this business
@@ -43,7 +43,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	$strsql = "SELECT ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
 		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.date_added, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
-		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.date_added))/86400) AS trial_remaining "
+		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.signup_date))/86400) AS trial_remaining "
 		. "FROM ciniki_business_subscriptions, ciniki_businesses "
 		. "WHERE ciniki_business_subscriptions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND ciniki_business_subscriptions.business_id = ciniki_businesses.id "
@@ -70,7 +70,13 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 			$subscription['status_text'] = 'Suspended';
 		} elseif( $subscription['status'] == 60 ) {
 			$subscription['status_text'] = 'Cancelled';
+		} elseif( $subscription['status'] == 61 ) {
+			$subscription['status_text'] = 'Pending Cancel';
 		}
+	}
+
+	if( $subscription['trial_remaining'] < 0 ) {
+		$subscription['trial_remaining'] = 0;
 	}
 
 	//

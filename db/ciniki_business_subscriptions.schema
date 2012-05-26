@@ -17,6 +17,7 @@
 #						10 - Active
 #						50 - Suspended
 #						60 - Cancelled
+#						61 - Pending cancel at paypal
 #
 # signup_date:			The UTC date and time the business was created in the system.  
 #						This is used to calculated the trial period.

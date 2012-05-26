@@ -87,7 +87,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 	//
 	// If already pending update required, don't change status
 	//
-	elseif( $rc['subscription']['status'] == 1 || $rc['subscription']['status'] == 2 ) {
+	elseif( $rc['subscription']['status'] == 1 || $rc['subscription']['status'] == 2 || $rc['subscription']['status'] == 60 ) {
 		$strsql = "UPDATE ciniki_business_subscriptions "
 			. "SET currency = '" . ciniki_core_dbQuote($ciniki, $args['currency']) . "' "
 			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
