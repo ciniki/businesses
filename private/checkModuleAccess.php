@@ -29,8 +29,9 @@ function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $m
 		. "FROM ciniki_businesses, ciniki_business_modules "
 		. "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 		. "AND ciniki_businesses.id = ciniki_business_modules.business_id "
-		. "AND ciniki_business_modules.package = '" . ciniki_core_dbQuote($ciniki, $package) . "' "
-		. "AND ciniki_business_modules.module = '" . ciniki_core_dbQuote($ciniki, $module) . "' "
+		. "AND ciniki_business_modules.status = 1 "
+//		. "AND ciniki_business_modules.package = '" . ciniki_core_dbQuote($ciniki, $package) . "' "
+//		. "AND ciniki_business_modules.module = '" . ciniki_core_dbQuote($ciniki, $module) . "' "
 		. "";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'module_id');
