@@ -56,6 +56,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.updateModuleRulesets',
 		'ciniki.businesses.subscriptionInfo',
 		'ciniki.businesses.subscriptionChangeCurrency',
+		'ciniki.businesses.subscriptionCancel',
 		);
 	if( !in_array($method, $available_methods) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'57', 'msg'=>'Access denied'));
