@@ -55,8 +55,6 @@ function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $m
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'693', 'msg'=>'Business inactive'));
 	}
 
-	error_log(print_r($rc, true));
-	
 	//
 	// Check if module is enabled
 	//
