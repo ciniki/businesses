@@ -40,7 +40,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	//
 	// Get the billing information from the subscription table
 	//
-	$strsql = "SELECT ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
+	$strsql = "SELECT ciniki_businesses.name, ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
 		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.date_added, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
 		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.signup_date))/86400) AS trial_remaining "
@@ -55,7 +55,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 		return $rc;
 	}
 	if( !isset($rc['subscription']) ) {
-		$subscription = array();
+		$subscription = array('status'=>0, 'status_text'=>'No subscription', 'monthly'=>0);
 	} else {
 		$subscription = $rc['subscription'];
 		if( $subscription['status'] == 0 ) {
