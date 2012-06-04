@@ -77,7 +77,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 					. "AND ciniki_atdos.status = 1 "
 					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
-					. "AND (ciniki_atdo_users.perms&0x08) = 0x08 "
+					. "AND (ciniki_atdo_users.perms&0x08) = 0 "
 					. "GROUP BY type "
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
@@ -91,9 +91,9 @@ function ciniki_businesses_getUserModules($ciniki) {
 					$rsp['modules'][$i]['module']['message_count'] = 0;
 				}
 				if( isset($rc['atdo']['5']['num_items']) ) {
-					$rsp['modules'][$i]['module']['message_count'] = 0 + $rc['atdo']['5']['num_items'];
+					$rsp['modules'][$i]['module']['notes_count'] = 0 + $rc['atdo']['5']['num_items'];
 				} else {
-					$rsp['modules'][$i]['module']['message_count'] = 0;
+					$rsp['modules'][$i]['module']['notes_count'] = 0;
 				}
 			}
 		}
