@@ -120,6 +120,13 @@ function ciniki_businesses_getUserSettings($ciniki) {
 				} 
 				$rsp['settings']['ciniki.atdo'] = $rc['settings'];
 			}
+			if( $module['module']['name'] == 'ciniki.bugs' ) {
+				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_bug_settings', 'business_id', $args['business_id'], 'bugs', 'settings', '');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc; 
+				} 
+				$rsp['settings']['ciniki.bugs'] = $rc['settings'];
+			}
 		}
 	}
 
