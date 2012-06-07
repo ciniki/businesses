@@ -75,9 +75,9 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 		}
 	}
 
-	if( $subscription['trial_remaining'] < 0 ) {
+	if( isset($subscription['trail_remaining']) && $subscription['trial_remaining'] < 0 ) {
 		$subscription['trial_remaining'] = 0;
-	}
+	} 
 
 	//
 	// Get the history
