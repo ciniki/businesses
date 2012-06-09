@@ -39,6 +39,40 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	}
 
 	//
+	// The following methods are only available to business owners, no employees
+	//
+	$owner_methods = array(
+		'ciniki.businesses.userList',
+		);
+	//
+	// Check the session user is a business owner or employee
+	//
+	if( $business_id > 0 ) {
+		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
+		//
+		// Find any users which are owners of the requested business_id
+		//
+		$strsql = "SELECT business_id, user_id FROM ciniki_business_users "
+			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+			. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+			. "AND package = 'ciniki' "
+			. "AND (permission_group = 'owners') "
+			. "";
+		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
+		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'user');
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		//
+		// If the user has permission, return ok
+		//
+		if( isset($rc['rows']) && isset($rc['rows'][0]) 
+			&& $rc['rows'][0]['user_id'] > 0 && $rc['rows'][0]['user_id'] == $ciniki['session']['user']['id'] ) {
+			return array('stat'=>'ok');
+		}
+	}
+
+	//
 	// Limit the functions the business owner has access to.  Any
 	// other methods will be denied access.
 	//
