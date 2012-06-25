@@ -45,6 +45,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'676', 'msg'=>'Currency must be USD or CAD.'));
 	}
 
+    require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	//
 	// Get the billing information from the subscription table
 	//
@@ -81,6 +82,10 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'678', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
 		}
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '1');
 		return $rc;
 	}
 
@@ -97,6 +102,8 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'679', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
 		}
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
 		return $rc;
 	}
 

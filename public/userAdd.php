@@ -47,6 +47,8 @@ function ciniki_businesses_userAdd($ciniki) {
 	//
 	// Don't need a transaction, there's only 1 statement which will either succeed or fail.
 	//
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
+
 
 	//
 	// Remove the user from the business_users table
@@ -62,10 +64,20 @@ function ciniki_businesses_userAdd($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-
-	if( $rc['num_affected_rows'] > 0 ) {
-		return array('stat'=>'ok', 'id'=>$rc['insert_id']);
+	if( $rc['num_affected_rows'] < 1 ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'512', 'msg'=>'Unable to add user to the business'));
 	}
-	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'512', 'msg'=>'Unable to add user to the business'));
+	$business_user_id = $rc['insert_id'];
+
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_users', $business_user_id, 'user_id', $args['user_id']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_users', $business_user_id, 'package', $args['package']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_users', $business_user_id, 'permission_group', $args['permission_group']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_users', $business_user_id, 'status', '1'); 
+
+	return array('stat'=>'ok', 'id'=>$business_user_id);
 }
 ?>

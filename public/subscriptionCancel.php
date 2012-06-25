@@ -34,6 +34,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
         return $rc;
     }   
 
+    require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	//
 	// Get the billing information from the subscription table
 	//
@@ -75,8 +76,10 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
 		if( $rc['stat'] != 'ok' ) {
-			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
 		}
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');
 		return $rc;
 	}
 

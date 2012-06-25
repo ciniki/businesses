@@ -51,7 +51,7 @@ function ciniki_businesses_add($ciniki) {
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 
 	//
 	// Turn off autocommit
@@ -67,9 +67,9 @@ function ciniki_businesses_add($ciniki) {
 	//
 	// Add the business to the database
 	//
-	$strsql = "INSERT INTO ciniki_businesses (uuid, modules, name, sitename, tagline, status, date_added, last_updated) VALUES ("
+	$strsql = "INSERT INTO ciniki_businesses (uuid, name, sitename, tagline, status, date_added, last_updated) VALUES ("
 		. "UUID(), "
-		. "247, '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "' "
+		. "'" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['business.sitename']) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "' "
 		. ", 1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
@@ -83,9 +83,14 @@ function ciniki_businesses_add($ciniki) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'159', 'msg'=>'Unable to add business'));
 	}
 	$business_id = $rc['insert_id'];
-	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'name', $args['business.name']);
-	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'tagline', $args['business.tagline']);
-	ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		1, 'ciniki_businesses', $business_id, 'name', $args['business.name']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		1, 'ciniki_businesses', $business_id, 'tagline', $args['business.tagline']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		1, 'ciniki_businesses', $business_id, 'sitename', $args['business.sitename']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		1, 'ciniki_businesses', $business_id, 'status', '1');
 
 	if( $business_id < 1 ) {
 		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
@@ -120,7 +125,8 @@ function ciniki_businesses_add($ciniki) {
 				ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 				return $rc;
 			}
-			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $business_id, 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				1, 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
 		}
 	}
 

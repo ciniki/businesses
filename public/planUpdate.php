@@ -50,7 +50,7 @@ function ciniki_businesses_planUpdate($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return $rc;
@@ -75,8 +75,8 @@ function ciniki_businesses_planUpdate($ciniki) {
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) ) {
 			$strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
-			$rc = ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 
-				'ciniki_business_plans', $args['plan_id'], $field, $args[$field]);
+			$rc = ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_plans', $args['plan_id'], $field, $args[$field]);
 		}
 	}
 	$strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "

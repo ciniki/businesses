@@ -68,6 +68,12 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'529', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
 	}
+	$sync_id = $rc['insert_id'];
+
+	// Update the log
+    require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_syncs', $sync_id, 'status', '10');
 
 	return array('stat'=>'ok');
 }

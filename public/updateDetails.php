@@ -83,19 +83,22 @@ function ciniki_businesses_updateDetails($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	$strsql = "";
 	if( isset($args['business.name']) && $args['business.name'] != '' ) {
 		$strsql .= ", name = '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "'";
-		ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', '', 'name', $args['business.name']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_businesses', '', 'name', $args['business.name']);
 	}
 	if( isset($args['business.sitename']) ) {
 		$strsql .= ", sitename = '" . ciniki_core_dbQuote($ciniki, $args['business.sitename']) . "'";
-		ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
 	}
 	if( isset($args['business.tagline']) ) {
 		$strsql .= ", tagline = '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "'";
-		ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_businesses', '', 'tagline', $args['business.tagline']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_businesses', '', 'tagline', $args['business.tagline']);
 	}
 	if( $strsql != '' ) {
 		$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP()" . $strsql 
@@ -139,7 +142,8 @@ function ciniki_businesses_updateDetails($ciniki) {
 				ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 				return $rc;
 			}
-			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
 		}
 	}
 

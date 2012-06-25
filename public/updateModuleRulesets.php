@@ -42,7 +42,7 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 		return $ac;
 	}
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
@@ -99,7 +99,8 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 					return $rc;
 				} 
 				if( $rc['num_affected_rows'] > 0 ) {
-					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_modules', "$name", 'ruleset', $new_ruleset);
+					ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+						2, 'ciniki_business_modules', "$name", 'ruleset', $new_ruleset);
 				} else {
 					ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'212', 'msg'=>'Error occured during update'));
@@ -119,8 +120,10 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
 					return $rc;
 				} 
 				if( $rc['num_affected_rows'] > 0 ) {
-					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_modules', "$name", 'status', $status);
-					ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 'ciniki_business_modules', "$name", 'ruleset', $new_ruleset);
+					ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+						2, 'ciniki_business_modules', "$name", 'status', $status);
+					ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+						2, 'ciniki_business_modules', "$name", 'ruleset', $new_ruleset);
 				} else {
 					ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'213', 'msg'=>'Error occured during update'));

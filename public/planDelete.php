@@ -44,7 +44,7 @@ function ciniki_businesses_planDelete($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDelete.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return $rc;
@@ -67,6 +67,12 @@ function ciniki_businesses_planDelete($ciniki) {
 		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'669', 'msg'=>'Unable to delete plan'));
 	}
+
+	//
+	// Log the delete
+	//
+	$rc = ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		3, 'ciniki_business_plans', $args['plan_id'], '*', ''); 
 
 	//
 	// Commit the database changes

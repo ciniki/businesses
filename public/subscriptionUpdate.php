@@ -47,7 +47,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return $rc;
@@ -95,16 +95,16 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		$subscription_id = $rc['insert_id'];
 		
 		if( isset($args['currency']) && $args['currency'] != '' ) {
-			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 
-				'ciniki_business_subscriptions', $subscription_id, 'currency', $args['currency']);
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'currency', $args['currency']);
 		}
 		if( isset($args['trial_days']) && $args['trial_days'] != '' ) {
-			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 
-				'ciniki_business_subscriptions', $subscription_id, 'trial_days', $args['trial_days']);
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'trial_days', $args['trial_days']);
 		}
 		if( isset($args['monthly']) && $args['monthly'] != '' ) {
-			ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 
-				'ciniki_business_subscriptions', $subscription_id, 'monthly', $args['monthly']);
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'monthly', $args['monthly']);
 		}
 
 	} else {
@@ -143,8 +143,8 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		foreach($changelog_fields as $field) {
 			if( isset($args[$field]) ) {
 				$strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
-				$rc = ciniki_core_dbAddChangeLog($ciniki, 'businesses', $args['business_id'], 
-					'ciniki_business_subscriptions', $subscription['id'], $field, $args[$field]);
+				$rc = ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+					2, 'ciniki_business_subscriptions', $subscription['id'], $field, $args[$field]);
 			}
 		}
 		$strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "

@@ -51,7 +51,8 @@ function ciniki_businesses_getModuleHistory($ciniki) {
 		return $ac;
 	}
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetChangeLog.php');
-	return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', $args['field'], 'modules', 'businesses');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetModuleHistory.php');
+	return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		'ciniki_business_modules', $args['field'], 'status');
 }
 ?>

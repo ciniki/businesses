@@ -1,0 +1,7 @@
+#
+# This file will upgrade the database table businesses to version 1.02.
+#
+ALTER TABLE ciniki_business_users DROP PRIMARY KEY;
+ALTER TABLE ciniki_business_users ADD COLUMN id int not null auto_increment PRIMARY KEY FIRST;
+CREATE UNIQUE INDEX business_id ON ciniki_business_users (business_id, user_id, package, permission_group);
+ALTER TABLE ciniki_business_users COMMENT='v1.03';

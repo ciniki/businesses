@@ -48,6 +48,25 @@ function ciniki_businesses_userRemove($ciniki) {
 	//
 	// No need for transactions, on one statement
 	//
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
+
+	//
+	// Grab the business_user_id
+	//
+	$strsql = "SELECT id FROM ciniki_business_users "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'"
+		. "AND package = '" . ciniki_core_dbQuote($ciniki, $args['package']) . "'"
+		. "AND permission_group = '" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "'"
+		. "";
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'user');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	if( !isset($rc['user']) ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'155', 'msg'=>'Unable to remove user.'));
+	}
+	$business_user_id = $rc['user']['id'];
 
 	//
 	// Remove the user from the business_users table
@@ -64,9 +83,13 @@ function ciniki_businesses_userRemove($ciniki) {
 		return $rc;
 	}
 
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		3, 'ciniki_business_users', $business_user_id, '*', '');
+
 	if( $rc['num_affected_rows'] > 0 ) {
 		return array('stat'=>'ok');
 	}
+
 
 	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove user'));
 }

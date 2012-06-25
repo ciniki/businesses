@@ -50,7 +50,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/cinikiAPIAuth.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/cinikiAPIGet.php');
 
@@ -140,6 +140,17 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	if( $rc['stat'] != 'ok' ) { 
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'527', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
 	}
+	$sync_id = $rc['insert_id'];
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_syncs', $sync_id, 'flags', $flags);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_syncs', $sync_id, 'status', '10');
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_syncs', $sync_id, 'remote_name', $args['remote_name']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_syncs', $sync_id, 'remote_uuid', $args['remote_uuid']);
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		1, 'ciniki_business_syncs', $sync_id, 'remote_url', $args['sync_url']);
 
 	//
 	// call syncActivateRemote

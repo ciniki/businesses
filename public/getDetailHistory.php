@@ -51,15 +51,19 @@ function ciniki_businesses_getDetailHistory($ciniki) {
 		return $ac;
 	}
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetChangeLog.php');
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetModuleHistory.php');
 	if( $args['field'] == 'business.name' ) {
-		return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', '', 'name', 'businesses');
+		return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			'ciniki_businesses', '', 'name');
 	} elseif( $args['field'] == 'business.sitename' ) {
-		return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', '', 'sitename', 'businesses');
+		return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			'ciniki_businesses', '', 'sitename');
 	} elseif( $args['field'] == 'business.tagline' ) {
-		return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_businesses', '', 'tagline', 'businesses');
+		return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			'ciniki_businesses', '', 'tagline');
 	}
 
-	return ciniki_core_dbGetChangeLog($ciniki, $args['business_id'], 'ciniki_business_details', $args['field'], 'detail_value', 'businesses');
+	return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		'ciniki_business_details', $args['field'], 'detail_value');
 }
 ?>
