@@ -68,7 +68,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
 	//
 	// If active subscription, then update at paypal will be required
 	//
-	if( $rc['subscription']['status'] < 60 ) {
+	if( $subscription['status'] < 60 ) {
 		$strsql = "UPDATE ciniki_business_subscriptions "
 			. "SET status = 61 "
 			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "

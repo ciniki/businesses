@@ -52,6 +52,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 	//
 	// Lookup the business_id for the IPN
 	//
+    require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	$strsql = "SELECT id, status, name "
 		. "FROM ciniki_businesses "
@@ -70,6 +71,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		$business_id = $rc['business']['id'];
 		$business_status = $rc['business']['status'];
 	}
+
 
 	//
 	// Enter the information into the paypal_log
@@ -117,6 +119,22 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		return array('stat'=>'ok');
 	}
 
+	//
+	// Lookup the subscription id
+	//
+	$strsql = "SELECT id "
+		. "FROM ciniki_business_subscriptions "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+		. "";
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'subscription');
+	if( $rc['stat'] != 'ok') {
+		error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . ' - ' . $rc['err']['code'] . ' - ' . $rc['err']['msg']);
+	}
+	if( !isset($rc['subscription']) ) {
+		error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . ' - No business subscription found');
+		return array('stat'=>'ok');
+	}
+	$subscription_id = $rc['subscription']['id'];
 
 	//
 	// subscr_signup - initial setup of subscription
@@ -138,6 +156,16 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to update business subscription");
 		}
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'status', '10');
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_subscr_id', $args['subscr_id']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_id', $args['payer_id']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_email', $args['payer_email']);
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_amount', $args['mc_amount3']);
 
 		//
 		// Unsuspend the business if suspended
@@ -150,6 +178,8 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			if( $rc['stat'] != 'ok' ) {
 				error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to unsuspend business");
 			}
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_businesses', $business_id, 'status', '50');
 		}
 	}
 
@@ -165,15 +195,23 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			. "";
 		if( $args['subscr_id'] != '' ) {
 			$strsql .= ", paypal_subscr_id = '" . ciniki_core_dbQuote($ciniki, $args['subscr_id']) . "' ";
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_subscr_id', $args['subscr_id']);
 		}
 		if( $args['payer_id'] != '' ) {
 			$strsql .= ", paypal_payer_id = '" . ciniki_core_dbQuote($ciniki, $args['payer_id']) . "' ";
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_id', $args['payer_id']);
 		}
 		if( $args['payer_email'] != '' ) {
 			$strsql .= ", paypal_payer_email = '" . ciniki_core_dbQuote($ciniki, $args['payer_email']) . "' ";
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_email', $args['payer_email']);
 		}
 		if( $args['mc_amount3'] != '' ) {
 			$strsql .= ", paypal_amount = '" . ciniki_core_dbQuote($ciniki, $args['mc_amount3']) . "' ";
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_amount', $args['mc_amount3']);
 		}
 		$strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
@@ -182,6 +220,8 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to update business subscription");
 		}
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'status', '10');
 
 		//
 		// Unsuspend the business if suspended
@@ -194,6 +234,8 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			if( $rc['stat'] != 'ok' ) {
 				error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to unsuspend business");
 			}
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_businesses', $business_id, 'status', '1');
 		}
 	}
 
@@ -213,7 +255,6 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to cancel business subscription");
 		}
-
 	}
 
 	//
@@ -235,6 +276,8 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to cancel business subscription");
 		}
+		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			2, 'ciniki_business_subscriptions', $subscription_id, 'status', '60');
 
 		//
 		// Suspend the business
@@ -247,6 +290,8 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			if( $rc['stat'] != 'ok' ) {
 				error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to suspend business");
 			}
+			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+				2, 'ciniki_businesses', $business_id, 'status', '50');
 		}
 	}
 

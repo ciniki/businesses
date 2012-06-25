@@ -40,6 +40,15 @@ function ciniki_businesses_activate($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	$strsql = "UPDATE ciniki_businesses SET status = 1 "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'";
-	return ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	
+	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
+	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['id'], 
+		2, 'ciniki_businesses', $args['id'], 'status', '1');
+
+	return $rc;
 }
 ?>
