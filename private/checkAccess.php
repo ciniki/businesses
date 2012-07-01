@@ -47,6 +47,9 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.userRemove',
 		'ciniki.businesses.userDetails',
 		'ciniki.businesses.userUpdateDetails',
+		'ciniki.businesses.logoGet',
+		'ciniki.businesses.logoSave',
+		'ciniki.businesses.logoDelete',
 		);
 	//
 	// Check the session user is a business owner or employee

@@ -9,42 +9,6 @@
 #
 # uuid:			The unique ID for the business, which is unique across all database instances.
 #
-# modules:		The modules which are turned on for this business. (NO LONGER USED)
-#
-#				0x01 - Customers
-#				0x02 - Products
-#				0x04 - Inventory
-#				0x08 - Website
-#				0x10 - POS
-#				0x20 - Manufacturing
-#				0x40 - Mailing Lists/Newsletters
-#				0x80 - Security Cameras
-#				0x0100 - Scheduling
-#				0x0200 - Online Surveys
-#				0x0400 - Event Management
-#				0x0800 - Bug Tracking
-#				0x1000 - Feature Requests
-#				0x2000 - Questions
-#				0x4000 - FAQ
-#				0x8000 - Customer Service
-#				0x010000 - Toolbox
-#				0x020000 - Friends
-#				0x040000 - Media
-#				0x080000 - Documents
-#				0x100000 - Appearances
-#				0x200000 - Wine Production
-#				0x400000 - Subscriptions
-#				0x800000 - Task Management
-#				0x01000000 - 
-#				0x02000000 - 
-#				0x04000000 -
-#				0x08000000 -
-#				0x10000000 -
-#				0x20000000 -
-#				0x40000000 -
-#				0x80000000 -
-#
-#
 # name: 		The official name of the business
 #
 # tagline:		The brief one line business description.
@@ -64,6 +28,8 @@
 #				placeholder for now to allow certain
 #				tables to be in their own database.
 #				This may be done for security.
+#
+# logo_id:		The business logo stored in the module ciniki.images
 #	
 # date_added:	The date and time the business was created in the database.
 # last_updated:	The date and time the business record was last updated.
@@ -71,17 +37,17 @@
 create table ciniki_businesses (
 	id int not null auto_increment,
 	uuid char(36) not null,
-	modules int unsigned not null,			# 4 bytes, 32 bits
 	name varchar(150) not null,				# The common name for the company, used on marketing material
 	sitename varchar(150) not null,			# The unique sitename for the business, used in web delivery
 	tagline varchar(255) not null,			# The tagline for the business, just a 1 liner to be used in headers
 	description text not null,
 	status tinyint unsigned not null,
 	db_prefix varchar(10) not null,
+	logo_id int not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),
 	index (last_updated),
 	unique index (uuid),
 	unique index (sitename)
-) ENGINE=InnoDB, COMMENT='v1.05';
+) ENGINE=InnoDB, COMMENT='v1.06';

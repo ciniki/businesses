@@ -31,7 +31,7 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	//
 	// Get the business name and tagline
 	//
-	$strsql = "SELECT name, sitename, tagline FROM ciniki_businesses "
+	$strsql = "SELECT name, sitename, tagline, logo_id FROM ciniki_businesses "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'details', 'business');
 	if( $rc['stat'] != 'ok' ) {
@@ -40,6 +40,7 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	$rsp['details']['name'] = $rc['business']['name'];
 	$rsp['details']['sitename'] = $rc['business']['sitename'];
 	$rsp['details']['tagline'] = $rc['business']['tagline'];
+	$rsp['details']['logo_id'] = $rc['business']['logo_id'];
 	
 	return $rsp;
 }
