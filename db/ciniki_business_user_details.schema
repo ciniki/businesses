@@ -1,0 +1,37 @@
+#
+# Description
+# -----------
+# The business_details table stores extra information for a
+# business such as configuration, options, and other values
+# required.  This table provides the 
+# flexibility to store only what is required for each business.
+#
+# The commonly used information is stored directly in the 
+# businesses table for fast indexing and searching.
+#
+# Some examples:
+# - contact.title
+# - contact.phone.number
+# - contact.cell.number
+# - contact.fax.number
+# - contact.email.address
+#
+# Fields
+# ------
+# business_id:	The id of the business the detail is for.
+# user_id:		The id of the the detail is for.
+# detail_key:	The unique key for the detail.
+# detail_value:	The value stored for this key.
+# date_added:	The date and time the entry was created in the database.
+# last_updated:	The date and time the entry was last updated.
+#
+create table ciniki_business_user_details (
+	business_id int not null,
+	user_id int not null,
+	detail_key varchar(50) not null,
+	detail_value varchar(6000) not null,
+	date_added datetime not null,
+	last_updated datetime not null,
+	primary key (business_id, user_id, detail_key),
+	index (last_updated)
+) ENGINE=InnoDB, COMMENT='v1.01';
