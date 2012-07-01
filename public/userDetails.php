@@ -36,12 +36,11 @@ function ciniki_businesses_userDetails($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	$modules = $rc['modules'];
 
 	//
 	// Get details for a user
 	//
-	$strsql = "SELECT ciniki_business_users.user_id, "
+	$strsql = "SELECT ciniki_business_users.user_id, ciniki_users.username, "
 		. "ciniki_users.firstname, ciniki_users.lastname, "
 		. "ciniki_users.email, ciniki_users.display_name, "
 		. "ciniki_business_user_details.detail_key, ciniki_business_user_details.detail_value "
@@ -56,7 +55,7 @@ function ciniki_businesses_userDetails($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 
-			'fields'=>array('user_id', 'firstname', 'lastname', 'email', 'display_name'),
+			'fields'=>array('user_id', 'firstname', 'lastname', 'username', 'email', 'display_name'),
 			'details'=>array('detail_key'=>'detail_value'),
 			),
 		));
@@ -72,7 +71,8 @@ function ciniki_businesses_userDetails($ciniki) {
 	//
 	// Check if the business is active and the module is enabled
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkModuleAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
 	$rc = ciniki_businesses_checkModuleAccess($ciniki, $args['business_id'], 'ciniki', 'web');
 	if( $rc['stat'] == 'ok' ) {
 		$strsql = "SELECT detail_value "
