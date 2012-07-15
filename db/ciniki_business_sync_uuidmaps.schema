@@ -23,10 +23,6 @@
 # local_uuid:			The local_uuid which should be substituted for the remote_uuid when
 #						inserted into this instance.
 #
-# date_added:			The UTC date and time the record was created.
-# 
-# last_updated:			The UTC date and time the record was last updated.
-#
 create table ciniki_business_sync_uuidmaps (
 	sync_id int not null,
 	package varchar(50) not null,

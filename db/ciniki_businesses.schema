@@ -9,7 +9,7 @@
 #
 # uuid:			The unique ID for the business, which is unique across all database instances.
 #
-# name: 		The official name of the business
+# name: 		The common name of the business, which is used on the website and marketing materials.
 #
 # tagline:		The brief one line business description.
 #
@@ -37,9 +37,9 @@
 create table ciniki_businesses (
 	id int not null auto_increment,
 	uuid char(36) not null,
-	name varchar(150) not null,				# The common name for the company, used on marketing material
-	sitename varchar(150) not null,			# The unique sitename for the business, used in web delivery
-	tagline varchar(255) not null,			# The tagline for the business, just a 1 liner to be used in headers
+	name varchar(150) not null,
+	sitename varchar(150) not null,
+	tagline varchar(255) not null,
 	description text not null,
 	status tinyint unsigned not null,
 	db_prefix varchar(10) not null,

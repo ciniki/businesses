@@ -1,8 +1,7 @@
 #
 # Description
 # -----------
-# This table stores the subscriptions for businesses.  It was designed
-# to store the information required for 
+# This table stores the subscriptions for businesses.
 #
 # Fields
 # ------
@@ -34,7 +33,7 @@
 #
 # last_payment_date:	The UTC date and time the last payment was received.
 # date_added:			The UTC date and time the record was created.
-# date_added:			The UTC date and time the record was last_updated.
+# last_updated:			The UTC date and time the record was last_updated.
 # 
 create table ciniki_business_subscriptions (
 	id int not null auto_increment,

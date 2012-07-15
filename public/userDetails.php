@@ -51,7 +51,6 @@ function ciniki_businesses_userDetails($ciniki) {
 		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
 		. "";
-	error_log($strsql);
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 

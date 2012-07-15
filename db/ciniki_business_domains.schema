@@ -22,11 +22,12 @@
 #					0x01 - The domain is a fully qualified domain.
 #					0x02 - Designate this site as primary *future*
 #					0x04 - The domain is registed here *future*
-#					0x08 - subdomain (this domain is a subdomain of another *future)
+#					0x08 - subdomain (this domain is a subdomain of another *future*)
 #
-# status: 			0 - unknown
+# status: 			The current status of the domain.
+#					0 - unknown
 #					1 - active
-#					10 - api only, no web hosting *future
+#					10 - api only, no web hosting *future*
 #					20 - expired
 #					50 - suspended
 #					60 - deleted
@@ -35,8 +36,8 @@
 #					record is a sub domain, then this points to the
 #					root domain if hosted here. (not used currently)
 #
-# date_added:		The date and time the domain was added to the table.
-# last_updated:		The date and time the domain was last updated.
+# date_added:		The UTC date and time the domain was added to the table.
+# last_updated:		The UTC date and time the domain was last updated.
 #
 create table ciniki_business_domains (
 	id int not null auto_increment,
