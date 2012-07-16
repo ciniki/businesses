@@ -1,0 +1,5 @@
+#
+# This file will upgrade the database table business_subscriptions to version 1.02.
+#
+ALTER TABLE ciniki_business_subscriptions DROP COLUMN paypal_profile_id;
+ALTER TABLE ciniki_business_subscriptions COMMENT='v1.02';
