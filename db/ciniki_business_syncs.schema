@@ -6,10 +6,10 @@
 # 
 # Fields
 # ------
-# id:					The id of the sync
-# business_id: 			The id of the business.
+# id:					The ID of the sync
+# business_id: 			The ID of the business.
 #
-# flags:				The
+# flags:				The flags for the syncronization.
 #
 #						0x01 - Push to the remote
 #						0x02 - Pull from the remote
@@ -21,10 +21,13 @@
 # 
 # local_private_key:	The local key for this connection to unencrypt response messages.
 #
+# remote_uuid:			The remote business Universal Unique ID.
+#
+# remote_name:			The remote server name.  This value is set in the ciniki-api.ini file (sync.name)
+#						on the remote server.
+#
 # remote_url:			The URL to connect to the remote sync system, typically 
 #						will be https://<instance>.ciniki.ca/ciniki-sync.php
-#
-# remote_uuid:			The remote business Universal Unique ID.
 #
 # remote_public_key:	The encryption password for the remote system.  All request arguments
 #						must be encrypted with this password before being sent.
@@ -33,7 +36,7 @@
 # 
 # last_updated:			The UTC date and time the record was last updated.
 #
-# last_sync: 			The UTC date and time the last sync was initialized.
+# last_sync: 			The UTC date and time the last sync was run.
 #
 create table ciniki_business_syncs (
 	id int not null auto_increment,
