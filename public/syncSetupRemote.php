@@ -61,7 +61,7 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncInfo');
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncSetupRemote');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

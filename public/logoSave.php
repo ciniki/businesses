@@ -31,7 +31,7 @@ function ciniki_businesses_logoSave(&$ciniki) {
 	// Check access 
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.saveLogo');
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.logoSave');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

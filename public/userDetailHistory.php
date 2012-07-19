@@ -35,7 +35,7 @@ function ciniki_businesses_userDetailHistory($ciniki) {
 	// Check access to business_id as owner, or sys admin
 	//
 	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
-	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.planHistory');
+	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.userDetailHistory');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
