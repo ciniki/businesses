@@ -2,19 +2,17 @@
 //
 // Description
 // -----------
-// Remove the business logo.
-//
-// Info
-// ----
-// Status: defined
+// This method will remove the logo image from the business.
 //
 // Arguments
 // ---------
-// user_id: 		The user making the request
+// api_key:
+// auth_token:
+// business_id:		The ID of the business to delete the logo from.
 // 
 // Example Return
 // --------------
-// <rsp stat="ok" id="4" />
+// <rsp stat="ok" />
 //
 function ciniki_businesses_logoDelete(&$ciniki) {
 	//

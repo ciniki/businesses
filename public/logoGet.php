@@ -2,28 +2,15 @@
 //
 // Description
 // -----------
-// This function will return the image binary data in jpg format.
-//
-// Info
-// ----
-// Status: defined
+// This method will return the ID of the image of the business logo.
 //
 // Arguments
 // ---------
-// image_id:			The ID if the image requested.
-// version:				The version of the image (regular, thumbnail)
-//
-//						*note* the thumbnail is not referring to the size, but to a 
-//						square cropped version, designed for use as a thumbnail.
-//						This allows only a portion of the original image to be used
-//						for thumbnails, as some images are too complex for thumbnails.
-//
-// maxlength:			The max length of the longest side should be.  This allows
-//						for generation of thumbnail's, etc.
+// business_id:			The ID of the business to get the logo for.
 //
 // Returns
 // -------
-// logo_id
+// <rsp stat="ok" logo_id="32" />
 //
 function ciniki_businesses_logoGet($ciniki) {
 	//

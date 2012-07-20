@@ -2,11 +2,7 @@
 //
 // Description
 // -----------
-// This function will add an owner from a business.
-//
-// Info
-// ----
-// Status: beta
+// This method will add an existing user to a business with permissions.
 //
 // Arguments
 // ---------
@@ -14,6 +10,8 @@
 // auth_token:
 // business_id:			The ID of the business to get the users for.
 // user_id:				The ID of the user to be added.
+// package:				The package to be used in combination with the permission group.
+// permission_group:	The permission group the user is a part of.
 //
 // Returns
 // -------

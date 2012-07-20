@@ -2,15 +2,19 @@
 //
 // Description
 // -----------
-// Upload a new image to be the businesses logo
+// This method will set the logo image ID for a business.
 //
 // Arguments
 // ---------
-// user_id: 		The user making the request
+// api_key:
+// auth_token:
+// business_id:		The ID of the business to set the logo image ID.
+// image_id:		The ID of the image in the ciniki images modules 
+//					to be used as the business logo.
 // 
 // Example Return
 // --------------
-// <rsp stat="ok" id="4" />
+// <rsp stat="ok" logo_id="4" />
 //
 function ciniki_businesses_logoSave(&$ciniki) {
 	//
