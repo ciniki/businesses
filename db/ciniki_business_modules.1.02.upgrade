@@ -2,4 +2,5 @@
 # This file will upgrade the database table ciniki_business_modules to version 1.02.
 #
 ALTER TABLE ciniki_business_modules ADD COLUMN last_change datetime not null AFTER last_updated;
+UPDATE ciniki_business_modules SET last_change = UTC_TIMESTAMP();
 ALTER TABLE ciniki_business_modules COMMENT='v1.02';

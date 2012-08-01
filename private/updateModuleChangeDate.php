@@ -20,6 +20,13 @@
 function ciniki_businesses_updateModuleChangeDate($ciniki, $business_id, $package, $module) {
 
 	//
+	// If business_id is passed as zero, then don't updated the module last_change field
+	//
+	if( $business_id == 0 ) {
+		return array('stat'=>'ok');
+	}
+
+	//
 	// Update the module.  Assume the module has been added to the ciniki_business_modules table,
 	// if not run an insert.
 	//
