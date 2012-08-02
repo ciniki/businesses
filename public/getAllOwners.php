@@ -42,7 +42,7 @@ function ciniki_businesses_getAllOwners($ciniki) {
 		. "ORDER BY ciniki_users.lastname, ciniki_users.firstname, ciniki_businesses.name "
 		. "";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQueryTree.php');
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user',
 			'fields'=>array('id'=>'user_id', 'display_name', 'firstname', 'lastname', 'email')),
 		array('container'=>'businesses', 'fname'=>'business_id', 'name'=>'business',

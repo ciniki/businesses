@@ -55,7 +55,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'subscription');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -78,13 +78,13 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'678', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
 		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '1');
 		return $rc;
 	}
@@ -98,11 +98,11 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
 			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'679', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
 		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
 		return $rc;
 	}

@@ -48,7 +48,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return $rc;
 	}   
@@ -60,7 +60,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		. "FROM ciniki_business_subscriptions "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "";
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'subscription');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -88,22 +88,22 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		}
 		$strsql .= "'paypal', "
 			. "UTC_TIMESTAMP(), UTC_TIMESTAMP())";
-		$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
 		}
 		$subscription_id = $rc['insert_id'];
 		
 		if( isset($args['currency']) && $args['currency'] != '' ) {
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'currency', $args['currency']);
 		}
 		if( isset($args['trial_days']) && $args['trial_days'] != '' ) {
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'trial_days', $args['trial_days']);
 		}
 		if( isset($args['monthly']) && $args['monthly'] != '' ) {
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'monthly', $args['monthly']);
 		}
 
@@ -143,19 +143,19 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		foreach($changelog_fields as $field) {
 			if( isset($args[$field]) ) {
 				$strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
-				$rc = ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+				$rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 					2, 'ciniki_business_subscriptions', $subscription['id'], $field, $args[$field]);
 			}
 		}
 		$strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "";
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
-			ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+			ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 			return $rc;
 		}
 		if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
-			ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+			ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'665', 'msg'=>'Unable to update subscription'));
 		}
 	}
@@ -164,7 +164,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 	//
 	// Commit the database changes
 	//
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

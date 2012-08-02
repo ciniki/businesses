@@ -59,7 +59,7 @@ function ciniki_businesses_userRemove($ciniki) {
 		. "AND package = '" . ciniki_core_dbQuote($ciniki, $args['package']) . "'"
 		. "AND permission_group = '" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "'"
 		. "";
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'user');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -77,20 +77,31 @@ function ciniki_businesses_userRemove($ciniki) {
 		. "AND package = '" . ciniki_core_dbQuote($ciniki, $args['package']) . "'"
 		. "AND permission_group = '" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "'"
 		. "";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDelete.php');
-	$rc = ciniki_core_dbDelete($ciniki, $strsql, 'businesses');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDelete');
+	$rc = ciniki_core_dbDelete($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
 
-	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		3, 'ciniki_business_users', $business_user_id, '*', '');
 
-	if( $rc['num_affected_rows'] > 0 ) {
-		return array('stat'=>'ok');
+	if( $rc['num_affected_rows'] < 1 ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove user'));
 	}
 
+	//
+	// Update the last_updated date so changes will be sync'd
+	//
+	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP() "
+		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "";
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
 
-	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove user'));
+	return array('stat'=>'ok');
 }
 ?>

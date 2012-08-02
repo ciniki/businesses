@@ -58,7 +58,7 @@ function ciniki_businesses_userAdd($ciniki) {
 		. "'" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "', "
 		. "1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
-	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -67,14 +67,27 @@ function ciniki_businesses_userAdd($ciniki) {
 	}
 	$business_user_id = $rc['insert_id'];
 
-	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		1, 'ciniki_business_users', $business_user_id, 'user_id', $args['user_id']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		1, 'ciniki_business_users', $business_user_id, 'package', $args['package']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		1, 'ciniki_business_users', $business_user_id, 'permission_group', $args['permission_group']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		1, 'ciniki_business_users', $business_user_id, 'status', '1'); 
+
+	//
+	// Update the last_updated date so changes will be sync'd
+	//
+	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP() "
+		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "";
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
 
 	return array('stat'=>'ok', 'id'=>$business_user_id);
 }

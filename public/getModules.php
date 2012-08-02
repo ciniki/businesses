@@ -49,7 +49,7 @@ function ciniki_businesses_getModules($ciniki) {
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "ORDER BY name "
 		. "";	
-	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'name');
+	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'name');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

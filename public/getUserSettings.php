@@ -57,7 +57,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		. "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'business');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -77,7 +77,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		. "AND ciniki_business_users.user_id = ciniki_users.id "
 		. "ORDER BY display_name "
 		. "";
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
+	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -91,7 +91,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
 		. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 		. "";
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'permissions', 'group', array('stat'=>'ok', 'permissions'=>array()));
+	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'permissions', 'group', array('stat'=>'ok', 'permissions'=>array()));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -105,7 +105,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND status = 1 "
 		. "";
-	$mrc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
+	$mrc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
 	//
 	// Check for any modules which should have some settings loaded as well
@@ -114,14 +114,14 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDetailsQuery.php');
 		foreach($mrc['modules'] as $i => $module) {
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
-				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'atdo', 'settings', '');
+				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
 				if( $rc['stat'] != 'ok' ) {
 					return $rc; 
 				} 
 				$rsp['settings']['ciniki.atdo'] = $rc['settings'];
 			}
 			if( $module['module']['name'] == 'ciniki.bugs' ) {
-				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_bug_settings', 'business_id', $args['business_id'], 'bugs', 'settings', '');
+				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_bug_settings', 'business_id', $args['business_id'], 'ciniki.bugs', 'settings', '');
 				if( $rc['stat'] != 'ok' ) {
 					return $rc; 
 				} 

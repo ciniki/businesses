@@ -51,7 +51,7 @@ function ciniki_businesses_planUpdate($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return $rc;
 	}   
@@ -75,26 +75,26 @@ function ciniki_businesses_planUpdate($ciniki) {
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) ) {
 			$strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
-			$rc = ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			$rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_plans', $args['plan_id'], $field, $args[$field]);
 		}
 	}
 	$strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND id = '" . ciniki_core_dbQuote($ciniki, $args['plan_id']) . "' ";
-	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
-		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 		return $rc;
 	}
 	if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
-		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'670', 'msg'=>'Unable to update plan'));
 	}
 
 	//
 	// Commit the database changes
 	//
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

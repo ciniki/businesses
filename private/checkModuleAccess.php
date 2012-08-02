@@ -34,7 +34,7 @@ function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $m
 //		. "AND ciniki_business_modules.module = '" . ciniki_core_dbQuote($ciniki, $module) . "' "
 		. "";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
-	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'module_id');
+	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module_id');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

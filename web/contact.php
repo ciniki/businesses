@@ -35,8 +35,7 @@ function ciniki_businesses_web_contact($ciniki, $settings, $business_id) {
 
 	$rsp = array('stat'=>'ok', 'details'=>array(), 'users'=>array());
 
-	$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_business_details', 
-		'business_id', $business_id, 'businesses', 'details', 'contact');
+	$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_business_details', 'business_id', $business_id, 'ciniki.businesses', 'details', 'contact');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -52,7 +51,7 @@ function ciniki_businesses_web_contact($ciniki, $settings, $business_id) {
 			. "FROM ciniki_businesses "
 			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
-		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'business');
+		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
 		}
@@ -77,7 +76,7 @@ function ciniki_businesses_web_contact($ciniki, $settings, $business_id) {
 			. "AND ciniki_business_users.status = 1 "
 			. "";
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-		$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+		$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 			array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 
 				'fields'=>array('id'=>'user_id', 'firstname', 'lastname', 'email', 'display_name'),
 				'details'=>array('detail_key'=>'detail_value'),

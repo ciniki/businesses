@@ -44,7 +44,7 @@ function ciniki_businesses_getAll($ciniki) {
 		. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id) "
 		. "LEFT JOIN ciniki_users ON (ciniki_business_users.user_id = ciniki_users.id) "
 		. "ORDER BY ciniki_businesses.name, ciniki_users.firstname, ciniki_users.lastname ";
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'businesses', 'fname'=>'business_id', 'name'=>'business',
 			'fields'=>array('id'=>'business_id', 'name')),
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user',

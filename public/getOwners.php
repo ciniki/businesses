@@ -53,7 +53,7 @@ function ciniki_businesses_getOwners($ciniki) {
 	$strsql = "SELECT user_id FROM ciniki_business_users "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND type = 1 ";
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'users', 'business');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -72,6 +72,6 @@ function ciniki_businesses_getOwners($ciniki) {
 	$strsql .= ") ORDER BY lastname, firstname";
 	
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
-	return ciniki_core_dbRspQuery($ciniki, $strsql, 'users', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
+	return ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.users', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
 }
 ?>

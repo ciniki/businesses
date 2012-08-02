@@ -29,7 +29,7 @@ function ciniki_businesses_web_featured($ciniki, $settings) {
 		. "ORDER BY ciniki_businesses.name "
 		. "";
 
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'businesses', 'fname'=>'id', 'name'=>'business',
 			'fields'=>array('id', 'name', 'sitename', 'domain')),
 		));

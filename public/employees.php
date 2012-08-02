@@ -48,7 +48,7 @@ function ciniki_businesses_employees($ciniki) {
 		. "ORDER BY display_name "
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
+	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
 
 	return $rc;
 }

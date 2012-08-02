@@ -41,7 +41,7 @@ function ciniki_businesses_logoGet($ciniki) {
 	$strsql = "SELECT logo_id FROM ciniki_businesses "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "";
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'business');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

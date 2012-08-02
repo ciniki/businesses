@@ -48,7 +48,7 @@ function ciniki_businesses_syncInfo($ciniki) {
 		. "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'business');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -67,7 +67,7 @@ function ciniki_businesses_syncInfo($ciniki) {
 		. "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'syncs', 'sync', array('stat'=>'ok', 'syncs'=>array()));
+	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'syncs', 'sync', array('stat'=>'ok', 'syncs'=>array()));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

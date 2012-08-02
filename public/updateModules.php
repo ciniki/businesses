@@ -45,7 +45,7 @@ function ciniki_businesses_updateModules($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, module, status "
 		. "FROM ciniki_business_modules WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
-	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'businesses', 'modules', 'name');
+	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'name');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -67,7 +67,7 @@ function ciniki_businesses_updateModules($ciniki) {
     require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionStart.php');
     require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionRollback.php');
     require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -88,17 +88,28 @@ function ciniki_businesses_updateModules($ciniki) {
 				. "ON DUPLICATE KEY UPDATE "
 					. "status = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$name]) . "' "
 					. "";
-			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 				return $rc;
 			} 
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_modules', $name, 'status', $ciniki['request']['args'][$name]);
 		}
 	}
 
-	$rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+	//
+	// Update the last_updated date so changes will be sync'd
+	//
+	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP() "
+		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	} 

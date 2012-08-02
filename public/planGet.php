@@ -43,7 +43,7 @@ function ciniki_businesses_planGet($ciniki) {
 		. "";
 	
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'plan');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'plan');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

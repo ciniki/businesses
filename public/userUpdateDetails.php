@@ -53,7 +53,7 @@ function ciniki_businesses_userUpdateDetails($ciniki) {
 	//
 	// Turn off autocommit
 	//
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -79,12 +79,12 @@ function ciniki_businesses_userUpdateDetails($ciniki) {
 				. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $arg_value) . "' "
 				. ", last_updated = UTC_TIMESTAMP() "
 				. "";
-			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
+			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 				return $rc;
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_user_details', $args['user_id'], $arg_name, $arg_value);
 		}
 	}
@@ -106,15 +106,16 @@ function ciniki_businesses_userUpdateDetails($ciniki) {
 				. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$field]) . "' "
 				. ", last_updated = UTC_TIMESTAMP() "
 				. "";
-			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'web');
+			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.web');
 			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'web');
+				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.web');
 				return $rc;
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'web', 'ciniki_web_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.web', 'ciniki_web_history', $args['business_id'], 
 				2, 'ciniki_web_settings', $field, 'detail_value', $ciniki['request']['args'][$field]);
 			//
 			// Update the page-contact-user-display field
+			// - this function will update last_change for web module.
 			//
 			ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'updateUserDisplay');
 			$rc = ciniki_web_updateUserDisplay($ciniki, $args['business_id']);
@@ -124,10 +125,22 @@ function ciniki_businesses_userUpdateDetails($ciniki) {
 		}
 	}
 
-	$rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+	//
+	// Update the last_updated flag for the business, used for sync
+	//
+	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP() "
+		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'43', 'msg'=>'Unable to update business information', 'err'=>$rc['err']));
+	}
+
+	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
+
 
 	return array('stat'=>'ok');
 }

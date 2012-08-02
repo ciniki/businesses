@@ -72,7 +72,7 @@ function ciniki_businesses_updateDetails($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionStart.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionRollback.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -87,27 +87,28 @@ function ciniki_businesses_updateDetails($ciniki) {
 	$strsql = "";
 	if( isset($args['business.name']) && $args['business.name'] != '' ) {
 		$strsql .= ", name = '" . ciniki_core_dbQuote($ciniki, $args['business.name']) . "'";
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_businesses', '', 'name', $args['business.name']);
 	}
 	if( isset($args['business.sitename']) ) {
 		$strsql .= ", sitename = '" . ciniki_core_dbQuote($ciniki, $args['business.sitename']) . "'";
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
 	}
 	if( isset($args['business.tagline']) ) {
 		$strsql .= ", tagline = '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "'";
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_businesses', '', 'tagline', $args['business.tagline']);
 	}
-	if( $strsql != '' ) {
-		$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP()" . $strsql 
-			. " WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
-		if( $rc['stat'] != 'ok' ) {
-			ciniki_core_dbTransactionRollback($ciniki, 'businesses');
-			return $rc;
-		}
+	//
+	// Always update last_updated for sync purposes
+	//
+	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP()" . $strsql 
+		. " WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+		return $rc;
 	}
 
 	//
@@ -137,17 +138,17 @@ function ciniki_businesses_updateDetails($ciniki) {
 				. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $arg_value) . "' "
 				. ", last_updated = UTC_TIMESTAMP() "
 				. "";
-			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
+			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 				return $rc;
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
 		}
 	}
 
-	$rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

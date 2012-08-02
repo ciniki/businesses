@@ -43,6 +43,6 @@ function ciniki_businesses_domainList($ciniki) {
 		. "";
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
-	return ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'domains', 'domain', array('stat'=>'ok', 'domains'=>array()));
+	return ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'domains', 'domain', array('stat'=>'ok', 'domains'=>array()));
 }
 ?>

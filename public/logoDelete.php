@@ -45,7 +45,7 @@ function ciniki_businesses_logoDelete(&$ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'745', 'msg'=>'Internal Error', 'err'=>$rc['err']));
 	}   
@@ -54,8 +54,9 @@ function ciniki_businesses_logoDelete(&$ciniki) {
 	// Remove logo_id from business
 	//
 	$strsql = "UPDATE ciniki_businesses SET logo_id = 0 "
+		. ", last_updated = UTC_TIMESTAMP() "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
-	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -63,7 +64,7 @@ function ciniki_businesses_logoDelete(&$ciniki) {
 	//
 	// Commit the transaction
 	//
-	$rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'746', 'msg'=>'Unable to delete logo', 'err'=>$rc['err']));
 	}

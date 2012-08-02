@@ -50,7 +50,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'subscription');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

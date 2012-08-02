@@ -39,7 +39,7 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'businesses', 'fname'=>'id', 'name'=>'business', 	
 			'fields'=>array('id', 'name', 'business_status', 'status', 'signup_date', 'trial_days', 'currency', 'monthly', 'last_payment_date', 'trial_remaining'),
 			'maps'=>array(

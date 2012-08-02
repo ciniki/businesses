@@ -46,7 +46,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND status = 1 "
 		. "";
-	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
+	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
 	//
 	// Check for any modules which should have some stats with them
@@ -64,7 +64,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
-				$rc = ciniki_core_dbCount($ciniki, $strsql, 'atdo', 'atdo');
+				$rc = ciniki_core_dbCount($ciniki, $strsql, 'ciniki.atdo', 'atdo');
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
@@ -81,7 +81,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 					. "GROUP BY type "
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
-				$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'atdo', 'atdo', 'type');
+				$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.atdo', 'atdo', 'type');
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}

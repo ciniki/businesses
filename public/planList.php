@@ -42,6 +42,6 @@ function ciniki_businesses_planList($ciniki) {
 		. "";
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
-	return ciniki_core_dbRspQuery($ciniki, $strsql, 'businesses', 'plans', 'plan', array('stat'=>'ok', 'plans'=>array()));
+	return ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'plans', 'plan', array('stat'=>'ok', 'plans'=>array()));
 }
 ?>

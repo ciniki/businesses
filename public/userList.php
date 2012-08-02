@@ -48,7 +48,7 @@ function ciniki_businesses_userList($ciniki) {
 		. "ORDER BY permission_group "
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'groups', 'fname'=>'permission_group', 'name'=>'group', 'fields'=>array('permission_group')),
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 'fields'=>array('user_id', 'firstname', 'lastname', 'display_name', 'email')),
 		));

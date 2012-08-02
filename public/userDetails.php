@@ -52,7 +52,7 @@ function ciniki_businesses_userDetails($ciniki) {
 		. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'businesses', array(
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 
 			'fields'=>array('user_id', 'firstname', 'lastname', 'username', 'email', 'display_name'),
 			'details'=>array('detail_key'=>'detail_value'),
@@ -79,7 +79,7 @@ function ciniki_businesses_userDetails($ciniki) {
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "AND detail_key = 'page-contact-user-display-flags-" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
 			. "";
-		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'web', 'user');
+		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.web', 'user');
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
 		}

@@ -47,7 +47,7 @@ function ciniki_businesses_planAdd($ciniki) {
 	require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
 	require($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
 	require($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return $rc;
 	}   
@@ -67,13 +67,13 @@ function ciniki_businesses_planAdd($ciniki) {
 		. "'" . ciniki_core_dbQuote($ciniki, $args['trial_days']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['description']) . "', "
 		. "UTC_TIMESTAMP(), UTC_TIMESTAMP())";
-	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
-		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 		return $rc;
 	}
 	if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
-		ciniki_core_dbTransactionRollback($ciniki, 'businesses');
+		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'668', 'msg'=>'Unable to add plan'));
 	}
 	$plan_id = $rc['insert_id'];
@@ -91,7 +91,7 @@ function ciniki_businesses_planAdd($ciniki) {
 		);
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) && $args[$field] != '' ) {
-			$rc = ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+			$rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				1, 'ciniki_business_plans', $plan_id, $field, $args[$field]);
 		}
 	}
@@ -99,7 +99,7 @@ function ciniki_businesses_planAdd($ciniki) {
 	//
 	// Commit the transaction
 	//
-	$rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

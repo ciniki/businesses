@@ -48,7 +48,7 @@ function ciniki_businesses_logoSave(&$ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) { 
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'747', 'msg'=>'Internal Error', 'err'=>$rc['err']));
 	}   
@@ -57,8 +57,9 @@ function ciniki_businesses_logoSave(&$ciniki) {
 	// Update business with new image id
 	//
 	$strsql = "UPDATE ciniki_businesses SET logo_id = '" . ciniki_core_dbQuote($ciniki, $args['image_id']) . "' "
+		. ", last_updated = UTC_TIMESTAMP() "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
-	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -66,7 +67,7 @@ function ciniki_businesses_logoSave(&$ciniki) {
 	//
 	// Commit the transaction
 	//
-	$rc = ciniki_core_dbTransactionCommit($ciniki, 'businesses');
+	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'748', 'msg'=>'Unable to save logo', 'err'=>$rc['err']));
 	}

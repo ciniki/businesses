@@ -59,7 +59,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		. "WHERE uuid = '" . ciniki_core_dbQuote($ciniki, $args['item_number']) . "' "
 		. "";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'business');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 	if( $rc['stat'] != 'ok') {
 		error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . ' - ' . $rc['err']['code'] . ' - ' . $rc['err']['msg']);
 	}
@@ -101,7 +101,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		. "UTC_TIMESTAMP(), UTC_TIMESTAMP()"
 		. ")";
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
-	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'businesses');
+	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to log " . $args['item_number'] . ' for ' . $args['item_name']);
 	}
@@ -126,7 +126,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 		. "FROM ciniki_business_subscriptions "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 		. "";
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'subscription');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
 	if( $rc['stat'] != 'ok') {
 		error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . ' - ' . $rc['err']['code'] . ' - ' . $rc['err']['msg']);
 	}
@@ -152,19 +152,19 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to update business subscription");
 		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'status', '10');
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_subscr_id', $args['subscr_id']);
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_id', $args['payer_id']);
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_email', $args['payer_email']);
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_amount', $args['mc_amount3']);
 
 		//
@@ -174,11 +174,11 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			$strsql = "UPDATE ciniki_businesses SET status = 1 "
 				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 				. "AND status = 50 ";
-			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' ) {
 				error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to unsuspend business");
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_businesses', $business_id, 'status', '50');
 		}
 	}
@@ -195,32 +195,32 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			. "";
 		if( $args['subscr_id'] != '' ) {
 			$strsql .= ", paypal_subscr_id = '" . ciniki_core_dbQuote($ciniki, $args['subscr_id']) . "' ";
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_subscr_id', $args['subscr_id']);
 		}
 		if( $args['payer_id'] != '' ) {
 			$strsql .= ", paypal_payer_id = '" . ciniki_core_dbQuote($ciniki, $args['payer_id']) . "' ";
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_id', $args['payer_id']);
 		}
 		if( $args['payer_email'] != '' ) {
 			$strsql .= ", paypal_payer_email = '" . ciniki_core_dbQuote($ciniki, $args['payer_email']) . "' ";
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_payer_email', $args['payer_email']);
 		}
 		if( $args['mc_amount3'] != '' ) {
 			$strsql .= ", paypal_amount = '" . ciniki_core_dbQuote($ciniki, $args['mc_amount3']) . "' ";
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'paypal_amount', $args['mc_amount3']);
 		}
 		$strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to update business subscription");
 		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'status', '10');
 
 		//
@@ -230,11 +230,11 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			$strsql = "UPDATE ciniki_businesses SET status = 1 "
 				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 				. "AND status = 50 ";
-			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' ) {
 				error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to unsuspend business");
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_businesses', $business_id, 'status', '1');
 		}
 	}
@@ -251,7 +251,7 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to cancel business subscription");
 		}
@@ -272,11 +272,11 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to cancel business subscription");
 		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 			2, 'ciniki_business_subscriptions', $subscription_id, 'status', '60');
 
 		//
@@ -286,11 +286,11 @@ function ciniki_businesses_processPaypalIPN($ciniki) {
 			$strsql = "UPDATE ciniki_businesses SET status = 50 "
 				. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 				. "AND status = 1 ";
-			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' ) {
 				error_log("PAYPAL-IPN: " . $args['ipn_track_id'] . " - Unable to suspend business");
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $business_id, 
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
 				2, 'ciniki_businesses', $business_id, 'status', '50');
 		}
 	}

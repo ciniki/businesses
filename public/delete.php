@@ -40,6 +40,6 @@ function ciniki_businesses_lock($ciniki) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
 	$strsql = "UPDATE ciniki_businesses SET status = 60 "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'";
-	return ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+	return ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 }
 ?>

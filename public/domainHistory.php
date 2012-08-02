@@ -41,6 +41,6 @@ function ciniki_businesses_domainHistory($ciniki) {
 	}
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetModuleHistory.php');
-	return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 'ciniki_business_domains', $args['domain_id'], $args['field']);
+	return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 'ciniki_business_domains', $args['domain_id'], $args['field']);
 }
 ?>

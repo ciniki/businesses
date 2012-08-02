@@ -43,7 +43,7 @@ function ciniki_businesses_domainGet($ciniki) {
 		. "";
 	
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'domain');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'domain');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

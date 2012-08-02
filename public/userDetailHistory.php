@@ -41,7 +41,7 @@ function ciniki_businesses_userDetailHistory($ciniki) {
 	}
 
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbGetModuleHistory.php');
-	return ciniki_core_dbGetModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+	return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		'ciniki_business_user_details', $args['user_id'], $args['field'], 'plan');
 }
 ?>

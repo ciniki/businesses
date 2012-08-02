@@ -33,7 +33,7 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	//
 	$strsql = "SELECT name, sitename, tagline, logo_id FROM ciniki_businesses "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'details', 'business');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

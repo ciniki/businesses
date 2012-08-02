@@ -44,7 +44,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'subscription');
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
@@ -74,11 +74,11 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
 			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
 			. "";
 		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbUpdate.php');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'businesses');
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
 		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'businesses', 'ciniki_business_history', $args['business_id'], 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');
 		return $rc;
 	}
