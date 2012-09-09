@@ -28,7 +28,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.getUserBusinesses');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
@@ -39,7 +39,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	// are a ciniki-manage, they have access to all businesses.
 	// Link to the business_users table to grab the groups the user belongs to for that business.
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
 		$strsql = "SELECT ciniki_businesses.id, name, "
 			. "IF(id='" . ciniki_core_dbQuote($ciniki, $ciniki['config']['core']['master_business_id']) . "', 'yes', 'no') AS ismaster "
@@ -67,8 +67,8 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 //			. "AND ciniki_businesses.status < 60 "	// Allow suspended businesses to be listed, so user can login and update billing/unsuspend
 //			. "ORDER BY ciniki_businesses.name ";
 	}	
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbRspQuery.php');
 
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
 	return ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'businesses', 'business', array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'66', 'msg'=>'No businesses found')));
 
 }

@@ -15,7 +15,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
     //  
     // Find all the required and optional arguments
     //  
-    require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+    require_once($ciniki['config']['ciniki.core']['modules_dir'] . '/core/private/prepareArgs.php');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
         )); 
@@ -28,13 +28,13 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
     // Make sure this module is activated, and
     // check permission to run this function for this business
     //  
-    require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+    require_once($ciniki['config']['ciniki.core']['modules_dir'] . '/businesses/private/checkAccess.php');
     $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.subscriptionInfo'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/users/private/timezoneOffset.php');
+	require_once($ciniki['config']['ciniki.core']['modules_dir'] . '/users/private/timezoneOffset.php');
 	$utc_offset = ciniki_users_timezoneOffset($ciniki);
 
 	//
@@ -84,10 +84,10 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	//
 
 	return array('stat'=>'ok', 'subscription'=>$subscription, 'paypal'=>array(
-		'url'=>$ciniki['config']['businesses']['paypal.url'],
-		'business'=>$ciniki['config']['businesses']['paypal.business'],
-		'prefix'=>$ciniki['config']['businesses']['paypal.item_name.prefix'],
-		'ipn'=>$ciniki['config']['businesses']['paypal.ipn']),
+		'url'=>$ciniki['config']['ciniki.businesses']['paypal.url'],
+		'business'=>$ciniki['config']['ciniki.businesses']['paypal.business'],
+		'prefix'=>$ciniki['config']['ciniki.businesses']['paypal.item_name.prefix'],
+		'ipn'=>$ciniki['config']['ciniki.businesses']['paypal.ipn']),
 		);
 }
 ?>
