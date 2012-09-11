@@ -20,7 +20,7 @@
 //
 function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $module) {
 	//
-	// Check if the module is enabled for this business, don't really care about the ruleset
+	// Get the active modules for the business
 	//
 	$strsql = "SELECT ciniki_businesses.status AS business_status, "
 		. "ciniki_business_modules.status AS module_status, "
@@ -33,13 +33,17 @@ function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $m
 //		. "AND ciniki_business_modules.package = '" . ciniki_core_dbQuote($ciniki, $package) . "' "
 //		. "AND ciniki_business_modules.module = '" . ciniki_core_dbQuote($ciniki, $module) . "' "
 		. "";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module_id');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
 
-	if( !isset($rc['modules']) || !isset($rc['modules'][$package . '.' . $module]) ) {
+	if( !isset($rc['modules']) ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'650', 'msg'=>'No modules enabled'));
+	}
+
+	if( !isset($rc['modules'][$package . '.' . $module]) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'696', 'msg'=>'Module disabled'));
 	}
 	$modules = $rc['modules'];
