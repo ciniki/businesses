@@ -54,30 +54,15 @@ function ciniki_businesses_getUserModules($ciniki) {
 	if( $rsp['stat'] == 'ok' ) {
 		foreach($rsp['modules'] as $i => $module) {
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
-//				$strsql = "SELECT 'numtasks', COUNT(ciniki_atdos.id) "
-//					. "FROM ciniki_atdos, ciniki_atdo_users "
-//					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-//					. "AND ciniki_atdos.type = 2 "	// Tasks
-//					. "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
-//					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
-//					. "AND ciniki_atdos.status = 1 "
-//					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
-//					. "";
-//				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
-//				$rc = ciniki_core_dbCount($ciniki, $strsql, 'ciniki.atdo', 'atdo');
-//				if( $rc['stat'] != 'ok' ) {
-//					return $rc;
-//				}
-//				$rsp['modules'][$i]['module']['task_count'] = $rc['atdo']['numtasks'];
 				$strsql = "SELECT type, COUNT(ciniki_atdos.id) AS num_items "
+//				$strsql = "SELECT 'numtasks', COUNT(ciniki_atdos.id) "
 					. "FROM ciniki_atdos, ciniki_atdo_users "
 					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-					. "AND (ciniki_atdos.type = 2 OR ciniki_atdos.type = 6 OR ciniki_atdos.type = 5 )"	// Messages or Notes
+					. "AND (ciniki_atdos.type = 2 OR ciniki_atdos.type = 7) "	// Tasks or Projects
 					. "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
 					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 					. "AND ciniki_atdos.status = 1 "
 					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
-//					. "AND (ciniki_atdo_users.perms&0x08) = 0 "
 					. "GROUP BY type "
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
@@ -89,6 +74,35 @@ function ciniki_businesses_getUserModules($ciniki) {
 					$rsp['modules'][$i]['module']['task_count'] = 0 + $rc['atdo']['2']['num_items'];
 				} else {
 					$rsp['modules'][$i]['module']['task_count'] = 0;
+				}
+				if( isset($rc['atdo']['7']['num_items']) ) {
+					$rsp['modules'][$i]['module']['project_count'] = 0 + $rc['atdo']['7']['num_items'];
+				} else {
+					$rsp['modules'][$i]['module']['project_count'] = 0;
+				}
+//				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
+//				$rc = ciniki_core_dbCount($ciniki, $strsql, 'ciniki.atdo', 'atdo');
+//				if( $rc['stat'] != 'ok' ) {
+//					return $rc;
+//				}
+//				$rsp['modules'][$i]['module']['task_count'] = $rc['atdo']['numtasks'];
+				//
+				// Messages and Notes are different, as it shows how many new or unread items
+				//
+				$strsql = "SELECT type, COUNT(ciniki_atdos.id) AS num_items "
+					. "FROM ciniki_atdos, ciniki_atdo_users "
+					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "AND ((ciniki_atdos.type = 5 AND ciniki_atdos.parent_id = 0) OR ciniki_atdos.type = 6 )"	// Notes or Messages
+					. "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
+					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+					. "AND ciniki_atdos.status = 1 "
+					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
+					. "AND (ciniki_atdo_users.perms&0x08) = 0 "
+					. "GROUP BY type "
+					. "";
+				$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.atdo', 'atdo', 'type');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
 				}
 				if( isset($rc['atdo']['6']['num_items']) ) {
 					$rsp['modules'][$i]['module']['message_count'] = 0 + $rc['atdo']['6']['num_items'];
