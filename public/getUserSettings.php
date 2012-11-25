@@ -24,7 +24,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		));
@@ -36,7 +36,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getUserSettings');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -111,7 +111,8 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	// Check for any modules which should have some settings loaded as well
 	//
 	if( $mrc['stat'] == 'ok' ) {
-		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDetailsQuery.php');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 		foreach($mrc['modules'] as $i => $module) {
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
@@ -126,6 +127,13 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					return $rc; 
 				} 
 				$rsp['settings']['ciniki.bugs'] = $rc['settings'];
+			}
+			if( $module['module']['name'] == 'ciniki.customers' ) {
+				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_customer_settings', 'business_id', $args['business_id'], 'ciniki.customers', 'settings', '');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc; 
+				} 
+				$rsp['settings']['ciniki.customers'] = $rc['settings'];
 			}
 		}
 	}
