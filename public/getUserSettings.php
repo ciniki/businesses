@@ -135,9 +135,15 @@ function ciniki_businesses_getUserSettings($ciniki) {
 				} 
 				$rsp['settings']['ciniki.customers'] = $rc['settings'];
 			}
+			if( $module['module']['name'] == 'ciniki.services' ) {
+				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_service_settings', 'business_id', $args['business_id'], 'ciniki.services', 'settings', '');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc; 
+				} 
+				$rsp['settings']['ciniki.services'] = $rc['settings'];
+			}
 		}
 	}
-
 
 	return $rsp;
 }
