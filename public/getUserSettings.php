@@ -116,31 +116,27 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		foreach($mrc['modules'] as $i => $module) {
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
-				if( $rc['stat'] != 'ok' ) {
-					return $rc; 
-				} 
-				$rsp['settings']['ciniki.atdo'] = $rc['settings'];
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.atdo'] = $rc['settings'];
+				}
 			}
 			if( $module['module']['name'] == 'ciniki.bugs' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_bug_settings', 'business_id', $args['business_id'], 'ciniki.bugs', 'settings', '');
-				if( $rc['stat'] != 'ok' ) {
-					return $rc; 
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.bugs'] = $rc['settings'];
 				} 
-				$rsp['settings']['ciniki.bugs'] = $rc['settings'];
 			}
 			if( $module['module']['name'] == 'ciniki.customers' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_customer_settings', 'business_id', $args['business_id'], 'ciniki.customers', 'settings', '');
-				if( $rc['stat'] != 'ok' ) {
-					return $rc; 
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.customers'] = $rc['settings'];
 				} 
-				$rsp['settings']['ciniki.customers'] = $rc['settings'];
 			}
 			if( $module['module']['name'] == 'ciniki.services' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_service_settings', 'business_id', $args['business_id'], 'ciniki.services', 'settings', '');
-				if( $rc['stat'] != 'ok' ) {
-					return $rc; 
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.services'] = $rc['settings'];
 				} 
-				$rsp['settings']['ciniki.services'] = $rc['settings'];
 			}
 		}
 	}
