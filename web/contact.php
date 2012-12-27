@@ -30,8 +30,8 @@
 //
 function ciniki_businesses_web_contact($ciniki, $settings, $business_id) {
 	
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbDetailsQuery.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
 
 	$rsp = array('stat'=>'ok', 'details'=>array(), 'users'=>array());
 

@@ -28,7 +28,7 @@ function ciniki_businesses_getAllOwners($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.getAllOwners');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
@@ -41,7 +41,7 @@ function ciniki_businesses_getAllOwners($ciniki) {
 		. "LEFT JOIN ciniki_businesses ON (ciniki_business_users.business_id = ciniki_businesses.id) "
 		. "ORDER BY ciniki_users.lastname, ciniki_users.firstname, ciniki_businesses.name "
 		. "";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQueryTree.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user',
 			'fields'=>array('id'=>'user_id', 'display_name', 'firstname', 'lastname', 'email')),

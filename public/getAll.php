@@ -28,7 +28,7 @@ function ciniki_businesses_getAll($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.getAll');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
@@ -37,7 +37,7 @@ function ciniki_businesses_getAll($ciniki) {
 	//
 	// Query for businesses and users
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQueryTree.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$strsql = "SELECT ciniki_businesses.id as business_id, ciniki_businesses.name, ciniki_business_users.user_id, "
 		. "ciniki_users.display_name, ciniki_users.firstname, ciniki_users.lastname, ciniki_users.email "
 		. "FROM ciniki_businesses "

@@ -15,7 +15,7 @@ function ciniki_businesses_planAdd($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		'name'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No name specified'), 
@@ -33,7 +33,7 @@ function ciniki_businesses_planAdd($ciniki) {
 	//
 	// Check access to business_id as owner
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.planAdd');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;

@@ -55,7 +55,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	// Check the session user is a business owner or employee
 	//
 	if( $business_id > 0 ) {
-		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 		//
 		// Find any users which are owners of the requested business_id
 		//
@@ -65,7 +65,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 			. "AND package = 'ciniki' "
 			. "AND (permission_group = 'owners') "
 			. "";
-		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
 		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
@@ -107,7 +107,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	// Check the session user is a business owner or employee
 	//
 	if( $business_id > 0 ) {
-		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbQuote.php');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 		//
 		// Find any users which are owners of the requested business_id
 		//
@@ -117,7 +117,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 			. "AND package = 'ciniki' "
 			. "AND (permission_group = 'owners' OR permission_group = 'employees') "
 			. "";
-		require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
 		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;

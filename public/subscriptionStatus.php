@@ -16,13 +16,13 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
     // Make sure this module is activated, and
     // check permission to run this function for this business
     //  
-    require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
     $rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.subscriptionStatus'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/users/private/timezoneOffset.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'timezoneOffset');
 	$utc_offset = ciniki_users_timezoneOffset($ciniki);
 
 	//

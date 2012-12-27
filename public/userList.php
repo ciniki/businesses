@@ -18,7 +18,7 @@ function ciniki_businesses_userList($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		));
@@ -30,7 +30,7 @@ function ciniki_businesses_userList($ciniki) {
 	//
 	// Check access 
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.userList');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

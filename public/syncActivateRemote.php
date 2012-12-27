@@ -19,7 +19,7 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_uuid'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		'url'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No url specified'), 
@@ -53,7 +53,7 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 	//
 	// Check access 
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncActivateRemote');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -71,7 +71,7 @@ function ciniki_businesses_syncActivateRemote($ciniki) {
 	$sync_id = $rc['insert_id'];
 
 	// Update the log
-    require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
 	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		1, 'ciniki_business_syncs', $sync_id, 'status', '10');
 

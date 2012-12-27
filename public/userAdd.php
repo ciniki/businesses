@@ -21,7 +21,7 @@ function ciniki_businesses_userAdd($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		'user_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No user specified'), 
@@ -36,7 +36,7 @@ function ciniki_businesses_userAdd($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.userAdd');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
@@ -45,7 +45,7 @@ function ciniki_businesses_userAdd($ciniki) {
 	//
 	// Don't need a transaction, there's only 1 statement which will either succeed or fail.
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbAddModuleHistory.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
 
 
 	//
@@ -57,7 +57,7 @@ function ciniki_businesses_userAdd($ciniki) {
 		. "'" . ciniki_core_dbQuote($ciniki, $args['package']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "', "
 		. "1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbInsert.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

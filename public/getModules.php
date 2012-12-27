@@ -25,7 +25,7 @@ function ciniki_businesses_getModules($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		));
@@ -37,13 +37,13 @@ function ciniki_businesses_getModules($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin. 
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getModules');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
 
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, status, ruleset "
 		. "FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
@@ -61,7 +61,7 @@ function ciniki_businesses_getModules($ciniki) {
 	//
 	// Get the list of available modules
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/getModuleList.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'getModuleList');
 	$rc = ciniki_core_getModuleList($ciniki);
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

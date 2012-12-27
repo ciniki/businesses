@@ -31,7 +31,7 @@ function ciniki_businesses_getActiveModules($ciniki, $business_id) {
 		. "AND ciniki_businesses.id = ciniki_business_modules.business_id "
 		. "AND ciniki_business_modules.status = 1 "
 		. "";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module_id');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

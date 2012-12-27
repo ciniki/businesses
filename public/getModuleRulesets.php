@@ -23,7 +23,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/prepareArgs.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business name specified'), 
 		));
@@ -35,13 +35,13 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	//
 	// Check access to business_id as owner, or sys admin. 
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/businesses/private/checkAccess.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getModuleRulesets');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
 
-/*	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
+/*	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
 	$strsql = "SELECT package, module, status, ruleset "
 		. "FROM ciniki_business_modules "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
@@ -60,7 +60,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, status, ruleset "
 		. "FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashIDQuery.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
 	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'name');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -70,7 +70,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 	//
 	// Get the list of available modules
 	//
-	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/getModuleList.php');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'getModuleList');
 	$rc = ciniki_core_getModuleList($ciniki);
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -98,7 +98,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 			// Check for any rulesets for this module
 			//
 			if( file_exists($ciniki['config']['core']['root_dir'] . '/' . $module['package'] . '-api/' . $module['name'] . '/private/getRulesets.php') ) {
-				require_once($ciniki['config']['core']['root_dir'] . '/' . $module['package'] . '-api/' . $module['name'] . '/private/getRulesets.php');
+				ciniki_core_loadMethod($ciniki, 'ciniki', '' . $module['package'] . '-api/' . $module['name'] . '', 'private', 'getRulesets');
 				$func = "ciniki_" . $module['name'] . "_getRulesets";
 				$rulesets = $func($ciniki);
 				$i = 0;
