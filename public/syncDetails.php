@@ -6,6 +6,10 @@
 //
 // Arguments
 // ---------
+// api_key:
+// auth_token:
+// business_id:		The ID of the business to get the sync information for.
+// sync_id:			The ID of the syncronization to get the information for.
 //
 // Returns
 // -------
@@ -17,8 +21,8 @@ function ciniki_businesses_syncDetails($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No sync specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Sync'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
