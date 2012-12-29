@@ -57,7 +57,7 @@ function ciniki_businesses_syncPing($ciniki) {
 	// Make the request
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncRequest');
-	$rc = ciniki_core_syncRequest($ciniki, $sync, array('action'=>'ping'));
+	$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.core.ping'));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

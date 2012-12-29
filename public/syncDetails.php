@@ -62,12 +62,12 @@ function ciniki_businesses_syncDetails($ciniki) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'506', 'msg'=>'Unable to find syncronization'));
 	}
 
-	if( ($rc['sync']['flags']&0x01) == 0x01 ) {
+	if( ($rc['sync']['flags']&0x03) == 0x03 ) {
+		$rc['sync']['type'] = 'bi';
+	} elseif( ($rc['sync']['flags']&0x01) == 0x01 ) {
 		$rc['sync']['type'] = 'push';
 	} elseif( ($rc['sync']['flags']&0x02) == 0x02 ) {
 		$rc['sync']['type'] = 'pull';
-	} elseif( ($rc['sync']['flags']&0x03) == 0x03 ) {
-		$rc['sync']['type'] = 'bi';
 	}
 
 	if( !isset($rc['sync']['last_sync']) ) {

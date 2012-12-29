@@ -8,7 +8,8 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id: 			The ID of the business to lock.
+// business_id: 			The ID of the business to sync.
+// sync_id:					The ID of the sync to update.
 //
 // Returns
 // -------
@@ -20,8 +21,8 @@ function ciniki_businesses_syncNow($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No sync specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Sync'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -40,21 +41,8 @@ function ciniki_businesses_syncNow($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'datetimeFormat');
 	$datetime_format = ciniki_users_datetimeFormat($ciniki);
 
-	//
-	// Get the sync information
-	//
-	$strsql = "SELECT id, business_id, flags, status, "
-		. "local_private_key, remote_name, remote_url, remote_uuid, remote_public_key, "
-		. "UNIX_TIMESTAMP(last_sync) AS last_sync "
-		. "FROM ciniki_business_syncs "
-		. "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
-		. "";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'sync');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	
-	return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$rc['syncs']);
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncBusiness');
+	$rc = ciniki_core_syncBusiness($ciniki, $args['business_id'], $args['sync_id']);
+	return $rc;
 }
 ?>
