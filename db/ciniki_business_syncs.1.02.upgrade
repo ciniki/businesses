@@ -1,0 +1,6 @@
+#
+# This file will upgrade the database table ciniki_business_modules to version 1.02.
+#
+ALTER TABLE ciniki_business_syncs ADD COLUMN last_partial datetime not null AFTER last_sync;
+ALTER TABLE ciniki_business_syncs ADD COLUMN last_full datetime not null AFTER last_partial;
+ALTER TABLE ciniki_business_syncs COMMENT='v1.02';

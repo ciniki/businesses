@@ -36,7 +36,11 @@
 # 
 # last_updated:			The UTC date and time the record was last updated.
 #
-# last_sync: 			The UTC date and time the last sync was run.
+# last_sync: 			The UTC date and time the last incremental sync was run.
+#
+# last_partial:			The UTC date and time the last partial sync was run.
+#
+# last_full:			The UTC date and time the last full sync was run.
 #
 create table ciniki_business_syncs (
 	id int not null auto_increment,
@@ -51,7 +55,9 @@ create table ciniki_business_syncs (
 	date_added datetime not null,
 	last_updated datetime not null,
 	last_sync datetime not null,
+	last_partial datetime not null,
+	last_full datetime not null,
 	primary key (id),
 	index (business_id),
 	unique index (business_id, remote_url, remote_uuid)
-) ENGINE=InnoDB, COMMENT='v1.01';
+) ENGINE=InnoDB, COMMENT='v1.02';

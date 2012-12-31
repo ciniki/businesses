@@ -62,7 +62,9 @@ function ciniki_businesses_syncInfo($ciniki) {
 	//
 	$strsql = "SELECT id, business_id, flags, status, "
 		. "remote_name, remote_url, remote_uuid, "
-		. "DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_sync "
+		. "DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_sync, "
+		. "DATE_FORMAT(last_partial, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_partial, "
+		. "DATE_FORMAT(last_full, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_full "
 		. "FROM ciniki_business_syncs "
 		. "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
 		. "";
