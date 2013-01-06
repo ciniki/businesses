@@ -26,6 +26,6 @@ create table ciniki_business_sync_uuidmaps (
 	module varchar(150) not null,
 	remote_uuid char(36) not null,
 	local_uuid char(36) not null,
-	primary key (sync_id, package, module, remote_uuid),
-	unique index (sync_id, package, module, local_uuid)
+	primary key (sync_id, module, remote_uuid),
+	unique index (sync_id, module, local_uuid)
 ) ENGINE=InnoDB, COMMENT='v1.01';

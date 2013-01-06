@@ -103,10 +103,6 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
 				return $rc;
 			}
-			if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
-				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'914', 'msg'=>'Unable to add user'));
-			}
 			$detail_id = $rc['insert_id'];
 			
 			if( isset($detail['history']) ) {
@@ -178,10 +174,6 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 			if( $rc['stat'] != 'ok' ) { 
 				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
 				return $rc;
-			}
-			if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
-				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'913', 'msg'=>'Unable to add user'));
 			}
 			$detail_id = $rc['insert_id'];
 			

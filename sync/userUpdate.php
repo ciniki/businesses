@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_sync_userUpdate(&$ciniki, $sync, $business_id, $args) {
+function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args) {
 	//
 	// Check the args
 	//
@@ -29,7 +29,7 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, $sync, $business_id, $args)
 		return $rc;
 	}
 	if( !isset($rc['user']) ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'sync', 'userAdd');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'userAdd');
 		
 		//
 		// Check to see if the email address is under another uuid
@@ -314,12 +314,6 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, $sync, $business_id, $args)
 					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 					return $rc;
 				}
-
-				if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
-					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'888', 'msg'=>'Unable to add user'));
-				}
-				$detail_id = $rc['insert_id'];
 				$db_updated = 1;
 			} else {
 				$local_detail = $local_user['user_details'][$detail_key];
@@ -336,8 +330,8 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, $sync, $business_id, $args)
 				}
 				if( isset($rc['strsql']) && $rc['strsql'] != '' ) {
 					$strsql = "UPDATE ciniki_user_details SET " . $rc['strsql'] . " "
-						. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $local_detail['id']) . "' "
-						. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $local_user['id']) . "' "
+						. "WHERE user_id = '" . ciniki_core_dbQuote($ciniki, $local_user['id']) . "' "
+						. "AND detail_key = '" . ciniki_core_dbQuote($ciniki, $detail_key) . "' "
 						. "";
 					$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.users');
 					if( $rc['stat'] != 'ok' ) {
