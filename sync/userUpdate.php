@@ -54,13 +54,12 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args
 			//
 			$user_id = $rc['user']['id'];
 			$user_uuid = $rc['user']['uuid'];
-			if( !isset($sync['uuidmaps']['ciniki.users'][$remote_user['uuid']]) ) {
+			if( !isset($sync['uuidmaps']['ciniki_users'][$remote_user['uuid']]) ) {
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncUpdateUUIDMap');
 				$rc = ciniki_core_syncUpdateUUIDMap($ciniki, $sync, $business_id, 'ciniki_users', $remote_user['uuid'], $user_id);
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
-				$sync['uuidmaps']['ciniki.users'][$remote_user['uuid']] = $user_uuid;
 			}
 		}
 	} else {
