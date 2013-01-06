@@ -15,6 +15,7 @@
 //		[username] => test1
 //		[firstname] => Test1
 //		[lastname] => last
+//		[status] => 1
 //		[timeout] => 0
 //		[display_name] => Test1
 //		[date_added] => 1357201364
@@ -93,7 +94,7 @@ function ciniki_businesses_sync_userGet($ciniki, $sync, $business_id, $args) {
 	// Get the customer information
 	//
 	$strsql = "SELECT u1.uuid, "
-		. "u1.id, u1.email, u1.username, u1.firstname, u1.lastname, u1.timeout, u1.display_name, "
+		. "u1.id, u1.email, u1.username, u1.firstname, u1.lastname, u1.timeout, u1.display_name, u1.status AS user_status, "
 		. "UNIX_TIMESTAMP(u1.date_added) AS date_added, "
 		. "UNIX_TIMESTAMP(u1.last_updated) AS last_updated, "
 		. "ciniki_business_users.business_id, "
@@ -141,7 +142,7 @@ function ciniki_businesses_sync_userGet($ciniki, $sync, $business_id, $args) {
 	$rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.customers', array(
 		array('container'=>'users', 'fname'=>'uuid', 
 			'fields'=>array('uuid', 'id', 'email', 'username', 'firstname', 'lastname', 'timeout', 'display_name',
-				'date_added', 'last_updated')),
+				'status'=>'user_status', 'date_added', 'last_updated')),
 		array('container'=>'permissions', 'fname'=>'permission', 
 			'fields'=>array('business_id', 'business_uuid', 'package', 'permission_group', 'status'=>'permission_status',
 				'date_added'=>'permission_date_added', 'last_updated'=>'permission_last_updated')),

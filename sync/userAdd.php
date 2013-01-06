@@ -49,7 +49,7 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 	// Create the user record
 	//
 	$strsql = "INSERT INTO ciniki_users (uuid, email, username, password, firstname, lastname, display_name, "
-		. "date_added, last_updated) VALUES ("
+		. "status, date_added, last_updated) VALUES ("
 		. "'" . ciniki_core_dbQuote($ciniki, $user['uuid']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $user['email']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $user['username']) . "', "
@@ -57,6 +57,7 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 		. "'" . ciniki_core_dbQuote($ciniki, $user['firstname']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $user['lastname']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $user['display_name']) . "', "
+		. "'" . ciniki_core_dbQuote($ciniki, $user['status']) . "', "
 		. "FROM_UNIXTIME('" . ciniki_core_dbQuote($ciniki, $user['date_added']) . "'), "
 		. "FROM_UNIXTIME('" . ciniki_core_dbQuote($ciniki, $user['last_updated']) . "') "
 		. ") "

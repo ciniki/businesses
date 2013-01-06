@@ -85,6 +85,6 @@ function ciniki_businesses_syncInfo($ciniki) {
 		$syncs = $rc['syncs'];
 	}
 	
-	return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$rc['syncs']);
+	return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$syncs);
 }
 ?>
