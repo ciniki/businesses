@@ -377,6 +377,6 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args
 		$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncPushUser', 'args'=>array('id'=>$user_id, 'ignore_sync_id'=>$sync['id']));
 	}
 
-	return array('stat'=>'ok');
+	return array('stat'=>'ok', 'id'=>$user_id);
 }
 ?>

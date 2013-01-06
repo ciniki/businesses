@@ -201,6 +201,6 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 	//
 	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncPushUser', 'args'=>array('id'=>$user_id));
 
-	return array('stat'=>'ok', 'user_id'=>$user_id);
+	return array('stat'=>'ok', 'id'=>$user_id);
 }
 ?>
