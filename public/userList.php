@@ -44,6 +44,7 @@ function ciniki_businesses_userList($ciniki) {
 		. "CONCAT_WS('.', ciniki_business_users.package, ciniki_business_users.permission_group) AS permission_group "
 		. "FROM ciniki_business_users, ciniki_users "
 		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "' " 
+		. "AND ciniki_business_users.status = 10 "
 		. "AND ciniki_business_users.user_id = ciniki_users.id "
 		. "ORDER BY permission_group "
 		. "";

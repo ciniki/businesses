@@ -14,9 +14,7 @@
 # ------
 # sync_id:				The ID of the syncronization the uuidmap is for.
 #
-# package:				The package of the uuid.
-#
-# module:				The module of the uuid.
+# module:				The full name of the module including the package name for the uuid map.
 #
 # remote_uuid:			The remote uuid which will be changed to the local_uuid when inserting.
 #
@@ -25,8 +23,7 @@
 #
 create table ciniki_business_sync_uuidmaps (
 	sync_id int not null,
-	package varchar(50) not null,
-	module varchar(50) not null,
+	module varchar(150) not null,
 	remote_uuid char(36) not null,
 	local_uuid char(36) not null,
 	primary key (sync_id, package, module, remote_uuid),

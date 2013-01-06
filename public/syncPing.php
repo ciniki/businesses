@@ -32,26 +32,12 @@ function ciniki_businesses_syncPing($ciniki) {
 		return $rc;
 	}
 
-	//
-	// Get the sync information required to send the request
-	//
-	$strsql = "SELECT ciniki_businesses.id, ciniki_businesses.uuid AS local_uuid, local_private_key, "
-		. "remote_name, remote_uuid, remote_url, remote_public_key "
-		. "FROM ciniki_businesses, ciniki_business_syncs "
-		. "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND ciniki_businesses.id = ciniki_business_syncs.business_id "
-		. "AND ciniki_business_syncs.id = '" . ciniki_core_dbQuote($ciniki, $args['sync_id']) . "' "
-		. "";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'sync');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncLoad');
+	$rc = ciniki_core_syncLoad($ciniki, $args['business_id'], $args['sync_id']);
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	if( !isset($rc['sync']) || !is_array($rc['sync']) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'546', 'msg'=>'Invalid sync'));
-	}
 	$sync = $rc['sync'];
-	$sync['type'] = 'business';
 
 	//
 	// Make the request

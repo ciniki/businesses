@@ -53,7 +53,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 		$strsql = "SELECT DISTINCT ciniki_businesses.id, name "
 			. "FROM ciniki_business_users, ciniki_businesses "
 			. "WHERE ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
-			. "AND ciniki_business_users.status = 1 "
+			. "AND ciniki_business_users.status = 10 "
 			. "AND ciniki_business_users.business_id = ciniki_businesses.id "
 			. "AND ciniki_businesses.status < 60 "	// Allow suspended businesses to be listed, so user can login and update billing/unsuspend
 			. "ORDER BY ciniki_businesses.name ";

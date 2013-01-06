@@ -37,7 +37,8 @@ function ciniki_businesses_getAllOwners($ciniki) {
 	$strsql = "SELECT ciniki_users.id AS user_id, email, firstname, lastname, display_name, "
 		. "ciniki_businesses.id AS business_id, ciniki_businesses.name "
 		. "FROM ciniki_users "
-		. "LEFT JOIN ciniki_business_users ON (ciniki_users.id = ciniki_business_users.user_id) "
+		. "LEFT JOIN ciniki_business_users ON (ciniki_users.id = ciniki_business_users.user_id "
+			. "AND ciniki_business_users.status = 10) "
 		. "LEFT JOIN ciniki_businesses ON (ciniki_business_users.business_id = ciniki_businesses.id) "
 		. "ORDER BY ciniki_users.lastname, ciniki_users.firstname, ciniki_businesses.name "
 		. "";

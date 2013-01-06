@@ -13,10 +13,10 @@
 #
 # permission_group:		The group the user is a part of. (owners, employees), future roles (sysadmin, accountant, assistant, etc)
 # 
-# status:		0 - unknown (future)
-# 				1 - active
-#				2 - locked
-#				3 - deleted
+# status:		0 - unknown
+# 				10 - active
+#				20 - locked **future**
+#				60 - deleted
 #
 # date_added:	The date and time the record was created.
 # 

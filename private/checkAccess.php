@@ -63,6 +63,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 			. "AND package = 'ciniki' "
+			. "AND status = 10 "	// Active owner
 			. "AND (permission_group = 'owners') "
 			. "";
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
@@ -115,6 +116,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 			. "AND package = 'ciniki' "
+			. "AND status = 10 "	// Active owner or employee
 			. "AND (permission_group = 'owners' OR permission_group = 'employees') "
 			. "";
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');

@@ -77,13 +77,13 @@ function ciniki_businesses_syncDetails($ciniki) {
 	}
 
 	if( $rc['sync']['status'] == 10 ) {
-		$rc['sync']['status'] = 'active';
-	} elseif( $rc['sync']['status'] == 20 ) {
-		$rc['sync']['status'] = 'paused';
+		$rc['sync']['status_text'] = 'active';
+//	} elseif( $rc['sync']['status_text'] == 20 ) {
+//		$rc['sync']['status'] = 'paused';
 	} elseif( $rc['sync']['status'] == 60 ) {
-		$rc['sync']['status'] = 'stopped';
+		$rc['sync']['status_text'] = 'suspended';
 	} else {
-		$rc['sync']['status'] = 'unknown';
+		$rc['sync']['status_text'] = 'unknown';
 	}
 	
 	return array('stat'=>'ok', 'sync'=>$rc['sync']); 

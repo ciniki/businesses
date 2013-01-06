@@ -17,16 +17,17 @@
 // -------
 // <rsp stat='ok' id='1' />
 //
-function ciniki_businesses_userAdd($ciniki) {
+function ciniki_businesses_userAdd(&$ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'user_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No user specified'), 
-		'package'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No package specified'), 
-		'permission_group'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No permissions specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'user_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'User'), 
+		'package'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Package'), 
+		'permission_group'=>array('required'=>'yes', 'blank'=>'no', 
+			'validlist'=>array('owners', 'employees'), 'name'=>'Permissions'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -56,7 +57,7 @@ function ciniki_businesses_userAdd($ciniki) {
 		. "'" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['package']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "', "
-		. "1, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
+		. "10, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
@@ -67,27 +68,21 @@ function ciniki_businesses_userAdd($ciniki) {
 	}
 	$business_user_id = $rc['insert_id'];
 
+//	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+//		1, 'ciniki_business_users', $business_user_id, 'user_id', $args['user_id']);
+//	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+//		1, 'ciniki_business_users', $args['user_id'], 'package', $args['package']);
+//	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+//		1, 'ciniki_business_users', $args['user_id'], 'permission_group', $args['permission_group']);
 	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		1, 'ciniki_business_users', $business_user_id, 'user_id', $args['user_id']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		1, 'ciniki_business_users', $business_user_id, 'package', $args['package']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		1, 'ciniki_business_users', $business_user_id, 'permission_group', $args['permission_group']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		1, 'ciniki_business_users', $business_user_id, 'status', '1'); 
+		1, 'ciniki_business_users', $args['user_id'] . '.' . $args['package'] . '.' . $args['permission_group'], 'status', '10'); 
 
 	//
-	// Update the last_updated date so changes will be sync'd
+	// Get the list of businesses this user is part of, and replicate that user for that business
 	//
-	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP() "
-		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
+	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'businesses');
+	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncPushUser', 'args'=>array('id'=>$args['user_id']));
 
 	return array('stat'=>'ok', 'id'=>$business_user_id);
 }

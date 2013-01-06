@@ -43,7 +43,8 @@ function ciniki_businesses_employees($ciniki) {
 	//
 	$strsql = "SELECT ciniki_business_users.user_id AS id, ciniki_users.display_name "
 		. "FROM ciniki_business_users, ciniki_users "
-		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
+		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND ciniki_business_users.status = 10 "
 		. "AND ciniki_business_users.user_id = ciniki_users.id "
 		. "ORDER BY display_name "
 		. "";

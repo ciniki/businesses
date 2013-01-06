@@ -104,8 +104,11 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	} else if( $args['type'] == 'pull' ) {
 		$remote_type = 'push';
 		$flags = 0x02;
+	} else if( $args['type'] == 'bi' ) {
+		$remote_type = 'bi';
+		$flags = 0x03;
 	} else {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'520', 'msg'=>'The type must be push or pull'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'520', 'msg'=>'The type must be push, pull or bi.'));
 	}
 	$remote_args = array(
 		'business_uuid'=>$args['remote_uuid'],
@@ -119,6 +122,8 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'526', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
 	}
+	$sync_url = $rc['sync_url'];
+	$public_key = $rc['public_key'];
 
 	//
 	// Add sync to local
@@ -132,8 +137,8 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 		. ", '" . ciniki_core_dbQuote($ciniki, $private_str) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['remote_name']) . "' "
 		. ", '" . ciniki_core_dbQuote($ciniki, $args['remote_uuid']) . "' "
-		. ", '" . ciniki_core_dbQuote($ciniki, $rc['sync_url']) . "' "
-		. ", '" . ciniki_core_dbQuote($ciniki, $rc['public_key']) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $sync_url) . "' "
+		. ", '" . ciniki_core_dbQuote($ciniki, $public_key) . "' "
 		. ", UTC_TIMESTAMP(), UTC_TIMESTAMP() "
 		. ")"; 
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
@@ -150,7 +155,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 		1, 'ciniki_business_syncs', $sync_id, 'remote_uuid', $args['remote_uuid']);
 	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		1, 'ciniki_business_syncs', $sync_id, 'remote_url', $args['sync_url']);
+		1, 'ciniki_business_syncs', $sync_id, 'remote_url', $sync_url);
 
 	//
 	// call syncActivateRemote

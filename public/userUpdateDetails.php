@@ -18,7 +18,7 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_userUpdateDetails($ciniki) {
+function ciniki_businesses_userUpdateDetails(&$ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
@@ -120,20 +120,10 @@ function ciniki_businesses_userUpdateDetails($ciniki) {
 			ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'updateUserDisplay');
 			$rc = ciniki_web_updateUserDisplay($ciniki, $args['business_id']);
 			if( $rc['stat'] != 'ok' ) {
+				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
 				return $rc;
 			}
 		}
-	}
-
-	//
-	// Update the last_updated flag for the business, used for sync
-	//
-	$strsql = "UPDATE ciniki_businesses SET last_updated = UTC_TIMESTAMP() "
-		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "";
-	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
-	if( $rc['stat'] != 'ok' ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'43', 'msg'=>'Unable to update business information', 'err'=>$rc['err']));
 	}
 
 	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
@@ -141,6 +131,24 @@ function ciniki_businesses_userUpdateDetails($ciniki) {
 		return $rc;
 	}
 
+	//
+	// Update the last_updated for the business user
+	//
+	$strsql = "UPDATE ciniki_business_users SET last_updated = UTC_TIMESTAMP() "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.users');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	//
+	// Get the list of businesses this user is part of, and replicate that user for that business
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
+	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'businesses');
+	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncPushUser', 'args'=>array('id'=>$args['user_id']));
 
 	return array('stat'=>'ok');
 }

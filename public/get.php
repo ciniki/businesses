@@ -103,12 +103,13 @@ function ciniki_businesses_get($ciniki) {
 	}
 
 	//
-	// Get all the businesses the user is a part of
+	// Get all the users that are a part of the business
 	//
 	$strsql = "SELECT ciniki_users.id, ciniki_users.firstname, ciniki_users.lastname "
 		. "FROM ciniki_business_users, ciniki_users "
 		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "' "
 		. "AND ciniki_business_users.user_id = ciniki_users.id "
+		. "AND ciniki_business_users.status = 10 "
 		. "";
 	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
 	if( $rc['stat'] != 'ok' ) {

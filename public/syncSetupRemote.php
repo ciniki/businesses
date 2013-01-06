@@ -90,6 +90,8 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 		$flags = 0x01;
 	} else if( $args['type'] == 'pull' ) {
 		$flags = 0x02;
+	} else if( $args['type'] == 'bi' ) {
+		$flags = 0x03;
 	}
 	$strsql = "INSERT INTO ciniki_business_syncs (business_id, flags, status, "
 		. "local_private_key, remote_name, remote_uuid, remote_url, remote_public_key, "

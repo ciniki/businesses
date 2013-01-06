@@ -60,7 +60,7 @@ function ciniki_businesses_syncInfo($ciniki) {
 	//
 	// Get the list of syncs setup for this business
 	//
-	$strsql = "SELECT id, business_id, flags, status, "
+	$strsql = "SELECT id, business_id, flags, flags AS type, status, status AS status_text, "
 		. "remote_name, remote_url, remote_uuid, "
 		. "IFNULL(DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_sync, "
 		. "IFNULL(DATE_FORMAT(last_partial, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_partial, "
@@ -68,19 +68,21 @@ function ciniki_businesses_syncInfo($ciniki) {
 		. "FROM ciniki_business_syncs "
 		. "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
 		. "";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
-	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'syncs', 'sync', array('stat'=>'ok', 'syncs'=>array()));
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
+	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+		array('container'=>'syncs', 'fname'=>'id', 'name'=>'sync',
+			'fields'=>array('id', 'business_id', 'flags', 'type', 'status', 'status_text', 'remote_name', 'remote_url', 'remote_uuid',
+				'last_sync', 'last_partial', 'last_full'),
+			'maps'=>array('status_text'=>array('10'=>'Active', '60'=>'Suspended'),
+				'type'=>array('1'=>'Push', '2'=>'Pull', '3'=>'Bi'))),
+		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	foreach($rc['syncs'] as $i => $sync) {
-		if( ($sync['sync']['flags']&0x03) == 0x03 ) {
-			$rc['syncs'][$i]['sync']['type'] = 'bi';
-		} elseif( ($sync['sync']['flags']&0x01) == 0x01 ) {
-			$rc['syncs'][$i]['sync']['type'] = 'push';
-		} elseif( ($sync['sync']['flags']&0x02) == 0x02 ) {
-			$rc['syncs'][$i]['sync']['type'] = 'pull';
-		}
+	if( !isset($rc['syncs']) ) {
+		$syncs = array();
+	} else {
+		$syncs = $rc['syncs'];
 	}
 	
 	return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$rc['syncs']);
