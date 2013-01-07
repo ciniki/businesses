@@ -17,7 +17,7 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncRequest');
 	$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.userList', 'type'=>$args['type'], 'since_uts'=>$sync['last_sync']));
 	if( $rc['stat'] != 'ok' ) {
-		return $rc;
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'983', 'msg'=>'Unable to get remote user list', 'err'=>$rc['err']));
 	}
 
 	if( !isset($rc['users']) ) {
@@ -74,7 +74,7 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 	//
 	$rc = ciniki_businesses_sync_userList($ciniki, $sync, $business_id, array('type'=>$args['type'], 'since_uts'=>$sync['last_sync']));
 	if( $rc['stat'] != 'ok' ) {
-		return $rc;
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'984', 'msg'=>'Unable to get local user list', 'err'=>$rc['err']));
 	}
 	if( !isset($rc['users']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'75', 'msg'=>'Unable to get local users'));
@@ -124,7 +124,7 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 				//
 				$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.userGet', 'uuid'=>$uuid));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'985', 'msg'=>'User not found on remote server', 'err'=>$rc['err']));
 				}
 				if( !isset($rc['user']) ) {
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'895', 'msg'=>'User not found on remote server'));
@@ -136,7 +136,7 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 				//
 				$rc = ciniki_businesses_sync_userUpdate($ciniki, $sync, $business_id, array('user'=>$user));
 				if( $rc['stat'] != 'ok' ) {
-					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'896', 'msg'=>'Unable to add user', 'err'=>$rc['err']));;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'896', 'msg'=>'Unable to update user on local server', 'err'=>$rc['err']));;
 				}
 			} 
 		}
@@ -156,7 +156,7 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 				//
 				$rc = ciniki_businesses_sync_userGet($ciniki, $sync, $business_id, array('uuid'=>$uuid));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'986', 'msg'=>'User not found on local server', 'err'=>$rc['err']));
 				}
 				if( !isset($rc['user']) ) {
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'897', 'msg'=>'User not found on remote server'));
@@ -168,7 +168,7 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 				//
 				$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.userUpdate', 'user'=>$user));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'987', 'msg'=>'Unable to update user on remote server', 'err'=>$rc['err']));
 				}
 			}
 		}

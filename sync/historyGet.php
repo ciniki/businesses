@@ -52,7 +52,7 @@ function ciniki_customers_sync_historyGet($ciniki, $sync, $business_id, $args) {
 		return $rc;
 	}
 	if( !isset($rc['history'][$args['history']]) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'919', 'msg'=>'History does not exist'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'899', 'msg'=>'History does not exist'));
 	}
 	$history = $rc['history'][$args['history']];
 
@@ -188,7 +188,7 @@ function ciniki_customers_sync_historyGet($ciniki, $sync, $business_id, $args) {
 			if( isset($rc['customer']) ) {
 				$history['new_value'] = $rc['customer']['new_value'];
 			} else {
-				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'920', 'msg'=>'History element is broken'));
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'914', 'msg'=>'History element is broken'));
 			}
 		}
 	}

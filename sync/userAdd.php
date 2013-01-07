@@ -65,7 +65,7 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.users');
 	if( $rc['stat'] != 'ok' ) { 
 		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
-		return $rc;
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'994', 'msg'=>'Unable to add user', 'err'=>$rc['err']));
 	}
 	if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
 		ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
@@ -102,7 +102,7 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.users');
 			if( $rc['stat'] != 'ok' ) { 
 				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
-				return $rc;
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'999', 'msg'=>'Unable to add user', 'err'=>$rc['err']));
 			}
 			$detail_id = $rc['insert_id'];
 			
@@ -134,11 +134,11 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 				. ")";
 			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 			if( $rc['stat'] != 'ok' && $rc['err']['code'] != '73' ) {
-				return $rc;
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'997', 'msg'=>'Unable to add user permission', 'err'=>$rc['err']));
 			}
 			if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
 				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
-				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'893', 'msg'=>'Unable to add user'));
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'893', 'msg'=>'Unable to add user permission'));
 			}
 			$detail_id = $rc['insert_id'];
 			
@@ -174,7 +174,7 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.users');
 			if( $rc['stat'] != 'ok' ) { 
 				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.users');
-				return $rc;
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'998', 'msg'=>'Unable to add user business detail', 'err'=>$rc['err']));
 			}
 			$detail_id = $rc['insert_id'];
 			

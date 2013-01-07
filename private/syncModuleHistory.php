@@ -20,10 +20,10 @@ function ciniki_businesses_syncModuleHistory(&$ciniki, &$sync, $business_id, $ar
 	//
 	$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.historyList', 'type'=>$args['type'], 'since_uts'=>$sync['last_sync']));
 	if( $rc['stat'] != 'ok' ) {
-		return $rc;
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'988', 'msg'=>'Unable to get remote history list', 'err'=>$rc['err']));
 	}
 	if( !isset($rc['history']) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'904', 'msg'=>'Unable to get remote history'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'904', 'msg'=>'Unable to get remote history list'));
 	}
 	$remote_history = $rc['history'];
 	
@@ -33,7 +33,7 @@ function ciniki_businesses_syncModuleHistory(&$ciniki, &$sync, $business_id, $ar
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'historyList');
 	$rc = ciniki_businesses_sync_historyList($ciniki, $sync, $business_id, array('type'=>$args['type'], 'since_uts'=>$sync['last_sync']));
 	if( $rc['stat'] != 'ok' ) {
-		return $rc;
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'989', 'msg'=>'Unable to get local history list', 'err'=>$rc['err']));
 	}
 	if( !isset($rc['history']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'909', 'msg'=>'Unable to get local history'));
@@ -55,7 +55,7 @@ function ciniki_businesses_syncModuleHistory(&$ciniki, &$sync, $business_id, $ar
 				//
 				$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.historyGet', 'history'=>$uuid));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'990', 'msg'=>'Unable to get remote history', 'err'=>$rc['err']));
 				}
 				if( !isset($rc['history']) ) {
 					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'910', 'msg'=>'History not found on remote server'));
@@ -67,7 +67,7 @@ function ciniki_businesses_syncModuleHistory(&$ciniki, &$sync, $business_id, $ar
 				//
 				$rc = ciniki_businesses_sync_historyAdd($ciniki, $sync, $business_id, array('history'=>$history));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'991', 'msg'=>'Unable to update local history', 'err'=>$rc['err']));
 				}
 			} 
 		}
@@ -84,10 +84,10 @@ function ciniki_businesses_syncModuleHistory(&$ciniki, &$sync, $business_id, $ar
 			if( !isset($remote_history[$uuid]) ) {
 				$rc = ciniki_businesses_sync_historyGet($ciniki, $sync, $business_id, array('history'=>$uuid));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'992', 'msg'=>'Unable to get local history', 'err'=>$rc['err']));
 				}
 				if( !isset($rc['history']) ) {
-					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'911', 'msg'=>'History not found on remote server'));
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'911', 'msg'=>'History not found on local server'));
 				}
 				$history = $rc['history'];
 				
@@ -96,7 +96,7 @@ function ciniki_businesses_syncModuleHistory(&$ciniki, &$sync, $business_id, $ar
 				//
 				$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.historyAdd', 'history'=>$history));
 				if( $rc['stat'] != 'ok' ) {
-					return $rc;
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'993', 'msg'=>'Unable to update remote history', 'err'=>$rc['err']));
 				}
 			} 
 		}
