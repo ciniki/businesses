@@ -124,10 +124,10 @@ function ciniki_businesses_syncModule(&$ciniki, &$sync, $business_id, $args) {
 				//
 				$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.userGet', 'uuid'=>$uuid));
 				if( $rc['stat'] != 'ok' ) {
-					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'985', 'msg'=>'User not found on remote server', 'err'=>$rc['err']));
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'985', 'msg'=>'User not found on remote server: ' . $uuid, 'err'=>$rc['err']));
 				}
 				if( !isset($rc['user']) ) {
-					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'895', 'msg'=>'User not found on remote server'));
+					return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'895', 'msg'=>'User not found on remote server: ' . $uuid));
 				}
 				$user = $rc['user'];
 
