@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
+function ciniki_businesses_user_add(&$ciniki, $sync, $business_id, $args) {
 	//
 	// Check the args
 	//
@@ -199,7 +199,7 @@ function ciniki_businesses_sync_userAdd(&$ciniki, $sync, $business_id, $args) {
 	//
 	// Get the list of businesses this user is part of, and replicate that user for that business
 	//
-	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncPushUser', 'args'=>array('id'=>$user_id));
+	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.user.push', 'args'=>array('id'=>$user_id));
 
 	return array('stat'=>'ok', 'id'=>$user_id);
 }

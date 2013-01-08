@@ -77,7 +77,7 @@
 //		)
 // )
 //
-function ciniki_businesses_sync_userGet($ciniki, $sync, $business_id, $args) {
+function ciniki_businesses_user_get($ciniki, $sync, $business_id, $args) {
 	//
 	// Check the args
 	//

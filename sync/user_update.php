@@ -9,14 +9,31 @@
 // Returns
 // -------
 //
-function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args) {
+function ciniki_businesses_user_update(&$ciniki, &$sync, $business_id, $args) {
 	//
 	// Check the args
 	//
-	if( !isset($args['user']) || $args['user'] == '' ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'890', 'msg'=>'No type specified'));
+	if( (!isset($args['uuid']) || $args['uuid'] == '') 
+		&& (!isset($args['user']) || $args['user'] == '') ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'890', 'msg'=>'No user specified'));
 	}
-	$remote_user = $args['user'];
+
+	if( isset($args['uuid']) && $args['uuid'] != '' ) {
+		//
+		// Get the remote user to update
+		//
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncRequest');
+		$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>"ciniki.businesses.user.get", 'uuid'=>$args['uuid']));
+		if( $rc['stat'] != 'ok' ) {
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'980', 'msg'=>"Unable to get the remote user", 'err'=>$rc['err']));
+		}
+		if( !isset($rc['user']) ) {
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'285', 'msg'=>"user not found on remote server"));
+		}
+		$remote_user = $rc['user'];
+	} else {
+		$remote_user = $args['user'];
+	}
 
 	//
 	// Check if user already exists in local server, and if not run the add script
@@ -29,7 +46,7 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1000', 'msg'=>'Unable to get user id', 'err'=>$rc['err']));
 	}
 	if( !isset($rc['user']) ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'userAdd');
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'user_add');
 		
 		//
 		// Check to see if the email address is under another uuid
@@ -45,8 +62,7 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args
 			//
 			// User does not exist at all
 			//
-			ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'userAdd');
-			$rc = ciniki_businesses_sync_userAdd($ciniki, $sync, $business_id, $args);
+			$rc = ciniki_businesses_user_add($ciniki, $sync, $business_id, $args);
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1002', 'msg'=>'Unable to add user: ' . $remote_user['uuid'], 'err'=>$rc['err']));
 		} else {
 			//
@@ -70,8 +86,8 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args
 	//
 	// Get the local user
 	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'userGet');
-	$rc = ciniki_businesses_sync_userGet($ciniki, $sync, $business_id, array('id'=>$user_id));
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'user_get');
+	$rc = ciniki_businesses_user_get($ciniki, $sync, $business_id, array('id'=>$user_id));
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1004', 'msg'=>'Unable to get local user: ' . $remote_user['uuid'], 'err'=>$rc['err']));
 	}
@@ -374,7 +390,7 @@ function ciniki_businesses_sync_userUpdate(&$ciniki, &$sync, $business_id, $args
 		//
 		// Get the list of businesses this user is part of, and replicate that user for that business
 		//
-		$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncPushUser', 'args'=>array('id'=>$user_id, 'ignore_sync_id'=>$sync['id']));
+		$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.user.push', 'args'=>array('id'=>$user_id, 'ignore_sync_id'=>$sync['id']));
 	}
 
 	return array('stat'=>'ok', 'id'=>$user_id);

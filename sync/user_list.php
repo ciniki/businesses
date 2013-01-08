@@ -10,7 +10,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_sync_userList($ciniki, $sync, $business_id, $args) {
+function ciniki_businesses_user_list($ciniki, $sync, $business_id, $args) {
 	//
 	// Check the args
 	//
@@ -63,6 +63,6 @@ function ciniki_businesses_sync_userList($ciniki, $sync, $business_id, $args) {
 	// Note: Users are never deleted, just their status is changed
 	//
 
-	return array('stat'=>'ok', 'users'=>$users);
+	return array('stat'=>'ok', 'list'=>$users);
 }
 ?>

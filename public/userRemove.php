@@ -151,7 +151,7 @@ function ciniki_businesses_userRemove(&$ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
 	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'businesses');
-	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.syncModule', 'args'=>array('type'=>'full'));
+	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.user.push', 'args'=>array('id'=>$args['user_id']));
 
 	return array('stat'=>'ok');
 }

@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_syncPushUser(&$ciniki, &$sync, $business_id, $args) {
+function ciniki_businesses_user_push(&$ciniki, &$sync, $business_id, $args) {
 	if( !isset($args['id']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'80', 'msg'=>'Missing ID argument'));
 	}
@@ -17,8 +17,8 @@ function ciniki_businesses_syncPushUser(&$ciniki, &$sync, $business_id, $args) {
 	//
 	// Get the local user
 	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'userGet');
-	$rc = ciniki_businesses_sync_userGet($ciniki, $sync, $business_id, array('id'=>$args['id']));
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'user_get');
+	$rc = ciniki_businesses_user_get($ciniki, $sync, $business_id, array('id'=>$args['id']));
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'79', 'msg'=>'Unable to get user'));
 	}
@@ -31,7 +31,7 @@ function ciniki_businesses_syncPushUser(&$ciniki, &$sync, $business_id, $args) {
 	// Update the remote user
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncRequest');
-	$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.userUpdate', 'user'=>$user));
+	$rc = ciniki_core_syncRequest($ciniki, $sync, array('method'=>'ciniki.businesses.user.update', 'user'=>$user));
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'77', 'msg'=>'Unable to sync user'));
 	}
