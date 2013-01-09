@@ -63,6 +63,6 @@ function ciniki_businesses_user_list($ciniki, $sync, $business_id, $args) {
 	// Note: Users are never deleted, just their status is changed
 	//
 
-	return array('stat'=>'ok', 'list'=>$users);
+	return array('stat'=>'ok', 'list'=>$users, 'deleted'=>array());
 }
 ?>
