@@ -55,6 +55,9 @@ function ciniki_businesses_getDetailHistory($ciniki) {
 	if( $args['field'] == 'business.name' ) {
 		return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			'ciniki_businesses', '', 'name');
+	} elseif( $args['field'] == 'business.category' ) {
+		return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+			'ciniki_businesses', '', 'category');
 	} elseif( $args['field'] == 'business.sitename' ) {
 		return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			'ciniki_businesses', '', 'sitename');

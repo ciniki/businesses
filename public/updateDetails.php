@@ -39,10 +39,11 @@ function ciniki_businesses_updateDetails($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'business.name'=>array('required'=>'no', 'blank'=>'no', 'errmsg'=>'No name specified'), 
-		'business.sitename'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No sitename specified'), 
-		'business.tagline'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No tagline specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'business.name'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Business Name'), 
+		'business.category'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Category'), 
+		'business.sitename'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Sitename'), 
+		'business.tagline'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Tagline'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -94,6 +95,11 @@ function ciniki_businesses_updateDetails($ciniki) {
 		$strsql .= ", sitename = '" . ciniki_core_dbQuote($ciniki, $args['business.sitename']) . "'";
 		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 			2, 'ciniki_businesses', '', 'sitename', $args['business.sitename']);
+	}
+	if( isset($args['business.category']) ) {
+		$strsql .= ", category = '" . ciniki_core_dbQuote($ciniki, $args['business.category']) . "'";
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+			2, 'ciniki_businesses', '', 'category', $args['business.category']);
 	}
 	if( isset($args['business.tagline']) ) {
 		$strsql .= ", tagline = '" . ciniki_core_dbQuote($ciniki, $args['business.tagline']) . "'";
