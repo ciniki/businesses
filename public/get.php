@@ -54,7 +54,7 @@ function ciniki_businesses_get($ciniki) {
 	//
 	// Get all the information form ciniki_users table
 	//
-	$strsql = "SELECT ciniki_businesses.id, ciniki_businesses.uuid, ciniki_businesses.name, ciniki_businesses.status AS business_status, "
+	$strsql = "SELECT ciniki_businesses.id, ciniki_businesses.uuid, ciniki_businesses.name, ciniki_businesses.category, ciniki_businesses.status AS business_status, "
 		. "DATE_FORMAT(ciniki_businesses.date_added, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS date_added, "
 		. "DATE_FORMAT(ciniki_businesses.last_updated, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS last_updated, "
 		. "ciniki_business_subscriptions.status AS subscription_status, signup_date, trial_days, "

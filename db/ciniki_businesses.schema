@@ -11,6 +11,8 @@
 #
 # name: 		The common name of the business, which is used on the website and marketing materials.
 #
+# category:		The category name for use by sysadmin.  Allows admins to view businesses by category, helps to keep them sorted.
+#
 # tagline:		The brief one line business description.
 #
 # sitename:		The unique name of the business website.  Used in web delivery, and must be
@@ -38,6 +40,7 @@ create table ciniki_businesses (
 	id int not null auto_increment,
 	uuid char(36) not null,
 	name varchar(150) not null,
+	category varchar(150) not null,
 	sitename varchar(150) not null,
 	tagline varchar(255) not null,
 	description text not null,
@@ -50,4 +53,4 @@ create table ciniki_businesses (
 	index (last_updated),
 	unique index (uuid),
 	unique index (sitename)
-) ENGINE=InnoDB, COMMENT='v1.06';
+) ENGINE=InnoDB, COMMENT='v1.07';

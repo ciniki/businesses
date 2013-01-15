@@ -1,0 +1,5 @@
+#
+# This file will upgrade the database table businesses to version 1.07.
+#
+ALTER TABLE ciniki_businesses ADD COLUMN category varchar(150) not null AFTER name;
+ALTER TABLE ciniki_businesses COMMENT='v1.07';
