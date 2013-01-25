@@ -14,7 +14,7 @@ function ciniki_businesses_user_update(&$ciniki, &$sync, $business_id, $args) {
 	// Check the args
 	//
 	if( (!isset($args['uuid']) || $args['uuid'] == '') 
-		&& (!isset($args['user']) || $args['user'] == '') ) {
+		&& (!isset($args['object']) || $args['object'] == '') ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'890', 'msg'=>'No user specified'));
 	}
 
@@ -27,12 +27,12 @@ function ciniki_businesses_user_update(&$ciniki, &$sync, $business_id, $args) {
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'985', 'msg'=>"Unable to get the remote user", 'err'=>$rc['err']));
 		}
-		if( !isset($rc['user']) ) {
+		if( !isset($rc['object']) ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'984', 'msg'=>"user not found on remote server"));
 		}
-		$remote_user = $rc['user'];
+		$remote_user = $rc['object'];
 	} else {
-		$remote_user = $args['user'];
+		$remote_user = $args['object'];
 	}
 
 	//
@@ -46,7 +46,6 @@ function ciniki_businesses_user_update(&$ciniki, &$sync, $business_id, $args) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1000', 'msg'=>'Unable to get user id', 'err'=>$rc['err']));
 	}
 	if( !isset($rc['user']) ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'user_add');
 		
 		//
 		// Check to see if the email address is under another uuid
@@ -62,6 +61,7 @@ function ciniki_businesses_user_update(&$ciniki, &$sync, $business_id, $args) {
 			//
 			// User does not exist at all
 			//
+			ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'sync', 'user_add');
 			$rc = ciniki_businesses_user_add($ciniki, $sync, $business_id, $args);
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1002', 'msg'=>'Unable to add user: ' . $remote_user['uuid'], 'err'=>$rc['err']));
 		} else {
@@ -91,10 +91,10 @@ function ciniki_businesses_user_update(&$ciniki, &$sync, $business_id, $args) {
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1004', 'msg'=>'Unable to get local user: ' . $remote_user['uuid'], 'err'=>$rc['err']));
 	}
-	if( !isset($rc['user']) ) {
+	if( !isset($rc['object']) ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'58', 'msg'=>'User not found on local server'));
 	}
-	$local_user = $rc['user'];
+	$local_user = $rc['object'];
 
 	//  
 	// Turn off autocommit

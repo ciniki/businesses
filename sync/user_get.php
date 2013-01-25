@@ -319,6 +319,6 @@ function ciniki_businesses_user_get($ciniki, $sync, $business_id, $args) {
 		$user['history'] = $rc['history'];
 	}
 
-	return array('stat'=>'ok', 'user'=>$user);
+	return array('stat'=>'ok', 'object'=>$user);
 }
 ?>
