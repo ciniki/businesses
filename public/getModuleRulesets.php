@@ -97,8 +97,8 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
 			//
 			// Check for any rulesets for this module
 			//
-			if( file_exists($ciniki['config']['core']['root_dir'] . '/' . $module['package'] . '-api/' . $module['name'] . '/private/getRulesets.php') ) {
-				ciniki_core_loadMethod($ciniki, 'ciniki', '' . $module['package'] . '-api/' . $module['name'] . '', 'private', 'getRulesets');
+			if( file_exists($ciniki['config']['ciniki.core']['root_dir'] . '/' . $module['package'] . '-api/' . $module['name'] . '/private/getRulesets.php') ) {
+				ciniki_core_loadMethod($ciniki, $module['package'], $module['name'], 'private', 'getRulesets');
 				$func = "ciniki_" . $module['name'] . "_getRulesets";
 				$rulesets = $func($ciniki);
 				$i = 0;
