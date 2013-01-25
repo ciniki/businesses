@@ -42,9 +42,10 @@ function ciniki_businesses_getUserModules($ciniki) {
 	// FIXME: Add check to see which groups the user is part of, and only hand back the module list
 	//        for what they have access to.
 	//
-	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module FROM ciniki_business_modules "
-		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND status = 1 "
+	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module "
+		. "FROM ciniki_business_modules "
+		. "WHERE ciniki_business_modules.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND ciniki_business_modules.status = 1 "
 		. "";
 	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
@@ -54,16 +55,16 @@ function ciniki_businesses_getUserModules($ciniki) {
 	if( $rsp['stat'] == 'ok' ) {
 		foreach($rsp['modules'] as $i => $module) {
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
-				$strsql = "SELECT type, COUNT(ciniki_atdos.id) AS num_items "
+				$strsql = "SELECT ciniki_atdos.type, COUNT(ciniki_atdos.id) AS num_items "
 //				$strsql = "SELECT 'numtasks', COUNT(ciniki_atdos.id) "
 					. "FROM ciniki_atdos, ciniki_atdo_users "
-					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "WHERE ciniki_atdos.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 					. "AND (ciniki_atdos.type = 2 OR ciniki_atdos.type = 7) "	// Tasks or Projects
 					. "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
 					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 					. "AND ciniki_atdos.status = 1 "
 					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
-					. "GROUP BY type "
+					. "GROUP BY ciniki_atdos.type "
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
 				$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.atdo', 'atdo', 'type');
@@ -91,14 +92,14 @@ function ciniki_businesses_getUserModules($ciniki) {
 				//
 				$strsql = "SELECT type, COUNT(ciniki_atdos.id) AS num_items "
 					. "FROM ciniki_atdos, ciniki_atdo_users "
-					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "WHERE ciniki_atdos.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 					. "AND ((ciniki_atdos.type = 5 AND ciniki_atdos.parent_id = 0) OR ciniki_atdos.type = 6 )"	// Notes or Messages
 					. "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
 					. "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 					. "AND ciniki_atdos.status = 1 "
 					. "AND (ciniki_atdo_users.perms&0x04) = 0x04 "
 					. "AND (ciniki_atdo_users.perms&0x08) = 0 "
-					. "GROUP BY type "
+					. "GROUP BY ciniki_atdos.type "
 					. "";
 				$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.atdo', 'atdo', 'type');
 				if( $rc['stat'] != 'ok' ) {
