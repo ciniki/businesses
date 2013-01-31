@@ -41,14 +41,20 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		$strsql = "SELECT ciniki_businesses.id, name, "
-			. "IF(id='" . ciniki_core_dbQuote($ciniki, $ciniki['config']['core']['master_business_id']) . "', 'yes', 'no') AS ismaster "
+		$strsql = "SELECT ciniki_businesses.category, "
+			. "ciniki_businesses.id, "
+			. "ciniki_businesses.name "
 			. "FROM ciniki_businesses "
-//			. "LEFT JOIN ciniki_business_users ON (ciniki_businesses.id = ciniki_business_users.business_id "
-//				. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' ) "
-			. "WHERE ciniki_businesses.status < 60 "
-//			. "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
-			. "ORDER BY ismaster DESC, ciniki_businesses.status, ciniki_businesses.name ";
+			. "ORDER BY category, ciniki_businesses.status, ciniki_businesses.name "
+			. "";
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
+		$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+			array('container'=>'categories', 'fname'=>'category', 'name'=>'category',
+				'fields'=>array('name'=>'category')),
+			array('container'=>'businesses', 'fname'=>'id', 'name'=>'business',
+				'fields'=>array('id', 'name')),
+			));
+		return $rc;
 	} else {
 		$strsql = "SELECT DISTINCT ciniki_businesses.id, name "
 			. "FROM ciniki_business_users, ciniki_businesses "
@@ -66,7 +72,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 //			. "AND ciniki_business_users.business_id = ciniki_businesses.id "
 //			. "AND ciniki_businesses.status < 60 "	// Allow suspended businesses to be listed, so user can login and update billing/unsuspend
 //			. "ORDER BY ciniki_businesses.name ";
-	}	
+	}
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
 	return ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'businesses', 'business', array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'66', 'msg'=>'No businesses found')));
