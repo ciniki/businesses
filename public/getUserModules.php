@@ -54,6 +54,17 @@ function ciniki_businesses_getUserModules($ciniki) {
 	//
 	if( $rsp['stat'] == 'ok' ) {
 		foreach($rsp['modules'] as $i => $module) {
+			//
+			// Get the current exhibition to display the menu at the top
+			// of the main menu for quick access
+			//
+			if( $module['module']['name'] == 'ciniki.exhibitions' ) {
+				// FIXME: Query for the current exhibition, and return info for main menu
+
+			}
+			//
+			// Get the numbers for the main menu
+			//
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
 				$strsql = "SELECT ciniki_atdos.type, COUNT(ciniki_atdos.id) AS num_items "
 //				$strsql = "SELECT 'numtasks', COUNT(ciniki_atdos.id) "
