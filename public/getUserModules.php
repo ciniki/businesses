@@ -59,8 +59,28 @@ function ciniki_businesses_getUserModules($ciniki) {
 			// of the main menu for quick access
 			//
 			if( $module['module']['name'] == 'ciniki.exhibitions' ) {
-				// FIXME: Query for the current exhibition, and return info for main menu
-
+				//
+				// Load the two most current exhibitions
+				//
+				$strsql = "SELECT ciniki_exhibitions.id, ciniki_exhibitions.name, "
+					. "DATE_FORMAT(ciniki_exhibitions.start_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS start_date, "
+					. "DATE_FORMAT(ciniki_exhibitions.end_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS end_date "
+					. "FROM ciniki_exhibitions "
+					. "WHERE ciniki_exhibitions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "ORDER BY ciniki_exhibitions.start_date DESC "
+					. "LIMIT 2"
+					. "";
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
+				$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.exhibitions', array(
+					array('container'=>'exhibitions', 'fname'=>'id', 'name'=>'exhibition',
+						'fields'=>array('id', 'name')),
+					));
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+				if( isset($rc['exhibitions']) ) {
+					$rsp['exhibitions'] = $rc['exhibitions'];
+				}
 			}
 			//
 			// Get the numbers for the main menu
