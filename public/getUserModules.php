@@ -62,9 +62,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 				//
 				// Load the two most current exhibitions
 				//
-				$strsql = "SELECT ciniki_exhibitions.id, ciniki_exhibitions.name, "
-					. "DATE_FORMAT(ciniki_exhibitions.start_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS start_date, "
-					. "DATE_FORMAT(ciniki_exhibitions.end_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS end_date "
+				$strsql = "SELECT ciniki_exhibitions.id, ciniki_exhibitions.name "
 					. "FROM ciniki_exhibitions "
 					. "WHERE ciniki_exhibitions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 					. "ORDER BY ciniki_exhibitions.start_date DESC "
