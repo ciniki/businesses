@@ -48,41 +48,101 @@ function ciniki_businesses_userAdd(&$ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
 
+	$db_updated = 0;
 
 	//
-	// Remove the user from the business_users table
+	// Check if user already exists, and we need to change status
 	//
-	$strsql = "INSERT INTO ciniki_business_users (business_id, user_id, package, permission_group, status, date_added, last_updated) VALUES ("
-		. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
-		. "'" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "', "
-		. "'" . ciniki_core_dbQuote($ciniki, $args['package']) . "', "
-		. "'" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "', "
-		. "10, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
-	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
-	if( $rc['stat'] != 'ok' ) {
+	$strsql = "SELECT id, user_id, status "
+		. "FROM ciniki_business_users "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+		. "AND package = '" . ciniki_core_dbQuote($ciniki, $args['package']) . "' "
+		. "AND permission_group = '" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "' "
+		. "";
+	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
+	if( $rc['stat'] != 'ok' ) {	
 		return $rc;
 	}
-	if( $rc['num_affected_rows'] < 1 ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'512', 'msg'=>'Unable to add user to the business'));
-	}
-	$business_user_id = $rc['insert_id'];
+	
+	if( isset($rc['user']) && $rc['user']['user_id'] == $args['user_id'] ) {
+		$business_user_id = $rc['user']['id'];
+		if( $rc['user']['status'] != '10' ) {
+			$strsql = "UPDATE ciniki_business_users SET "
+				. "status = '10', "
+				. "last_updated = UTC_TIMESTAMP() "
+				. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+				. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+				. "AND package = '" . ciniki_core_dbQuote($ciniki, $args['package']) . "' "
+				. "AND permission_group = '" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "' "
+				. "";
+			ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+			if( $rc['stat'] != 'ok' ) {
+				return $rc;
+			}
+			$db_updated = 1;
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+				$args['business_id'], 2, 'ciniki_business_users', $business_user_id, 'status', '10'); 
+		}
+	} 
 
-//	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-//		1, 'ciniki_business_users', $business_user_id, 'user_id', $args['user_id']);
-//	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-//		1, 'ciniki_business_users', $args['user_id'], 'package', $args['package']);
-//	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-//		1, 'ciniki_business_users', $args['user_id'], 'permission_group', $args['permission_group']);
-	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		1, 'ciniki_business_users', $args['user_id'] . '.' . $args['package'] . '.' . $args['permission_group'], 'status', '10'); 
+	//
+	// If the user and package-permission_group doesn't already exist, add
+	//
+	else {
+		//
+		// Get a new UUID
+		//
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUUID');
+		$rc = ciniki_core_dbUUID($ciniki, 'ciniki.businesses');
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		$uuid = $rc['uuid'];
+
+		//
+		// Remove the user from the business_users table
+		//
+		$strsql = "INSERT INTO ciniki_business_users (uuid, business_id, user_id, "
+			. "package, permission_group, status, date_added, last_updated) VALUES ("
+			. "'" . ciniki_core_dbQuote($ciniki, $uuid) . "', "
+			. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
+			. "'" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "', "
+			. "'" . ciniki_core_dbQuote($ciniki, $args['package']) . "', "
+			. "'" . ciniki_core_dbQuote($ciniki, $args['permission_group']) . "', "
+			. "10, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
+		$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		if( $rc['num_affected_rows'] < 1 ) {
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'512', 'msg'=>'Unable to add user to the business'));
+		}
+		$business_user_id = $rc['insert_id'];
+
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+			$args['business_id'], 1, 'ciniki_business_users', $business_user_id, 
+			'uuid', $uuid); 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+			$args['business_id'], 1, 'ciniki_business_users', $business_user_id, 
+			'package', $args['package']); 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+			$args['business_id'], 1, 'ciniki_business_users', $business_user_id, 
+			'permission_group', $args['permission_group']); 
+		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+			$args['business_id'], 1, 'ciniki_business_users', $business_user_id, 'status', '10'); 
+	}
 
 	//
 	// Get the list of businesses this user is part of, and replicate that user for that business
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
 	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'businesses');
-	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.user.push', 'args'=>array('id'=>$args['user_id']));
+
+	$ciniki['syncqueue'][] = array('push'=>'ciniki.businesses.user', 
+		'args'=>array('id'=>$business_user_id));
 
 	return array('stat'=>'ok', 'id'=>$business_user_id);
 }

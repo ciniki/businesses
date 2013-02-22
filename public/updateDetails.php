@@ -33,7 +33,7 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_updateDetails($ciniki) {
+function ciniki_businesses_updateDetails(&$ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
@@ -151,6 +151,8 @@ function ciniki_businesses_updateDetails($ciniki) {
 			}
 			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_details', $arg_name, 'detail_value', $arg_value);
+			$ciniki['syncqueue'][] = array('push'=>'ciniki.businesses.details', 
+				'args'=>array('id'=>$arg_name));
 		}
 	}
 

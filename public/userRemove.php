@@ -123,8 +123,8 @@ function ciniki_businesses_userRemove(&$ciniki) {
 	
 //	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 //		3, 'ciniki_business_users', $args['user_id'] . '.' . $args['package'] . '.' . $args['permission_group'], '*', '');
-	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		2, 'ciniki_business_users', $args['user_id'] . '.' . $args['package'] . '.' . $args['permission_group'], 'status', '60');
+	ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+		$args['business_id'], 2, 'ciniki_business_users', $business_user_id, 'status', '60');
 
 	//
 	// Commit the changes
@@ -137,21 +137,22 @@ function ciniki_businesses_userRemove(&$ciniki) {
 	//
 	// Update the last_updated for the user, so replication catches the changes
 	//
-	$strsql = "UPDATE ciniki_business_users SET last_updated = UTC_TIMESTAMP() "
-		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
-		. "";
-	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.users');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
+//	$strsql = "UPDATE ciniki_business_users SET last_updated = UTC_TIMESTAMP() "
+//		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+//		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+//		. "";
+//	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.users');
+//	if( $rc['stat'] != 'ok' ) {
+//		return $rc;
+//	}
 
 	//
 	// Get the list of businesses this user is part of, and replicate that user for that business
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
 	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'businesses');
-	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.user.push', 'args'=>array('id'=>$args['user_id']));
+	$ciniki['syncqueue'][] = array('push'=>'ciniki.businesses.user', 
+		'args'=>array('id'=>$business_user_id));
 
 	return array('stat'=>'ok');
 }

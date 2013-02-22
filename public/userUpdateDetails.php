@@ -59,6 +59,25 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 	}
 
 	//
+	// Get the existing details
+	//
+	$strsql = "SELECT id, detail_key, detail_value "
+		. "FROM ciniki_business_user_details "
+		. "WHERE ciniki_business_user_details.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND ciniki_business_user_details.user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+		. "";
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
+	$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'details', 'detail_key');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	if( isset($rc['details']) ) {
+		$existing_details = $rc['details'];
+	} else {
+		$existing_details = array();
+	}
+
+	//
 	// Allowed business user detail keys 
 	//
 	$allowed_keys = array(
@@ -70,22 +89,84 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {
-			$strsql = "INSERT INTO ciniki_business_user_details (business_id, user_id, detail_key, detail_value, date_added, last_updated) "
-				. "VALUES ('" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'"
-				. ", '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'"
-				. ", '" . ciniki_core_dbQuote($ciniki, $arg_name) . "'"
-				. ", '" . ciniki_core_dbQuote($ciniki, $arg_value) . "'"
-				. ", UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
-				. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $arg_value) . "' "
-				. ", last_updated = UTC_TIMESTAMP() "
-				. "";
-			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
-			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-				return $rc;
+			//
+			// Check if key already exists for user
+			//
+			if( !isset($existing_details[$arg_name]) ) {
+				// Add new detail
+
+				//
+				// Get a new UUID
+				//
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUUID');
+				$rc = ciniki_core_dbUUID($ciniki, 'ciniki.businesses');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+				$uuid = $rc['uuid'];
+
+				$strsql = "INSERT INTO ciniki_business_user_details ("
+					. "uuid, business_id, user_id, "
+					. "detail_key, detail_value, date_added, last_updated) "
+					. "VALUES ("
+					. "'" . ciniki_core_dbQuote($ciniki, $uuid) . "'"
+					. ",'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'"
+					. ", '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'"
+					. ", '" . ciniki_core_dbQuote($ciniki, $arg_name) . "'"
+					. ", '" . ciniki_core_dbQuote($ciniki, $arg_value) . "'"
+					. ", UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
+					. "";
+				$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
+				if( $rc['stat'] != 'ok' ) {
+					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+					return $rc;
+				}
+				$detail_id = $rc['insert_id'];
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 
+					'ciniki_business_history', $args['business_id'], 
+					1, 'ciniki_business_user_details', $detail_id, 'uuid', $uuid);
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 
+					'ciniki_business_history', $args['business_id'], 
+					1, 'ciniki_business_user_details', $detail_id, 'user_id', $args['user_id']);
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 
+					'ciniki_business_history', $args['business_id'], 
+					1, 'ciniki_business_user_details', $detail_id, 'detail_key', $arg_name);
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 
+					'ciniki_business_history', $args['business_id'], 
+					1, 'ciniki_business_user_details', $detail_id, 'detail_value', $arg_value);
+				$ciniki['syncqueue'][] = array('push'=>'ciniki.businesses.user_detail', 
+					'args'=>array('id'=>$detail_id));
+			} elseif( $existing_details[$arg_name] != $arg_value ) {
+				// Update existing detail
+				$detail_id = $existing_details[$arg_name]['id'];
+				$strsql = "UPDATE ciniki_business_user_details SET "
+					. "detail_value = '" . ciniki_core_dbQuote($ciniki, $arg_value) . "' "
+					. ", last_updated = UTC_TIMESTAMP() "
+					. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $detail_id) . "' "
+					. "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+					. "";
+				$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+				if( $rc['stat'] != 'ok' ) {
+					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+					return $rc;
+				}
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 
+					'ciniki_business_history', $args['business_id'], 
+					2, 'ciniki_business_user_details', $detail_id, 'detail_value', $arg_value);
+				$ciniki['syncqueue'][] = array('push'=>'ciniki.businesses.user_detail', 
+					'args'=>array('id'=>$detail_id));
 			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-				2, 'ciniki_business_user_details', $args['user_id'], $arg_name, $arg_value);
+			
+//			$strsql = "INSERT INTO ciniki_business_user_details (business_id, user_id, detail_key, detail_value, date_added, last_updated) "
+//				. "VALUES ('" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'"
+//				. ", '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "'"
+//				. ", '" . ciniki_core_dbQuote($ciniki, $arg_name) . "'"
+//				. ", '" . ciniki_core_dbQuote($ciniki, $arg_value) . "'"
+//				. ", UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
+//				. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $arg_value) . "' "
+//				. ", last_updated = UTC_TIMESTAMP() "
+//				. "";
 		}
 	}
 
@@ -148,7 +229,6 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
 	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'businesses');
-	$ciniki['syncqueue'][] = array('method'=>'ciniki.businesses.user.push', 'args'=>array('id'=>$args['user_id']));
 
 	return array('stat'=>'ok');
 }

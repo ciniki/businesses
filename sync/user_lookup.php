@@ -77,10 +77,11 @@ function ciniki_businesses_user_lookup(&$ciniki, &$sync, $business_id, $args) {
 	//
 	elseif( isset($args['local_id']) && $args['local_id'] != '' ) {
 		$strsql = "SELECT DISTINCT ciniki_users.uuid FROM ciniki_users, ciniki_business_users "
-			. "WHERE ciniki_users.id = '" . ciniki_core_dbQuote($ciniki, $args['local_id']) . "' "
+			. "WHERE ciniki_business_users.id = '" . ciniki_core_dbQuote($ciniki, $args['local_id']) . "' "
 			. "AND ciniki_users.id = ciniki_business_users.user_id "
 			. "AND ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. "";
+		error_log($strsql);
 		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
 		if( $rc['stat'] != 'ok' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1046', 'msg'=>"Unable to get the user uuid", 'err'=>$rc['err']));

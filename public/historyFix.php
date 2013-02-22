@@ -33,7 +33,48 @@ function ciniki_businesses_historyFix($ciniki) {
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDelete');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbFixTableHistory');
+
+	//
+	// Remove old incorrect formatted entries
+	//
+	$strsql = "DELETE FROM ciniki_business_history "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND table_name = 'ciniki_business_users' "
+		. "AND table_field LIKE '%.%.%' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	$strsql = "DELETE FROM ciniki_business_history "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND table_name = 'ciniki_business_user_details' "
+		. "AND table_field LIKE '%.%' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	//
+	// Add the proper history for ciniki_business_users
+	//
+	$rc = ciniki_core_dbFixTableHistory($ciniki, 'ciniki.businesses', $args['business_id'],
+		'ciniki_business_users', 'ciniki_business_history',
+		array('uuid', 'user_id', 'package', 'permission_group', 'status'));
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	$rc = ciniki_core_dbFixTableHistory($ciniki, 'ciniki.businesses', $args['business_id'],
+		'ciniki_business_user_details', 'ciniki_business_history',
+		array('uuid', 'user_id', 'detail_key', 'detail_value'));
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
 
 	//
 	// Check for items missing a UUID
