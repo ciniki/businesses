@@ -59,6 +59,18 @@ function ciniki_businesses_historyFix($ciniki) {
 		return $rc;
 	}
 
+	// Remote entries with blank table_field
+	$strsql = "DELETE FROM ciniki_business_history "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND table_name = 'ciniki_businesses' "
+		. "AND table_field = '' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	
+
 	//
 	// Add the proper history for ciniki_business_users
 	//
