@@ -24,6 +24,7 @@ function ciniki_businesses_syncNow($ciniki) {
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
 		'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Sync'), 
 		'type'=>array('required'=>'yes', 'blank'=>'no', 'validlist'=>array('incremental', 'partial', 'full'), 'name'=>'Type'),
+		'module'=>array('required'=>'no', 'blank'=>'no', 'default'=>'', 'name'=>'Module'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -43,7 +44,7 @@ function ciniki_businesses_syncNow($ciniki) {
 	$datetime_format = ciniki_users_datetimeFormat($ciniki);
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncBusiness');
-	$rc = ciniki_core_syncBusiness($ciniki, $args['business_id'], $args['sync_id'], $args['type']);
+	$rc = ciniki_core_syncBusiness($ciniki, $args['business_id'], $args['sync_id'], $args['type'], $args['module']);
 	return $rc;
 }
 ?>
