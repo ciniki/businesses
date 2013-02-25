@@ -51,6 +51,16 @@ function ciniki_businesses_historyFix($ciniki) {
 
 	$strsql = "DELETE FROM ciniki_business_history "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "AND table_name = 'ciniki_business_users' "
+		. "AND table_key LIKE '%.%.%' "
+		. "";
+	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	$strsql = "DELETE FROM ciniki_business_history "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND table_name = 'ciniki_business_user_details' "
 		. "AND table_field LIKE '%.%' "
 		. "";
