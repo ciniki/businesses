@@ -43,6 +43,15 @@ function ciniki_businesses_syncNow($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'datetimeFormat');
 	$datetime_format = ciniki_users_datetimeFormat($ciniki);
 
+	//
+	// Setup logging
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncLog');
+	if( isset($ciniki['config']['ciniki.core']['sync.log_dir']) ) {
+		$ciniki['synclogfile'] = $ciniki['config']['ciniki.core']['sync.log_dir'] . "/sync-" . $args['sync_id'] . ".log";
+	}
+	$ciniki['synclogprefix'] = '[' . $args['business_id'] . '-' . $args['sync_id'] . ']';
+
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncBusiness');
 	$rc = ciniki_core_syncBusiness($ciniki, $args['business_id'], $args['sync_id'], $args['type'], $args['module']);
 	return $rc;
