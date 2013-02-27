@@ -57,6 +57,6 @@ function ciniki_businesses_userDetailHistory($ciniki) {
 			'ciniki_business_user_details', $detail_id, 'detail_value', '');
 	} 
 
-	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'999', 'msg'=>'Unable to find any history'));
+	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'137', 'msg'=>'Unable to find any history'));
 }
 ?>
