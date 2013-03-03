@@ -36,7 +36,7 @@ create table ciniki_business_user_details (
 	detail_value varchar(6000) not null,
 	date_added datetime not null,
 	last_updated datetime not null,
-	primary_key (id),
+	primary key (id),
 	unique index (business_id, user_id, detail_key),
 	index (last_updated)
 ) ENGINE=InnoDB, COMMENT='v1.02';
