@@ -59,7 +59,8 @@ function ciniki_businesses_syncCheckRowCounts($ciniki) {
 	//
 	// Get the list of syncs, or just one if specified
 	//
-	$strsql = "SELECT id, remote_name, remote_uuid "
+	$strsql = "SELECT ciniki_business_syncs.id, "
+		. "ciniki_business_syncs.remote_name, ciniki_business_syncs.remote_uuid "
 		. "FROM ciniki_business_syncs "
 		. "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND status = 10 ";

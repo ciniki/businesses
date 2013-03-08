@@ -34,11 +34,18 @@ function ciniki_businesses_syncCheck($ciniki) {
 		return $rc;
 	}
 
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncLoad');
+	$rc = ciniki_core_syncLoad($ciniki, $args['business_id'], $args['sync_id']);
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	$sync = $rc['sync'];
+
 	//
 	// Check the versions and return
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncCheckVersions');
-	$rc = ciniki_core_syncCheckVersions($ciniki, $args['business_id'], $args['sync_id']);
+	$rc = ciniki_core_syncCheckVersions($ciniki, $sync, $args['business_id']);
 	if( $rc['stat'] != 'ok' ) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'568', 'msg'=>'Incompatible versions', 'err'=>$rc['err']));
 	}
