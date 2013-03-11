@@ -23,8 +23,8 @@ function ciniki_businesses_logoSave(&$ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'image_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No image specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'image_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Image'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -56,13 +56,18 @@ function ciniki_businesses_logoSave(&$ciniki) {
 	//
 	// Update business with new image id
 	//
-	$strsql = "UPDATE ciniki_businesses SET logo_id = '" . ciniki_core_dbQuote($ciniki, $args['image_id']) . "' "
+	$strsql = "UPDATE ciniki_businesses SET "
+		. "logo_id = '" . ciniki_core_dbQuote($ciniki, $args['image_id']) . "' "
 		. ", last_updated = UTC_TIMESTAMP() "
 		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
 	$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
+
+	//
+	// Add the reference
+	//
 	
 	//
 	// Commit the transaction
