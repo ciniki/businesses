@@ -145,6 +145,35 @@ function ciniki_businesses_getUserModules($ciniki) {
 					$rsp['modules'][$i]['module']['notes_count'] = 0;
 				}
 			}
+			if( $module['module']['name'] == 'ciniki.newsaggregator' ) {
+				$strsql = "SELECT 'unread_count' AS type, COUNT(*) AS num_items "
+					. "FROM ciniki_newsaggregator_subscriptions "
+					. "LEFT JOIN ciniki_newsaggregator_articles ON (ciniki_newsaggregator_subscriptions.feed_id = ciniki_newsaggregator_articles.feed_id "
+						. "AND ciniki_newsaggregator_subscriptions.date_read_all < ciniki_newsaggregator_articles.published_date ) "
+//					. "LEFT JOIN ciniki_newsaggregator_article_users ON (ciniki_newsaggregator_articles.id = ciniki_newsaggregator_article_users.article_id "
+//						. "AND ciniki_newsaggregator_article_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "') "
+//						. "AND (ciniki_newsaggregator_article_users.flags&0x01) = 0 )
+					. "WHERE ciniki_newsaggregator_subscriptions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "AND ciniki_newsaggregator_subscriptions.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+//					. "AND (ciniki_newsaggregator_article_users.flags = NULL OR (ciniki_newsaggregator_article_users.flags&0x01) = 0) "
+					. "AND NOT EXISTS (SELECT article_id FROM ciniki_newsaggregator_article_users "
+						. "WHERE ciniki_newsaggregator_articles.id = ciniki_newsaggregator_article_users.article_id "
+						. "AND ciniki_newsaggregator_article_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+						. "AND (ciniki_newsaggregator_article_users.flags&0x01) = 1 "
+						. ") "
+					. "GROUP BY type "
+					. "";
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
+				$rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.newsaggregator', 'newsaggregator', 'type');
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+				if( isset($rc['newsaggregator']['unread_count']['num_items']) ) {
+					$rsp['modules'][$i]['module']['unread_count'] = 0 + $rc['newsaggregator']['unread_count']['num_items'];
+				} else {
+					$rsp['modules'][$i]['module']['unread_count'] = 0;
+				}
+			}
 		}
 	}
 
