@@ -36,6 +36,8 @@
 #					record is a sub domain, then this points to the
 #					root domain if hosted here. (not used currently)
 #
+# expiry_date:		The date the domain is set to expire, used for tracking renewals.
+#
 # date_added:		The UTC date and time the domain was added to the table.
 # last_updated:		The UTC date and time the domain was last updated.
 #
@@ -46,9 +48,10 @@ create table ciniki_business_domains (
 	flags tinyint unsigned not null,
 	status tinyint unsigned not null,
 	root_id int not null,
+	expiry_date date not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),
 	index(business_id),
 	unique index (domain)
-) ENGINE=InnoDB, COMMENT='v1.01';
+) ENGINE=InnoDB, COMMENT='v1.02';

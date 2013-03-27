@@ -1,0 +1,5 @@
+#
+# This file will upgrade the database table businesses to version 1.02.
+#
+ALTER TABLE ciniki_business_domains ADD COLUMN expiry_date date not null AFTER root_id;
+ALTER TABLE ciniki_business_domains COMMENT='v1.02';
