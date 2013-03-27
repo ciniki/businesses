@@ -47,11 +47,12 @@ function ciniki_businesses_domainExpiries($ciniki) {
 		. "IF((ciniki_business_domains.flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
 		. "IFNULL(DATE_FORMAT(ciniki_business_domains.expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
 		. "ciniki_business_domains.status, "
-		. "DATEDIFF(UTC_TIMESTAMP(),ciniki_business_domains.expiry_date) AS age "
+		. "IFNULL(DATEDIFF(ciniki_business_domains.expiry_date, UTC_TIMESTAMP()), -999) AS expire_in_days "
 		. "FROM ciniki_business_domains "
 		. "LEFT JOIN ciniki_businesses ON (ciniki_business_domains.business_id = ciniki_businesses.id) "
 		. "WHERE DATEDIFF(ciniki_business_domains.expiry_date,UTC_TIMESTAMP()) < '" . $args['days'] . "' "
-		. "ORDER BY age "
+		. "OR ciniki_business_domains.expiry_date = '0000-00-00' "
+		. "ORDER BY expire_in_days ASC "
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
