@@ -18,11 +18,12 @@ function ciniki_businesses_domainUpdate($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'domain_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No domain specified'), 
-		'domain'=>array('required'=>'no', 'blank'=>'no', 'errmsg'=>'No domain specified'), 
-		'flags'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No flags specified'), 
-		'status'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No status specified'),
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'domain_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Domain ID'), 
+		'domain'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Domain'), 
+		'flags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Flags'), 
+		'status'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Status'),
+		'expiry_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Expiry Date'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -65,6 +66,7 @@ function ciniki_businesses_domainUpdate($ciniki) {
 		'domain',
 		'flags',
 		'status',
+		'expiry_date',
 		);
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) ) {

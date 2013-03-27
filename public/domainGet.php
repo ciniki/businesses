@@ -35,7 +35,11 @@ function ciniki_businesses_domainGet($ciniki) {
         return $rc;
     }   
 
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
+	$date_format = ciniki_users_dateFormat($ciniki);
+
 	$strsql = "SELECT ciniki_business_domains.id, domain, flags, status, "
+		. "DATE_FORMAT(expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS expiry_date, "
 		. "date_added, last_updated "
 		. "FROM ciniki_business_domains "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "

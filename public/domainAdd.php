@@ -17,10 +17,11 @@ function ciniki_businesses_domainAdd($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'domain'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No domain specified'), 
-		'flags'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'errmsg'=>'No flags specified'), 
-		'status'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'errmsg'=>'No status specified'),
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'domain'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Domain'), 
+		'flags'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Flags'), 
+		'status'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Status'),
+		'expiry_date'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'type'=>'date', 'name'=>'Expiry Date'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -53,12 +54,13 @@ function ciniki_businesses_domainAdd($ciniki) {
 	// FIXME: Add ability to set modules when site is added, right now default to most apps on
 	//
 	$strsql = "INSERT INTO ciniki_business_domains (business_id, "
-		. "domain, flags, status, "
+		. "domain, flags, status, expiry_date, "
 		. "date_added, last_updated ) VALUES ( "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['domain']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['flags']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['status']) . "', "
+		. "'" . ciniki_core_dbQuote($ciniki, $args['expiry_date']) . "', "
 		. "UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
@@ -78,6 +80,7 @@ function ciniki_businesses_domainAdd($ciniki) {
 		'domain',
 		'flags',
 		'status',
+		'expiry_date',
 		);
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) && $args[$field] != '' ) {

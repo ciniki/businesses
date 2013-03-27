@@ -32,11 +32,15 @@ function ciniki_businesses_domainList($ciniki) {
 		return $ac;
 	}
 
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
+	$date_format = ciniki_users_dateFormat($ciniki);
+
 	//
 	// Query the database for the domain
 	//
 	$strsql = "SELECT id, domain, flags, status, "
 		. "IF((flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
+		. "IFNULL(DATE_FORMAT(expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
 		. "status "
 		. "FROM ciniki_business_domains "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
