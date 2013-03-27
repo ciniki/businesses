@@ -40,6 +40,11 @@ function ciniki_businesses_domainHistory($ciniki) {
 		return $rc;
 	}
 
+	if( $args['field'] == 'expiry_date' ) {
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
+		return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 'ciniki_business_domains', $args['domain_id'], $args['field'], 'date');
+	}
+
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
 	return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 'ciniki_business_domains', $args['domain_id'], $args['field']);
 }
