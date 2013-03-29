@@ -24,6 +24,7 @@ function ciniki_businesses_domainUpdate($ciniki) {
 		'flags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Flags'), 
 		'status'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Status'),
 		'expiry_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Expiry Date'),
+		'managed_by'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Managed'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -67,6 +68,7 @@ function ciniki_businesses_domainUpdate($ciniki) {
 		'flags',
 		'status',
 		'expiry_date',
+		'managed_by',
 		);
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) ) {

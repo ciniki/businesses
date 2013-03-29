@@ -22,6 +22,7 @@ function ciniki_businesses_domainAdd($ciniki) {
 		'flags'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Flags'), 
 		'status'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Status'),
 		'expiry_date'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'type'=>'date', 'name'=>'Expiry Date'),
+		'managed_by'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Managed'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -54,13 +55,14 @@ function ciniki_businesses_domainAdd($ciniki) {
 	// FIXME: Add ability to set modules when site is added, right now default to most apps on
 	//
 	$strsql = "INSERT INTO ciniki_business_domains (business_id, "
-		. "domain, flags, status, expiry_date, "
+		. "domain, flags, status, expiry_date, managed_by, "
 		. "date_added, last_updated ) VALUES ( "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['domain']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['flags']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['status']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['expiry_date']) . "', "
+		. "'" . ciniki_core_dbQuote($ciniki, $args['managed_by']) . "', "
 		. "UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 	$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
@@ -81,6 +83,7 @@ function ciniki_businesses_domainAdd($ciniki) {
 		'flags',
 		'status',
 		'expiry_date',
+		'managed_by',
 		);
 	foreach($changelog_fields as $field) {
 		if( isset($args[$field]) && $args[$field] != '' ) {

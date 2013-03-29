@@ -48,7 +48,8 @@ function ciniki_businesses_domainExpiries($ciniki) {
 		. "ciniki_business_domains.status AS status_text, "
 		. "IF((ciniki_business_domains.flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
 		. "IFNULL(DATE_FORMAT(ciniki_business_domains.expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
-		. "IFNULL(DATEDIFF(ciniki_business_domains.expiry_date, UTC_TIMESTAMP()), -999) AS expire_in_days "
+		. "IFNULL(DATEDIFF(ciniki_business_domains.expiry_date, UTC_TIMESTAMP()), -999) AS expire_in_days, "
+		. "ciniki_business_domains.managed_by "
 		. "FROM ciniki_business_domains "
 		. "LEFT JOIN ciniki_businesses ON (ciniki_business_domains.business_id = ciniki_businesses.id) "
 		. "WHERE DATEDIFF(ciniki_business_domains.expiry_date,UTC_TIMESTAMP()) < '" . $args['days'] . "' "
@@ -60,7 +61,7 @@ function ciniki_businesses_domainExpiries($ciniki) {
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'domains', 'fname'=>'id', 'name'=>'domain',
 			'fields'=>array('id', 'business_id', 'business_name', 'business_status',
-				'domain', 'flags', 'status', 'status_text', 'isprimary', 
+				'domain', 'flags', 'status', 'status_text', 'isprimary', 'managed_by', 
 				'expiry_date', 'expire_in_days'),
 			'maps'=>array(
 				'business_status'=>array('1'=>'Active', '10'=>'Suspended', '60'=>'Deleted'),

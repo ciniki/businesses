@@ -41,7 +41,7 @@ function ciniki_businesses_domainList($ciniki) {
 	$strsql = "SELECT id, domain, flags, status, "
 		. "IF((flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
 		. "IFNULL(DATE_FORMAT(expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
-		. "status "
+		. "status, managed_by "
 		. "FROM ciniki_business_domains "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "";

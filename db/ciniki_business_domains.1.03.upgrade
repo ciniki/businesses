@@ -1,0 +1,5 @@
+#
+# This file will upgrade the database table businesses to version 1.03.
+#
+ALTER TABLE ciniki_business_domains ADD COLUMN managed_by varchar(100) not null AFTER expiry_date;
+ALTER TABLE ciniki_business_domains COMMENT='v1.03';

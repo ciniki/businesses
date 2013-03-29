@@ -44,6 +44,7 @@ function ciniki_businesses_domainListAll($ciniki) {
 		. "ciniki_business_domains.domain, "
 		. "ciniki_business_domains.flags, "
 		. "ciniki_business_domains.status, "
+		. "ciniki_business_domains.managed_by, "
 		. "IF((ciniki_business_domains.flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
 		. "IFNULL(DATE_FORMAT(ciniki_business_domains.expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
 		. "DATEDIFF(ciniki_business_domains.expiry_date, UTC_TIMESTAMP()) AS expire_in_days "
@@ -60,7 +61,7 @@ function ciniki_businesses_domainListAll($ciniki) {
 		array('container'=>'domains', 'fname'=>'id', 'name'=>'domain',
 			'fields'=>array('id', 'business_id', 'business_name', 'business_status',
 				'domain', 'flags', 'status', 'isprimary', 
-				'expiry_date', 'expire_in_days'),
+				'expiry_date', 'expire_in_days', 'managed_by'),
 			'maps'=>array('business_status'=>array('1'=>'Active', '10'=>'Suspended', '60'=>'Deleted')),
 			),
 		));

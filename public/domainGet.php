@@ -40,6 +40,7 @@ function ciniki_businesses_domainGet($ciniki) {
 
 	$strsql = "SELECT ciniki_business_domains.id, domain, flags, status, "
 		. "DATE_FORMAT(expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS expiry_date, "
+		. "managed_by, "
 		. "date_added, last_updated "
 		. "FROM ciniki_business_domains "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
