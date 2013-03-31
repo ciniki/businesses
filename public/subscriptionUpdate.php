@@ -23,8 +23,10 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		'currency'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Currency'),
 		'monthly'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Monthly'),
 		'trial_days'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Trial'),
+		'trial_start_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Trial Start'),
 		'payment_type'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Payment Type'),
 		'payment_frequency'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Payment Frequency'),
+		'last_payment_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'datetime', 'name'=>'Notes'),
 		'paid_until'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Notes'),
 		'notes'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Notes'),
         )); 
@@ -58,6 +60,9 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		return $rc;
 	}   
 
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'timezoneOffset');
+	$utc_offset = ciniki_users_timezoneOffset($ciniki);
+
 	//
 	// Get the existing subscription information
 	//
@@ -70,11 +75,16 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		return $rc;
 	}
 	if( !isset($rc['subscription']) ) {
-		$strsql = "INSERT INTO ciniki_business_subscriptions (business_id, signup_date, status, "
-			. "trial_days, currency, monthly, payment_type, payment_frequency, paid_until, notes, "
+		$strsql = "INSERT INTO ciniki_business_subscriptions (business_id, signup_date, trial_start_date, status, "
+			. "trial_days, currency, monthly, payment_type, payment_frequency, paid_until, last_payment_date, notes, "
 			. "date_added, last_updated) VALUES ("
 			. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 			. "UTC_TIMESTAMP(), ";
+		if( isset($args['trial_start_date']) && $args['trial_start_date'] != '' ) {
+			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['trial_start_date']) . "', ";
+		} else {
+			$strsql .= "UTC_TIMESTAMP(), ";
+		}
 		if( isset($args['status']) && $args['status'] != '' ) {
 			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['status']) . "', ";
 		} else {
@@ -107,6 +117,12 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		}
 		if( isset($args['paid_until']) && $args['paid_until'] != '' ) {
 			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['paid_until']) . "', ";
+		} else {
+			$strsql .= "'', ";
+		}
+		if( isset($args['last_payment_date']) && $args['last_payment_date'] != '' ) {
+			$strsql .= "CONVERT_TZ('" . ciniki_core_dbQuote($ciniki, $args['last_payment_date']) . "', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "', '+00:00'), ";
+//			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['last_payment_date']) . "', ";
 		} else {
 			$strsql .= "'', ";
 		}
@@ -168,6 +184,8 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 			'currency',
 			'monthly',
 			'trial_days',
+			'trial_start_date',
+			'last_payment_date',
 			'payment_type',
 			'payment_frequency',
 			'paid_until',
@@ -175,7 +193,12 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 			);
 		foreach($changelog_fields as $field) {
 			if( isset($args[$field]) ) {
-				$strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
+				if( $field == 'last_payment_date' ) {
+					$strsql .= ", last_payment_date = CONVERT_TZ('" . ciniki_core_dbQuote($ciniki, $args['last_payment_date']) . "', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "', '+00:00') ";
+				} else {
+					$strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
+				}
+				// FIXME: Stored converted date/time in history
 				$rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 					2, 'ciniki_business_subscriptions', $subscription['id'], $field, $args[$field]);
 			}

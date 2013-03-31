@@ -42,8 +42,9 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	//
 	$strsql = "SELECT ciniki_businesses.name, ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
 		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
-		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.date_added, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
-		. "IF(paid_until='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.paid_until, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y')) AS paid_until, "
+		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.last_payment_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
+		. "DATE_FORMAT(paid_until, '%b %e, %Y') AS paid_until, "
+		. "DATE_FORMAT(trial_start_date, '%b %e, %Y') AS trial_start_date, "
 		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.signup_date))/86400) AS trial_remaining, "
 		. "payment_type, payment_frequency, notes "
 		. "FROM ciniki_business_subscriptions, ciniki_businesses "

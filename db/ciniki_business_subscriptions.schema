@@ -53,6 +53,7 @@ create table ciniki_business_subscriptions (
 	business_id int not null,
 	status tinyint unsigned not null,
 	signup_date datetime not null,
+	trial_start_date not null,
 	trial_days int not null,
 	currency varchar(20) not null,
 	monthly decimal(10,2) not null,

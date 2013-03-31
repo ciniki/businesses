@@ -1,6 +1,8 @@
 #
 # This file will upgrade the database table business_subscriptions to version 1.03.
 #
+ALTER TABLE ciniki_business_subscriptions ADD COLUMN trial_start_date date not null AFTER signup_date;
+UPDATE ciniki_business_subscriptions SET trial_start_date = signup_date;
 ALTER TABLE ciniki_business_subscriptions ADD COLUMN payment_frequency tinyint unsigned not null AFTER payment_type;
 UPDATE ciniki_business_subscriptions SET payment_frequency = 10 WHERE payment_frequency = 0;
 ALTER TABLE ciniki_business_subscriptions ADD COLUMN paid_until date not null AFTER last_payment_date;
