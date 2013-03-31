@@ -43,7 +43,9 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	$strsql = "SELECT ciniki_businesses.name, ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
 		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.date_added, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
-		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.signup_date))/86400) AS trial_remaining "
+		. "IF(paid_until='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.paid_until, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y')) AS paid_until, "
+		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.signup_date))/86400) AS trial_remaining, "
+		. "payment_type, payment_frequency, notes "
 		. "FROM ciniki_business_subscriptions, ciniki_businesses "
 		. "WHERE ciniki_business_subscriptions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND ciniki_business_subscriptions.business_id = ciniki_businesses.id "
@@ -66,6 +68,8 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 			$subscription['status_text'] = 'Payment information required';
 		} elseif( $subscription['status'] == 10 ) {
 			$subscription['status_text'] = 'Active';
+		} elseif( $subscription['status'] == 11 ) {
+			$subscription['status_text'] = 'Free Subscription';
 		} elseif( $subscription['status'] == 50 ) {
 			$subscription['status_text'] = 'Suspended';
 		} elseif( $subscription['status'] == 60 ) {

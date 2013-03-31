@@ -14,6 +14,7 @@
 #						 1 - Update required at paypal
 #						 2 - Trial persion, Payment information required
 #						10 - Active
+#						11 - Free Subscription
 #						50 - Suspended
 #						60 - Cancelled
 #						61 - Pending cancel at paypal
@@ -27,12 +28,23 @@
 # discount_percent:		The discount to be applied in a percentage.
 # discount_amount:		The discount to be applied in a dollar value.
 # payment_type:			Must be 'paypal', but others might be allowed in the future.
+#
+#						paypal - payment is processed through paypal
+#						cheque - Payments are made by cheque
+#
+# payment_frequency:	The frequency of payments/subscription
+#
+#						0 - Unknown
+#						10 - Monthly
+#						20 - Yearly
+#	
 # paypal_subscr_id:		The subscr_id from paypal that submitted the payment.
 # paypal_payer_email:	The paypal payer_email who submitted the payment.
 # paypal_payer_id:		The payer_id from paypal of who submitted the payment.
 # paypal_amount:		The amount set in the subscription at paypal, updated from IPN.
 #
 # last_payment_date:	The UTC date and time the last payment was received.
+#
 # date_added:			The UTC date and time the record was created.
 # last_updated:			The UTC date and time the record was last_updated.
 # 
@@ -47,13 +59,16 @@ create table ciniki_business_subscriptions (
 	discount_percent int not null,
 	discount_amount int not null,
 	payment_type varchar(20) not null,
+	payment_frequency tinyint unsigned not null,
 	paypal_subscr_id varchar(100) not null,
 	paypal_payer_email varchar(250) not null,
 	paypal_payer_id varchar(100) not null,
 	paypal_amount decimal(10,2) not null,
 	last_payment_date datetime not null,
+	paid_until date not null,
+    notes varchar(6000) not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),
 	unique index (business_id)
-) ENGINE=InnoDB, COMMENT='v1.02';
+) ENGINE=InnoDB, COMMENT='v1.03';
