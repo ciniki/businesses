@@ -36,7 +36,7 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
 		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(signup_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.signup_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS signup_date, "
 		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.last_payment_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
-		. "IF(paid_until='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.paid_until, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS paid_until, "
+		. "IF(paid_until='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.paid_until, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y')) AS paid_until, "
 		. "IF(trial_start_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.trial_start_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS trial_start_date, "
 		. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.trial_start_date))/86400) AS trial_remaining "
 		. "FROM ciniki_businesses "
