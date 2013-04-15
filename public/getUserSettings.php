@@ -138,6 +138,12 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.services'] = $rc['settings'];
 				} 
 			}
+			if( $module['module']['name'] == 'ciniki.mail' ) {
+				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_mail_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'mail');
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.mail'] = $rc['settings'];
+				} 
+			}
 		}
 	}
 
