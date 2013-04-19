@@ -37,6 +37,9 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
+	if( !isset($rc['business']) ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1051', 'msg'=>'Unable to get business details'));
+	}
 	$rsp['details']['name'] = $rc['business']['name'];
 	$rsp['details']['sitename'] = $rc['business']['sitename'];
 	$rsp['details']['tagline'] = $rc['business']['tagline'];
