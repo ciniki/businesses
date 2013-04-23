@@ -114,6 +114,12 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 		foreach($mrc['modules'] as $i => $module) {
+			if( $module['module']['name'] == 'ciniki.artcatalog' ) {
+				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_artcatalog_settings', 'business_id', $args['business_id'], 'ciniki.artcatalog', 'settings', '');
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.artcatalog'] = $rc['settings'];
+				}
+			}
 			if( $module['module']['name'] == 'ciniki.atdo' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
