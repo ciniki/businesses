@@ -46,7 +46,7 @@ function ciniki_businesses_getModuleFlagsHistory($ciniki) {
 	// Check access to business_id as owner, or sys admin
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getModuleRulesetHistory');
+	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getModuleFlagsHistory');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
 	}
