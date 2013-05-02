@@ -150,6 +150,11 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.mail'] = $rc['settings'];
 				} 
 			}
+			if( $module['module']['name'] == 'ciniki.exhibitions' ) {
+				if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
+					$rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
+				}
+			}
 		}
 	}
 
