@@ -86,6 +86,9 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 		'contact.cell.number',
 		'contact.fax.number',
 		'contact.email.address',
+		'employee-bio-image',
+		'employee-bio-image-caption',
+		'employee-bio-content',
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {
