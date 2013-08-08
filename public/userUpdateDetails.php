@@ -178,34 +178,40 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
 	$rc = ciniki_businesses_checkModuleAccess($ciniki, $args['business_id'], 'ciniki', 'web');
+	$fields = array(
+		'page-contact-user-display-flags-',
+		'page-contact-user-sort-order-',
+		);
 	if( $rc['stat'] == 'ok' ) {
-		$field = 'page-contact-user-display-flags-' . $args['user_id'];
-		if( isset($ciniki['request']['args'][$field]) && $ciniki['request']['args'][$field] != '') {
-			// Update the web module
-			$strsql = "INSERT INTO ciniki_web_settings (business_id, detail_key, detail_value, date_added, last_updated) "
-				. "VALUES ('" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args']['business_id']) . "'"
-				. ", '" . ciniki_core_dbQuote($ciniki, $field) . "' "
-				. ", '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$field]) . "'"
-				. ", UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
-				. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$field]) . "' "
-				. ", last_updated = UTC_TIMESTAMP() "
-				. "";
-			$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.web');
-			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.web');
-				return $rc;
-			}
-			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.web', 'ciniki_web_history', $args['business_id'], 
-				2, 'ciniki_web_settings', $field, 'detail_value', $ciniki['request']['args'][$field]);
-			//
-			// Update the page-contact-user-display field
-			// - this function will update last_change for web module.
-			//
-			ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'updateUserDisplay');
-			$rc = ciniki_web_updateUserDisplay($ciniki, $args['business_id']);
-			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-				return $rc;
+		foreach($fields as $field_prefix) {
+			$field = $field_prefix . $args['user_id'];
+			if( isset($ciniki['request']['args'][$field]) && $ciniki['request']['args'][$field] != '') {
+				// Update the web module
+				$strsql = "INSERT INTO ciniki_web_settings (business_id, detail_key, detail_value, date_added, last_updated) "
+					. "VALUES ('" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args']['business_id']) . "'"
+					. ", '" . ciniki_core_dbQuote($ciniki, $field) . "' "
+					. ", '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$field]) . "'"
+					. ", UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
+					. "ON DUPLICATE KEY UPDATE detail_value = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$field]) . "' "
+					. ", last_updated = UTC_TIMESTAMP() "
+					. "";
+				$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.web');
+				if( $rc['stat'] != 'ok' ) {
+					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.web');
+					return $rc;
+				}
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.web', 'ciniki_web_history', $args['business_id'], 
+					2, 'ciniki_web_settings', $field, 'detail_value', $ciniki['request']['args'][$field]);
+				//
+				// Update the page-contact-user-display field
+				// - this function will update last_change for web module.
+				//
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'updateUserDisplay');
+				$rc = ciniki_web_updateUserDisplay($ciniki, $args['business_id']);
+				if( $rc['stat'] != 'ok' ) {
+					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+					return $rc;
+				}
 			}
 		}
 	}

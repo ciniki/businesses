@@ -74,19 +74,17 @@ function ciniki_businesses_userDetails($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
 	$rc = ciniki_businesses_checkModuleAccess($ciniki, $args['business_id'], 'ciniki', 'web');
 	if( $rc['stat'] == 'ok' ) {
-		$strsql = "SELECT detail_value "
+		$strsql = "SELECT detail_key, detail_value "
 			. "FROM ciniki_web_settings "
 			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "AND detail_key = 'page-contact-user-display-flags-" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+			. "AND detail_key LIKE 'page-contact-user-%-" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
 			. "";
 		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.web', 'user');
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
 		}
-		if( isset($rc['user']['detail_value']) && $rc['user']['detail_value'] != '' ) {
-			$user['page-contact-user-display-flags-' . $args['user_id']] = $rc['user']['detail_value'];
-		} else {
-			$user['page-contact-user-display-flags-' . $args['user_id']] = 0;
+		foreach($rc['rows'] as $row) {
+			$user[$row['detail_key']] = $row['detail_value'];
 		}
 	}
 
