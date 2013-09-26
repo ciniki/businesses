@@ -133,6 +133,15 @@ function ciniki_businesses_updateDetails(&$ciniki) {
 		'contact.fax.number',
 		'contact.email.address',
 		'ciniki.manage.css',
+		'social-facebook-url',
+		'social-twitter-username',
+		'social-flickr-url',
+		'social-etsy-url',
+		'social-pinterest-username',
+		'social-tumblr-username',
+		'social-youtube-username',
+		'social-vimeo-url',
+		'social-instagram-username',
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {

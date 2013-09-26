@@ -36,7 +36,8 @@ function ciniki_businesses_getDetails($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'keys'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Keys'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -53,8 +54,9 @@ function ciniki_businesses_getDetails($ciniki) {
 	}
 
 	// Split the keys, if specified
-	if( isset($ciniki['request']['args']['keys']) && $ciniki['request']['args']['keys'] != '' ) {
-		$detail_keys = preg_split('/,/', $ciniki['request']['args']['keys']);
+	if( isset($args['keys']) && $args['keys'] != '' ) {
+//	if( isset($ciniki['request']['args']['keys']) && $ciniki['request']['args']['keys'] != '' ) {
+		$detail_keys = preg_split('/,/', $args['keys']);
 	} else {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'118', 'msg'=>'No keys specified'));
 	}
@@ -64,6 +66,7 @@ function ciniki_businesses_getDetails($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 	foreach($detail_keys as $detail_key) {
 		if( $detail_key == 'business' ) {
 			$strsql = "SELECT name, category, sitename, tagline FROM ciniki_businesses "
@@ -84,10 +87,17 @@ function ciniki_businesses_getDetails($ciniki) {
 			if( $rc['details'] != null ) {
 				$rsp['details'] += $rc['details'];
 			}
+		} elseif( in_array($detail_key, array('social')) ) {
+			$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_business_details', 'business_id', $args['business_id'], 'ciniki.businesses', 'details', $detail_key);
+			if( $rc['stat'] != 'ok' ) {
+				return $rc;
+			}
+			if( $rc['details'] != null ) {
+				$rsp['details'] += $rc['details'];
+			}
 		}
 	}
 
 	return $rsp;
-
 }
 ?>

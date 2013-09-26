@@ -23,7 +23,7 @@
 # - contact.tollfree.restrictions = <string>
 # - contact.fax.number = <string>
 # - contact.email = <string>
-# - social.twitter = <string>
+# - social.twitter.username = <string>
 # - social.facebook = <string>
 # - social.flickr = <string>
 #

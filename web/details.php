@@ -27,6 +27,7 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 
 	//
 	// Get the business name and tagline
@@ -44,6 +45,17 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	$rsp['details']['sitename'] = $rc['business']['sitename'];
 	$rsp['details']['tagline'] = $rc['business']['tagline'];
 	$rsp['details']['logo_id'] = $rc['business']['logo_id'];
+
+	//
+	// Get the social media information for the business
+	//
+	$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_business_details', 'business_id', $business_id, 'ciniki.businesses', 'social', 'social');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	if( isset($rc['social']) ) {
+		$rsp['social'] = $rc['social'];
+	}
 	
 	return $rsp;
 }
