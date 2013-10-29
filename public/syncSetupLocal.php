@@ -21,14 +21,14 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'remote_name'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No name specified'), 
-		'remote_uuid'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No remote uuid specified'), 
-		'type'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No sync type specified'), 
-		'json_api'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No json API specified'), 
-		'remote_key'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No remote API key specified'), 
-		'username'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No remote username specified'), 
-		'password'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No remote password specified'), 
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'remote_name'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote Name'), 
+		'remote_uuid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote UUID'), 
+		'type'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Type'), 
+		'json_api'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote JSON API URL'), 
+		'remote_key'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote API Key'), 
+		'username'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote Username'), 
+		'password'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote Password'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

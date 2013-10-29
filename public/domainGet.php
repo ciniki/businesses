@@ -17,8 +17,8 @@ function ciniki_businesses_domainGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-        'domain_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No domain specified'), 
+        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'domain_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Domain'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;

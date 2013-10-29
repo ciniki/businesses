@@ -21,12 +21,12 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_uuid'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'type'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'name'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'url'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'uuid'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'public_key'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
+		'business_uuid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business UUID'), 
+		'type'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Type'), 
+		'name'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Name'), 
+		'url'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'URL'), 
+		'uuid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'UUID'), 
+		'public_key'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Public Key'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

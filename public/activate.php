@@ -20,7 +20,7 @@ function ciniki_businesses_activate($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
+		'id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

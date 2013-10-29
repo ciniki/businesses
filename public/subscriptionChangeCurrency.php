@@ -18,8 +18,8 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-        'currency'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No currency specified'), 
+        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'currency'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Currency'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;

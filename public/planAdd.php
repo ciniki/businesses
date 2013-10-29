@@ -17,13 +17,13 @@ function ciniki_businesses_planAdd($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'name'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No name specified'), 
-		'flags'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'errmsg'=>'No flags specified'), 
-		'monthly'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'errmsg'=>'No monthly specified'),
-		'modules'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'errmsg'=>'No modules specified'),
-		'trial_days'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'errmsg'=>'No trial_days specified'),
-		'description'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'errmsg'=>'No description specified'),
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'name'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Name'), 
+		'flags'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Flags'), 
+		'monthly'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Monthly Price'),
+		'modules'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Modules'),
+		'trial_days'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Number of Trial Days'),
+		'description'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Description'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

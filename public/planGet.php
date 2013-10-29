@@ -17,8 +17,8 @@ function ciniki_businesses_planGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-        'plan_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No plan specified'), 
+        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'plan_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plan'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
