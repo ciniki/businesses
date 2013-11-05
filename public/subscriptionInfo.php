@@ -84,10 +84,6 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 		$subscription['trial_remaining'] = 0;
 	} 
 
-	//
-	// Get the history
-	//
-
 	return array('stat'=>'ok', 'subscription'=>$subscription, 'paypal'=>array(
 		'url'=>$ciniki['config']['ciniki.businesses']['paypal.url'],
 		'business'=>$ciniki['config']['ciniki.businesses']['paypal.business'],
