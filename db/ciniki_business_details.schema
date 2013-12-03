@@ -23,9 +23,23 @@
 # - contact.tollfree.restrictions = <string>
 # - contact.fax.number = <string>
 # - contact.email = <string>
-# - social.twitter.username = <string>
-# - social.facebook = <string>
-# - social.flickr = <string>
+#
+# Social Media settings
+# - social-twitter-username = <string>
+# - social-facebook-url = <string>
+# - social-flickr-url = <string>
+# - social-etsy-url = <string>
+# - social-pinterest-username = <string>
+# - social-tumblr-username = <string>
+# - social-youtube-username = <string>
+# - social-vimeo-url = <string>
+# - social-instagram-username = <string>
+#
+# Set up the international settings for the business.  This is used
+# 
+# - intl-default-locale = <string> Default to en_US
+# - intl-default-currency = <string> Default to USD
+# - intl-default-timezone = <string> Default to America/Toronto
 #
 # - mossi.theme = <string>
 # - custom.name = <string> (custom fields created by user)

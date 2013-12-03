@@ -150,11 +150,26 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.mail'] = $rc['settings'];
 				} 
 			}
+			if( $module['module']['name'] == 'ciniki.sapos' ) {
+				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_sapos_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'paypal-api');
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.sapos'] = $rc['settings'];
+				} 
+			}
 			if( $module['module']['name'] == 'ciniki.exhibitions' ) {
 				if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
 					$rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
 				}
 			}
+		}
+
+		//
+		// Load the business settings
+		//
+		$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_business_details', 'business_id', 
+			$args['business_id'], 'ciniki.businesses', 'settings', 'intl');
+		if( $rc['stat'] == 'ok' ) {
+			$rsp['intl'] = $rc['settings'];
 		}
 	}
 
