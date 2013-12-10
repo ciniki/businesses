@@ -74,7 +74,8 @@ function ciniki_businesses_businessDetails($ciniki, $business_id) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'lookupBusinessURL');
 	$rc = ciniki_web_lookupBusinessURL($ciniki, $business_id);
 	if( $rc['stat'] == 'ok' ) {
-		$rsp['details']['contact-website-url'] = $rc['url'];
+		// Remove the http from the url
+		$rsp['details']['contact-website-url'] = preg_replace('/http:\/\/www\./', '', $rc['url']);
 	}
 	
 	return $rsp;
