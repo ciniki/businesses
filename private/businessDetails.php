@@ -58,6 +58,24 @@ function ciniki_businesses_businessDetails($ciniki, $business_id) {
 			$rsp['details'][$contact_key] = $contact;
 		}
 	}
+
+	//
+	// Check if web module is enabled, and determine the web address
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
+	$rc = ciniki_businesses_checkModuleAccess($ciniki, $business_id, 'ciniki', 'web');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	
+	//
+	// Lookup the web address
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'lookupBusinessURL');
+	$rc = ciniki_web_lookupBusinessURL($ciniki, $business_id);
+	if( $rc['stat'] == 'ok' ) {
+		$rsp['details']['contact-website-url'] = $rc['url'];
+	}
 	
 	return $rsp;
 }
