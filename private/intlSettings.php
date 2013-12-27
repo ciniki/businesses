@@ -46,7 +46,7 @@ function ciniki_businesses_intlSettings(&$ciniki, $business_id) {
 	}
 
 	//
-	// Save the settings int he business cache
+	// Save the settings in the business cache
 	//
 	if( !isset($ciniki['business']) ) {
 		$ciniki['business'] = array('settings'=>$rc['settings']);
