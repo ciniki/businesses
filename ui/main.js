@@ -625,6 +625,22 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
+		// Customer module, all owners and employees
+		// Add a space to the label, to create a separate section appearance
+		if( M.curBusiness.modules['ciniki.customers'] != null ) {
+			if( menu_search == 1 ) {
+				this.menu.sections[c] = {'label':'', 'id':'customers', 'searchlabel':'Customers', 'type':'livesearchgrid', 
+					'livesearchcols':1, 'hint':'',
+					'headerValues':null,
+					'noData':'No customers found',
+					'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
+				};
+				c++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Customers', 'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		// Courses module
 		if( M.curBusiness.modules['ciniki.courses'] != null ) {
 			this.menu.sections[c++] = {'label':'', 'list':{
@@ -643,22 +659,6 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
-		// Customer module, all owners and employees
-		// Add a space to the label, to create a separate section appearance
-		if( M.curBusiness.modules['ciniki.customers'] != null ) {
-			if( menu_search == 1 ) {
-				this.menu.sections[c] = {'label':'', 'id':'customers', 'searchlabel':'Customers', 'type':'livesearchgrid', 
-					'livesearchcols':1, 'hint':'',
-					'headerValues':null,
-					'noData':'No customers found',
-					'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
-				};
-				c++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Customers', 'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
 		// Products module, all owners and employees and Products group
 		if( M.curBusiness.modules['ciniki.products'] != null ) { 
 			this.menu.sections[c] = {'label':'', 'id':'products', 'searchlabel':'Products', 'type':'livesearchgrid', 
