@@ -79,7 +79,7 @@ function ciniki_businesses_settings() {
 			this.menu.sections['']['list']['taxes'] = {'label':'Taxes', 'fn':'M.startApp(\'ciniki.taxes.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.sapos'] != null ) {
-			this.menu.sections['']['list']['sapos'] = {'label':'POS', 'fn':'M.startApp(\'ciniki.sapos.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+			this.menu.sections['']['list']['sapos'] = {'label':'Accounting', 'fn':'M.startApp(\'ciniki.sapos.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.mail'] != null ) {
 			this.menu.sections['']['list']['mail'] = {'label':'Mail', 'fn':'M.startApp(\'ciniki.mail.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
