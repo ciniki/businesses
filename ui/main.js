@@ -599,7 +599,7 @@ function ciniki_businesses_main() {
 		// Simple Accounting/POS/Invoicing/Expenses module
 		//
 		if( M.curBusiness.modules['ciniki.sapos'] != null ) {
-			this.menu.sections[c] = {'label':'', 'id':'sapos', 'searchlabel':'POS', 'type':'livesearchgrid', 
+			this.menu.sections[c] = {'label':'', 'id':'sapos', 'searchlabel':'Accounting', 'type':'livesearchgrid', 
 				'livesearchcols':5, 'hint':'',
 				'headerValues':['Invoice #','Date','Customer','Amount','Status'],
 				'cellClasses':['','',''],
