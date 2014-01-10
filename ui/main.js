@@ -150,7 +150,7 @@ function ciniki_businesses_main() {
 				return '';
 			}
 			else if( this.sections[s].id == 'customers' ) {
-				if( d.customer.display_type == 'business' ) { return d.customer.company; }
+				if( d.customer.type == 2 ) { return d.customer.company + ' (' + d.customer.name + ')'; }
 				return d.customer.name;
 			}
 			else if( this.sections[s].id == 'products' ) {
@@ -192,7 +192,7 @@ function ciniki_businesses_main() {
 				switch (j) {
 					case 0: return d.invoice.invoice_number;
 					case 1: return d.invoice.invoice_date;
-					case 2: return d.invoice.customer_name;
+					case 2: return d.invoice.customer_name_display;
 					case 3: return d.invoice.total_amount_display;
 					case 4: return d.invoice.status_text;
 				}
