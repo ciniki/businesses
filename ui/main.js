@@ -55,7 +55,8 @@ function ciniki_businesses_main() {
 				return true;
 			}
 			else if( this.sections[s].id == 'products' && value != '' ) {
-				M.api.getJSONBgCb('ciniki.products.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10'}, 
+				M.api.getJSONBgCb('ciniki.products.productSearch', {'business_id':M.curBusinessID, 
+					'start_needle':value, 'status':1, 'limit':'10'}, 
 					function(rsp) { 
 						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.products); 
 					}); 
@@ -153,7 +154,7 @@ function ciniki_businesses_main() {
 				return d.customer.display_name;
 			}
 			else if( this.sections[s].id == 'products' ) {
-				return d.product.name;
+				return (d.product.category!=''?d.product.category:'Uncategorized') + ' - ' + d.product.name;
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
 				if( j == 0 ) {
@@ -209,7 +210,8 @@ function ciniki_businesses_main() {
 				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'atdo_id\':' + d.task.id + '})';
 			}
 			else if( this.sections[s].id == 'products' ) {
-				return 'M.startApp(\'ciniki.products.winekits\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':' + d.product.id + '})';
+//				return 'M.startApp(\'ciniki.products.winekits\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':' + d.product.id + '})';
+				return 'M.startApp(\'ciniki.products.product\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':\'' + d.product.id + '\'});';
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
 				return 'M.startApp(\'ciniki.artcatalog.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'artcatalog_id\':' + d.item.id + '})';
