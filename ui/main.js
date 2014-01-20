@@ -608,6 +608,9 @@ function ciniki_businesses_main() {
 				'addFn':'M.startApp(\'ciniki.sapos.invoice\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
 				'fn':'M.startApp(\'ciniki.sapos.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
 			};
+			if( (M.curBusiness.modules['ciniki.sapos'].flags&0x04) > 0 ) {
+				this.menu.sections[c].addFn = 'M.startApp(\'ciniki.sapos.qi\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});';
+				}
 			menu_search = 1;
 			c++;
 		}
@@ -634,6 +637,7 @@ function ciniki_businesses_main() {
 					'livesearchcols':1, 'hint':'',
 					'headerValues':null,
 					'noData':'No customers found',
+					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
 					'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
 				};
 				c++;

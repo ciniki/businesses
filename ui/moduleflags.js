@@ -55,6 +55,14 @@ function ciniki_businesses_moduleflags() {
 							'6':{'name':'Messages'},
 						}};
 				}
+				if( M.curBusiness.modules['ciniki.sapos'] != null ) {
+					p.sections.modules.fields['ciniki.sapos'] = {
+						'label':'Accounting', 'type':'flags', 'join':'no', 'flags':{
+							'1':{'name':'Invoices'},
+							'2':{'name':'Expenses'},
+							'3':{'name':'Quick Invoices'},
+						}};
+				}
 				if( M.curBusiness.modules['ciniki.mail'] != null ) {
 					p.sections.modules.fields['ciniki.mail'] = {
 						'label':'Mail', 'type':'flags', 'join':'no', 'flags':{
