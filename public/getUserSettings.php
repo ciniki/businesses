@@ -156,6 +156,13 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.sapos'] = $rc['settings'];
 				} 
 			}
+			if( $module['module']['name'] == 'ciniki.taxes' ) {
+				ciniki_core_loadMethod($ciniki, 'ciniki', 'taxes', 'private', 'taxTypes');
+				$rc = ciniki_taxes_taxTypes($ciniki, $args['business_id']);
+				if( $rc['stat'] == 'ok' ) {
+					$rsp['settings']['ciniki.taxes'] = array('types'=>$rc['types']);
+				} 
+			}
 			if( $module['module']['name'] == 'ciniki.exhibitions' ) {
 				if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
 					$rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
