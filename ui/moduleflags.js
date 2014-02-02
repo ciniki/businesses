@@ -75,8 +75,10 @@ function ciniki_businesses_moduleflags() {
 						'label':'Courses', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Course Codes'},
 							'2':{'name':'Instructors'},
-							'3':{'name':'Registrations'},
+							'3':{'name':'Course Prices'},
 							'4':{'name':'Course Files'},
+							'7':{'name':'Registrations'},
+							'8':{'name':'Online Registrations'},
 						}};
 				}
 				// The events and customers modules must both be enabled to allow for event registrations
