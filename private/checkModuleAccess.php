@@ -18,7 +18,7 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $module) {
+function ciniki_businesses_checkModuleAccess(&$ciniki, $business_id, $package, $module) {
 	//
 	// Get the active modules for the business
 	//
@@ -47,6 +47,7 @@ function ciniki_businesses_checkModuleAccess($ciniki, $business_id, $package, $m
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'696', 'msg'=>'Module disabled'));
 	}
 	$modules = $rc['modules'];
+	$ciniki['business']['modules'] = $modules;
 
 	//
 	// Check if the business is not active

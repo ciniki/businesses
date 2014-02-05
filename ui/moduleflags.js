@@ -56,13 +56,14 @@ function ciniki_businesses_moduleflags() {
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.products'] != null ) {
-//					p.sections.modules.fields['ciniki.products'] = {
+					var pflags = {'1':{'name':'Similar Products'}};
+					if( M.curBusiness.modules['ciniki.recipes'] != null ) {
+						pflags['2'] = {'name':'Recommended Recipes'};
+					}
 					p.sections['ciniki.products'] = {'label':'Products', 'fields':{
-						'ciniki.products':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
-							'1':{'name':'Similar Products'},
-//							'2':{'name':'Expenses'},
-//							'3':{'name':'Quick Invoices'},
-						}}}};
+						'ciniki.products':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 
+							'flags':pflags
+						}}};
 				}
 				if( M.curBusiness.modules['ciniki.sapos'] != null ) {
 //					p.sections.modules.fields['ciniki.sapos'] = {
