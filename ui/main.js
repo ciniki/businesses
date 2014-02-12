@@ -799,6 +799,15 @@ function ciniki_businesses_main() {
 					'_':{'label':'Media', 'fn':'M.startApp(\'ciniki.media.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		if( M.curBusiness.modules['ciniki.blog'] != null ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.blog = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		if( M.curBusiness.modules['ciniki.events'] != null ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.events = {'label':'Events', 'fn':'M.startApp(\'ciniki.events.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};

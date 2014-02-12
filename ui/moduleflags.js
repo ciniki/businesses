@@ -55,6 +55,13 @@ function ciniki_businesses_moduleflags() {
 							'6':{'name':'Messages'},
 						}}}};
 				}
+				if( M.curBusiness.modules['ciniki.blog'] != null ) {
+					p.sections['ciniki.blog'] = {'label':'Blog', 'fields':{
+						'ciniki.blog':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
+							'1':{'name':'Categories'},
+							'2':{'name':'Tags'},
+						}}}};
+				}
 				if( M.curBusiness.modules['ciniki.products'] != null ) {
 					var pflags = {'1':{'name':'Similar Products'}};
 					if( M.curBusiness.modules['ciniki.recipes'] != null ) {
@@ -66,7 +73,6 @@ function ciniki_businesses_moduleflags() {
 						}}};
 				}
 				if( M.curBusiness.modules['ciniki.sapos'] != null ) {
-//					p.sections.modules.fields['ciniki.sapos'] = {
 					p.sections['ciniki.sapos'] = {'label':'Accounting', 'fields':{
 						'ciniki.sapos':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Invoices'},
@@ -75,7 +81,6 @@ function ciniki_businesses_moduleflags() {
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.mail'] != null ) {
-//					p.sections.modules.fields['ciniki.mail'] = {
 					p.sections['ciniki.mail'] = {'label':'Mail', 'fields':{
 						'ciniki.mail':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Mailings'},
@@ -83,7 +88,6 @@ function ciniki_businesses_moduleflags() {
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.courses'] != null ) {
-					// p.sections.modules.fields['ciniki.courses'] = {
 					p.sections['ciniki.courses'] = {'label':'Courses', 'fields':{
 						'ciniki.courses':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Course Codes'},
@@ -97,7 +101,6 @@ function ciniki_businesses_moduleflags() {
 				// The events and customers modules must both be enabled to allow for event registrations
 				if( M.curBusiness.modules['ciniki.events'] != null 
 					&& M.curBusiness.modules['ciniki.customers'] != null ) {
-//					p.sections.modules.fields['ciniki.events'] = {
 					p.sections['ciniki.events'] = {'label':'Events', 'fields':{
 						'ciniki.events':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Registrations'},
