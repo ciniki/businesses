@@ -106,6 +106,9 @@ function ciniki_businesses_settings() {
 				'fixhistory':{'label':'Fix History', 'fn':'M.ciniki_businesses_settings.fixallhistory();'},
 //				'fixhistory':{'label':'Fix History', 'fn':'M.startApp(\'ciniki.businesses.fixhistory\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
 				}};
+			if( M.curBusiness.modules['ciniki.artclub'] != null ) {
+				this.menu.sections.admin.list['movemembers'] = {'label':'Move Members', 'fn':'M.ciniki_businesses_settings.movemembers();'};
+			}
 			if( M.curBusinessID == M.masterBusinessID ) {
 				this.menu.sections.admin.list['plans'] = {'label':'Plans', 'fn':'M.startApp(\'ciniki.businesses.plans\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 			}
@@ -205,6 +208,16 @@ function ciniki_businesses_settings() {
 	this.fixhistory = function(module) {
 		var rsp = M.api.getJSON(module + '.historyFix', {'business_id':M.curBusinessID});
 		if( rsp.stat != 'ok' ) {
+			M.api.err(rsp);
+			return false;
+		}
+		return true;
+	};
+
+	this.movemembers = function(module) {
+		var rsp = M.api.getJSON('ciniki.artclub.memberCopyToCustomers', {'business_id':M.curBusinessID});
+		if( rsp.stat != 'ok' ) {
+			alert('failed');
 			M.api.err(rsp);
 			return false;
 		}

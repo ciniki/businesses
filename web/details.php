@@ -56,7 +56,7 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
 	if( isset($rc['social']) ) {
 		$rsp['social'] = $rc['social'];
 	}
-	
+
 	return $rsp;
 }
 ?>

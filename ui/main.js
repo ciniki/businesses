@@ -541,10 +541,29 @@ function ciniki_businesses_main() {
 				this.menu.sections[c] = {'label':'Menu', 'list':{}};
 			}
 		}
+		//
+		// Members
+		//
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x02) > 0 ) {
+			if( menu_search == 1 ) {
+				this.menu.sections[c] = {'label':'', 'id':'members', 'searchlabel':'Members', 'type':'livesearchgrid', 
+					'livesearchcols':1, 'hint':'',
+					'headerValues':null,
+					'noData':'No members found',
+					'addFn':'M.startApp(\'ciniki.customers.memberedit\', null, \'M.ciniki_businesses_main.showMenu();\');',
+					'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');',
+				};
+				c++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Members', 'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		// Art Club
-		if( M.curBusiness.modules['ciniki.artclub'] != null ) {
+		if( M.curBusiness.modules['ciniki.artclub'] != null && (M.userPerms&0x01) == 0x01 ) {
 			this.menu.sections[c++] = {'label':'', 'list':{
-				'_':{'label':'Members', 'fn':'M.startApp(\'ciniki.artclub.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+				'_':{'label':'OLD Members', 'fn':'M.startApp(\'ciniki.artclub.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			this.menu.sections[c++] = {'label':'', 'list':{
 				'_':{'label':'Sponsors', 'fn':'M.startApp(\'ciniki.artclub.sponsors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
@@ -634,7 +653,8 @@ function ciniki_businesses_main() {
 
 		// Customer module, all owners and employees
 		// Add a space to the label, to create a separate section appearance
-		if( M.curBusiness.modules['ciniki.customers'] != null ) {
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x01) > 0 ) {
 			if( menu_search == 1 ) {
 				this.menu.sections[c] = {'label':'', 'id':'customers', 'searchlabel':'Customers', 'type':'livesearchgrid', 
 					'livesearchcols':1, 'hint':'',
