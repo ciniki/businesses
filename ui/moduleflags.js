@@ -40,6 +40,7 @@ function ciniki_businesses_moduleflags() {
 					return false;
 				}
 				var p = M.ciniki_businesses_moduleflags.modules;
+				p.sections = {};
 				//
 				// Setup the list of modules into the form fields
 				// 
