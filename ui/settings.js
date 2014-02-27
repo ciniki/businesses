@@ -63,9 +63,9 @@ function ciniki_businesses_settings() {
 			this.menu.sections['']['list']['wineproduction'] = {'label':'Wine Production', 'fn':'M.startApp(\'ciniki.wineproduction.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 			this.menu.sections[''].list.permissions.visible = 'yes';
 		}
-		if( M.curBusiness.modules['ciniki.subscriptions'] != null ) {
-			this.menu.sections[''].list.permissions.visible = 'yes';
-		}
+//		if( M.curBusiness.modules['ciniki.subscriptions'] != null ) {
+//			this.menu.sections[''].list.permissions.visible = 'yes';
+//		}
 		if( M.curBusiness.modules['ciniki.media'] != null ) {
 			this.menu.sections[''].list.permissions.visible = 'yes';
 		}
