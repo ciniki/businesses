@@ -61,13 +61,21 @@ function ciniki_businesses_moduleflags() {
 						'ciniki.customers':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Customers'},
 							'2':{'name':'Members'},
+							'3':{'name':'Member Categories'},
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.blog'] != null ) {
 					p.sections['ciniki.blog'] = {'label':'Blog', 'fields':{
 						'ciniki.blog':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
-							'1':{'name':'Categories'},
-							'2':{'name':'Tags'},
+							'1':{'name':'Public Blog'},
+							'2':{'name':'Public Categories'},
+							'3':{'name':'Public Tags'},
+//							'5':{'name':'Customer Blog'},
+//							'6':{'name':'Customer Categories'},
+//							'7':{'name':'Customer Tags'},
+							'9':{'name':'Member Blog'},
+							'10':{'name':'Member Categories'},
+							'11':{'name':'Member Tags'},
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.products'] != null ) {
