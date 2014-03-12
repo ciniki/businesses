@@ -561,12 +561,12 @@ function ciniki_businesses_main() {
 			}
 		}
 		// Art Club
-		if( M.curBusiness.modules['ciniki.artclub'] != null && (M.userPerms&0x01) == 0x01 ) {
+//		if( M.curBusiness.modules['ciniki.artclub'] != null && (M.userPerms&0x01) == 0x01 ) {
 //			this.menu.sections[c++] = {'label':'', 'list':{
 //				'_':{'label':'OLD Members', 'fn':'M.startApp(\'ciniki.artclub.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			this.menu.sections[c++] = {'label':'', 'list':{
-				'_':{'label':'Sponsors', 'fn':'M.startApp(\'ciniki.artclub.sponsors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-		}
+//			this.menu.sections[c++] = {'label':'', 'list':{
+//				'_':{'label':'Sponsors', 'fn':'M.startApp(\'ciniki.artclub.sponsors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+//		}
 		// Art Catalog
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
 			if( M.curBusiness.modules['ciniki.sapos'] != null ) {
