@@ -522,18 +522,24 @@ function ciniki_businesses_main() {
 		var menu_search = 0;
 		if( M.curBusiness.modules['ciniki.exhibitions'] != null && r.exhibitions != null ) {
 			for(i in r.exhibitions) {
-				this.menu.sections[c] = {'label':r.exhibitions[i].exhibition.name, 'list':{
+				this.menu.sections[c] = {'label':r.exhibitions[i].exhibition.name, 'list':{}};
 //					'gallery':{'label':'Gallery', 
 //						'fn':'M.startApp(\'ciniki.exhibitions.images\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\'});'},
-					'exhibitors':{'label':'Exhibitors', 
-						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'exhibitors\':\'yes\'});'},
-					'sponsors':{'label':'Sponsors', 
-						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'sponsors\':\'yes\'});'},
-					'tourexhibitors':{'label':'Tour', 
-						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'tour\':\'yes\'});'},
+				if( r.exhibitions[i].exhibition['use-exhibitors'] == 'yes' ) {
+					this.menu.sections[c].list['exhibitors'] = {'label':'Exhibitors', 
+						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'exhibitors\':\'yes\'});'};
+				}
+				if( r.exhibitions[i].exhibition['use-tour'] == 'yes' ) {
+					this.menu.sections[c].list['tourexhibitors'] = {'label':'Tour Exhibitors', 
+						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'tour\':\'yes\'});'};
+				}
+				if( r.exhibitions[i].exhibition['use-sponsors'] == 'yes' ) {
+					this.menu.sections[c].list['sponsors'] = {'label':'Sponsors', 
+						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'sponsors\':\'yes\'});'};
+				}
 //					'contacts':{'label':'Contacts', 
 //						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'contacts\':\'yes\'});'},
-				}};
+//				}};
 				c++;
 				join = 0;
 			}

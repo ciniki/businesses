@@ -62,22 +62,35 @@ function ciniki_businesses_getUserModules($ciniki) {
 				//
 				// Load the two most current exhibitions
 				//
-				$strsql = "SELECT ciniki_exhibitions.id, ciniki_exhibitions.name "
+				$strsql = "SELECT ciniki_exhibitions.id, ciniki_exhibitions.name, "
+					. "ciniki_exhibition_details.detail_key, "
+					. "ciniki_exhibition_details.detail_value "
 					. "FROM ciniki_exhibitions "
+					. "LEFT JOIN ciniki_exhibition_details ON (ciniki_exhibitions.id = ciniki_exhibition_details.exhibition_id "
+						. "AND ciniki_exhibition_details.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+						. ") "
 					. "WHERE ciniki_exhibitions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 					. "ORDER BY ciniki_exhibitions.start_date DESC "
-					. "LIMIT 2"
 					. "";
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 				$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.exhibitions', array(
 					array('container'=>'exhibitions', 'fname'=>'id', 'name'=>'exhibition',
-						'fields'=>array('id', 'name')),
+						'fields'=>array('id', 'name'),
+						'details'=>array('detail_key'=>'detail_value')),
+//					array('container'=>'settings', 'fname'=>'detail_key', 'name'=>'detail',
+//						'fields'=>array('key'=>'detail_key', 'value'=>'detail_value')),
 					));
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
-				if( isset($rc['exhibitions']) ) {
-					$rsp['exhibitions'] = $rc['exhibitions'];
+				if( isset($rc['exhibitions']) ) {	
+					$rsp['exhibitions'] = array();
+					// Add the first 2 to the list
+					for($i=0;$i<2;$i++) {
+						if( isset($rc['exhibitions'][$i]) ) {
+							$rsp['exhibitions'][] = $rc['exhibitions'][$i];
+						}
+					}
 				}
 			}
 			//
