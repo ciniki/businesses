@@ -941,15 +941,15 @@ function ciniki_businesses_main() {
 					'_':{'label':'Newsletters', 'fn':'M.startApp(\'ciniki.newsletters.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-		if( M.curBusiness.modules['ciniki.artclub'] != null ) { 
-			if( join > -1 ) {
-				this.menu.sections[c].list.artclub = {'label':'Club Info', 'fn':'M.startApp(\'ciniki.artclub.info\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Club Info', 'fn':'M.startApp(\'ciniki.artclub.info\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
+//		if( M.curBusiness.modules['ciniki.artclub'] != null ) { 
+//			if( join > -1 ) {
+//				this.menu.sections[c].list.artclub = {'label':'Club Info', 'fn':'M.startApp(\'ciniki.artclub.info\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+//				join++;
+//			} else {
+//				this.menu.sections[c++] = {'label':'', 'list':{
+//					'_':{'label':'Club Info', 'fn':'M.startApp(\'ciniki.artclub.info\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+//			}
+//		}
 		if( M.curBusiness.modules['ciniki.artgallery'] != null ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.artgallery = {'label':'Gallery Info', 'fn':'M.startApp(\'ciniki.artgallery.info\', null, \'M.ciniki_businesses_main.showMenu();\');'};
