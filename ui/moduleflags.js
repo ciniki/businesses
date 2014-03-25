@@ -131,6 +131,20 @@ function ciniki_businesses_moduleflags() {
 							'3':{'name':'Tour'},
 						}}}};
 				}
+				if( M.curBusiness.modules['ciniki.info'] != null ) {
+					p.sections['ciniki.info'] = {'label':'Business Information', 'fields':{
+						'ciniki.info':{'label':'Web', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
+							'1':{'name':'About'},
+							'2':{'name':'Artist Statement'},
+							'3':{'name':'CV'},
+							'4':{'name':'Awards'},
+							'5':{'name':'History'},
+							'6':{'name':'Donations'},
+							'7':{'name':'Membership'},
+							'8':{'name':'Board of Directors'},
+							'9':{'name':'Facilities'},
+						}}}};
+				}
 				if( M.curBusiness.modules['ciniki.web'] != null ) {
 					p.sections['ciniki.web'] = {'label':'Web', 'fields':{
 						'ciniki.web':{'label':'Web', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{

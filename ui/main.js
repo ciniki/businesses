@@ -978,6 +978,15 @@ function ciniki_businesses_main() {
 					'_':{'label':'Surveys', 'fn':'M.startApp(\'ciniki.surveys.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		if( M.curBusiness.modules['ciniki.info'] != null ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.info = {'label':'Information', 'fn':'M.startApp(\'ciniki.info.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Information', 'fn':'M.startApp(\'ciniki.info.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		if( M.curBusiness.modules['ciniki.web'] != null ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.website = {'label':'Website', 'fn':'M.startApp(\'ciniki.web.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
