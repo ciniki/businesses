@@ -33,7 +33,12 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
 		. "IFNULL(ciniki_business_subscriptions.status, 0) AS status_id, "
 		. "IFNULL(ciniki_business_subscriptions.status, 0) AS status, "
 		. "trial_days, payment_type, payment_frequency, "
-		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
+		. "currency, "
+		. "IFNULL(monthly,0) as monthly, "
+//		. "IFNULL(monthly,0) as monthly_total, "
+		. "IFNULL(monthly,0)*12 AS yearly, "
+//		. "IFNULL(monthly,0)*12 AS yearly_total, "
+		. "paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(signup_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.signup_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS signup_date, "
 		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.last_payment_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
 		. "IF(paid_until='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.paid_until, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y')) AS paid_until, "
@@ -47,13 +52,16 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'statuses', 'fname'=>'status', 'name'=>'status',
-			'fields'=>array('name'=>'status_id', 'status'),
+			'fields'=>array('name'=>'status_id', 'status', 'monthly', 'yearly'),
+			'sums'=>array('monthly', 'yearly'),
 			'maps'=>array(
 				'status'=>array('0'=>'Unknown', '1'=>'Update required', '2'=>'Trial', '10'=>'Active', '11'=>'Free Subscription', '50'=>'Suspended', '60'=>'Cancelled'),
 				)),
 		array('container'=>'businesses', 'fname'=>'id', 'name'=>'business', 	
-			'fields'=>array('id', 'name', 'business_status', 'status', 'signup_date', 'trial_days', 'currency', 'monthly', 
-				'payment_type', 'payment_frequency', 'paid_until', 'last_payment_date', 'trial_start_date', 'trial_remaining'),
+			'fields'=>array('id', 'name', 'business_status', 'status', 'signup_date', 
+				'trial_days', 'currency', 'monthly', 'yearly',
+				'payment_type', 'payment_frequency', 'paid_until', 'last_payment_date', 
+				'trial_start_date', 'trial_remaining'),
 			'maps'=>array(
 				'business_status'=>array('0'=>'Unknown', '1'=>'Active', '50'=>'Suspended', '60'=>'Deleted'),
 				'status'=>array(''=>'None', '0'=>'Unknown', '1'=>'Update required', '2'=>'Trial', '10'=>'Active', '11'=>'Free Subscription', '50'=>'Suspended', '60'=>'Cancelled'),
