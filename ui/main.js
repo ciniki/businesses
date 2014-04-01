@@ -566,13 +566,6 @@ function ciniki_businesses_main() {
 					'_':{'label':'Members', 'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-		// Art Club
-//		if( M.curBusiness.modules['ciniki.artclub'] != null && (M.userPerms&0x01) == 0x01 ) {
-//			this.menu.sections[c++] = {'label':'', 'list':{
-//				'_':{'label':'OLD Members', 'fn':'M.startApp(\'ciniki.artclub.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-//			this.menu.sections[c++] = {'label':'', 'list':{
-//				'_':{'label':'Sponsors', 'fn':'M.startApp(\'ciniki.artclub.sponsors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-//		}
 		// Art Catalog
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
 			if( M.curBusiness.modules['ciniki.sapos'] != null ) {
@@ -950,15 +943,15 @@ function ciniki_businesses_main() {
 					'_':{'label':'Club Info', 'fn':'M.startApp(\'ciniki.artclub.info\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-		if( M.curBusiness.modules['ciniki.artgallery'] != null ) { 
-			if( join > -1 ) {
-				this.menu.sections[c].list.artgallery = {'label':'Gallery Info', 'fn':'M.startApp(\'ciniki.artgallery.info\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Gallery Info', 'fn':'M.startApp(\'ciniki.artgallery.info\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
+//		if( M.curBusiness.modules['ciniki.artgallery'] != null ) { 
+//			if( join > -1 ) {
+//				this.menu.sections[c].list.artgallery = {'label':'Gallery Info', 'fn':'M.startApp(\'ciniki.artgallery.info\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+//				join++;
+//			} else {
+//				this.menu.sections[c++] = {'label':'', 'list':{
+//					'_':{'label':'Gallery Info', 'fn':'M.startApp(\'ciniki.artgallery.info\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+//			}
+//		}
 
 		if( M.curBusiness.modules['ciniki.mail'] != null && (M.curBusiness.modules['ciniki.mail'].flags&0x01) == 0x01 ) { 
 			if( join > -1 ) {
