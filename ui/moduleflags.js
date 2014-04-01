@@ -143,6 +143,7 @@ function ciniki_businesses_moduleflags() {
 							'7':{'name':'Membership'},
 							'8':{'name':'Board of Directors'},
 							'9':{'name':'Facilities'},
+							'10':{'name':'Exhibition Application'},
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.web'] != null ) {
