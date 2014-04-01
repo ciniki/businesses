@@ -14,7 +14,7 @@
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_lock($ciniki) {
+function ciniki_businesses_delete($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
