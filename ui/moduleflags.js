@@ -131,6 +131,12 @@ function ciniki_businesses_moduleflags() {
 							'3':{'name':'Tour'},
 						}}}};
 				}
+				if( M.curBusiness.modules['ciniki.sponsors'] != null ) {
+					p.sections['ciniki.sponsors'] = {'label':'Sponsors', 'fields':{
+						'ciniki.sponsors':{'label':'Web', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
+							'1':{'name':'Levels'},
+						}}}};
+				}
 				if( M.curBusiness.modules['ciniki.info'] != null ) {
 					p.sections['ciniki.info'] = {'label':'Business Information', 'fields':{
 						'ciniki.info':{'label':'Web', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
