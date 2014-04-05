@@ -25,6 +25,7 @@
 // contact.address.country:		(optional) The county of the business.
 // contact.person.name:			(optional) The contact person for the business.
 // contact.phone.number:		(optional) The contact phone number for the business.  
+// contact.cell.number:			(optional) The contact cell phone number for the business.  
 // contact.tollfree.number:		(optional) The toll free number for the business.
 // contact.fax.number:			(optional) The fax number for the business.
 // contact.email.address:		(optional) The contact email address for the business.
@@ -129,6 +130,7 @@ function ciniki_businesses_updateDetails(&$ciniki) {
 		'contact.address.country',
 		'contact.person.name',
 		'contact.phone.number',
+		'contact.cell.number',
 		'contact.tollfree.number',
 		'contact.fax.number',
 		'contact.email.address',

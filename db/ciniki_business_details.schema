@@ -19,6 +19,7 @@
 # - contact.address.country = <string>
 # - contact.person.name = <string> optional name of the contact person
 # - contact.phone.number = <string>
+# - contact.cell.number = <string>
 # - contact.tollfree.number = <string>
 # - contact.tollfree.restrictions = <string>
 # - contact.fax.number = <string>

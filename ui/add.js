@@ -19,6 +19,7 @@ function ciniki_businesses_add() {
 			'contact':{'label':'Contact', 'fields':{
 				'contact.person.name':{'label':'Name', 'type':'text'},
 				'contact.phone.number':{'label':'Phone', 'type':'text'},
+				'contact.cell.number':{'label':'Phone', 'type':'text'},
 				'contact.tollfree.number':{'label':'Tollfree', 'type':'text'},
 				'contact.fax.number':{'label':'Fax', 'type':'text'},
 				'contact.email.address':{'label':'Email', 'type':'text'},
