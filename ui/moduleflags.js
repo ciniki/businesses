@@ -83,6 +83,8 @@ function ciniki_businesses_moduleflags() {
 					if( M.curBusiness.modules['ciniki.recipes'] != null ) {
 						pflags['2'] = {'name':'Recommended Recipes'};
 					}
+					pflags['3'] = {'name':'Inventory'};
+					pflags['4'] = {'name':'Suppliers'};
 					p.sections['ciniki.products'] = {'label':'Products', 'fields':{
 						'ciniki.products':{'label':'', 'hidelabel':'yes', 'type':'flags', 'join':'no', 
 							'flags':pflags
