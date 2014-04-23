@@ -99,6 +99,8 @@ function ciniki_businesses_moduleflags() {
 							'4':{'name':'Shopping Cart'},
 							'5':{'name':'POS'},
 							'6':{'name':'Purchase Orders'},
+							'7':{'name':'Shipping'},
+							'8':{'name':'Manufacturing'},
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.mail'] != null ) {
