@@ -44,6 +44,9 @@ function ciniki_businesses_intlSettings(&$ciniki, $business_id) {
 	if( !isset($rc['settings']['intl-default-timezone']) ) {
 		$rc['settings']['intl-default-timezone'] = 'America/Toronto';
 	}
+	if( !isset($rc['settings']['intl-default-distance-units']) ) {
+		$rc['settings']['intl-default-distance-units'] = 'km';
+	}
 
 	//
 	// Save the settings in the business cache
@@ -61,6 +64,9 @@ function ciniki_businesses_intlSettings(&$ciniki, $business_id) {
 		}
 		if( !isset($ciniki['business']['settings']['intl-default-timezone']) ) {
 			$ciniki['business']['settings']['intl-default-timezone'] = $rc['settings']['intl-default-timezone'];
+		}
+		if( !isset($ciniki['business']['settings']['intl-default-distance-units']) ) {
+			$ciniki['business']['settings']['intl-default-distance-units'] = $rc['settings']['intl-default-distance-units'];
 		}
 	}
 
