@@ -42,6 +42,7 @@ function ciniki_businesses_settingsIntlGet($ciniki) {
 			'intl-default-locale'=>'en_CA',
 			'intl-default-currency'=>'CAD', 
 			'intl-default-timezone'=>'America/Toronto',
+			'intl-default-distance-units'=>'km',
 			),
 		'locales'=>array(),
 		'currencies'=>array(),
@@ -51,7 +52,12 @@ function ciniki_businesses_settingsIntlGet($ciniki) {
 	$strsql = "SELECT detail_key, detail_value "
 		. "FROM ciniki_business_details "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND detail_key IN ('intl-default-locale', 'intl-default-currency', 'intl-default-timezone') "
+		. "AND detail_key IN ("
+			. "'intl-default-locale', "
+			. "'intl-default-currency', "
+			. "'intl-default-timezone', "
+			. "'intl-default-distance-units' "
+			. ") "
 		. "";
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'setting');
 	if( $rc['stat'] != 'ok' ) {
@@ -92,6 +98,16 @@ function ciniki_businesses_settingsIntlGet($ciniki) {
 		return $rc;
 	}
 	$rsp['timezones'] = $rc['timezones'];
+
+	//
+	// Get the complete list of distance units
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'public', 'getDistanceUnits');
+	$rc = ciniki_core_getDistanceUnits($ciniki);
+	if( $rc['stat'] != 'ok') {
+		return $rc;
+	}
+	$rsp['distanceunits'] = $rc['units'];
 
 	return $rsp;
 }

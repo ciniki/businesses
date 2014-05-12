@@ -101,6 +101,7 @@ function ciniki_businesses_moduleflags() {
 							'6':{'name':'Purchase Orders'},
 							'7':{'name':'Shipping'},
 							'8':{'name':'Manufacturing'},
+							'9':{'name':'Mileage'},
 						}}}};
 				}
 				if( M.curBusiness.modules['ciniki.mail'] != null ) {

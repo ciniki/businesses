@@ -61,6 +61,7 @@ function ciniki_businesses_settingsIntlUpdate($ciniki) {
 		'intl-default-locale',
 		'intl-default-currency',
 		'intl-default-timezone',
+		'intl-default-distance-units',
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {

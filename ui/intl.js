@@ -18,6 +18,9 @@ function ciniki_businesses_intl() {
 			'timezone':{'label':'', 'fields':{
 				'intl-default-timezone':{'label':'Time Zone', 'type':'select', 'options':{}},
 				}},
+			'measurement':{'label':'', 'fields':{
+				'intl-default-distance-units':{'label':'Distance Units', 'type':'select', 'options':{}},
+				}},
 			'_save':{'label':'', 'buttons':{
 				'save':{'label':'Save', 'fn':'M.ciniki_businesses_intl.saveIntl();'},
 				}},
@@ -63,6 +66,10 @@ function ciniki_businesses_intl() {
 				p.sections.timezone.fields['intl-default-timezone'].options = {};
 				for(i in rsp.timezones) {
 					p.sections.timezone.fields['intl-default-timezone'].options[rsp.timezones[i].timezone.id] = rsp.timezones[i].timezone.id;
+				}
+				p.sections.measurement.fields['intl-default-distance-units'].options = {};
+				for(i in rsp.distanceunits) {
+					p.sections.measurement.fields['intl-default-distance-units'].options[rsp.distanceunits[i].unit.id] = rsp.distanceunits[i].unit.name;
 				}
 				p.refresh();
 				p.show(cb);
