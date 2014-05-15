@@ -87,6 +87,9 @@ function ciniki_businesses_settings() {
 //				this.menu.sections['']['list']['mailtemplates'] = {'label':'Mail Templates', 'fn':'M.startApp(\'ciniki.mail.templates\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 //			}
 		}
+		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
+			this.menu.sections['']['list']['backups'] = {'label':'Backups', 'fn':'M.startApp(\'ciniki.businesses.backups\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		
 		if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
 			//
