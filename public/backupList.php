@@ -62,7 +62,10 @@ function ciniki_businesses_backupList($ciniki) {
 		. '/' . $uuid[0] . '/' . $uuid;
 
 	$backups = array();
-	$dh = opendir($backup_dir);
+	if( ($dh = opendir($backup_dir)) === false ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1735', 'msg'=>'Unable to find backups'));
+		
+	}
 	while( ($file = readdir($dh)) !== false ) {
 		if( preg_match("/^backup-(([0-9][0-9][0-9][0-9])([0-9][0-9])([0-9][0-9])-([0-9][0-9])([0-9][0-9])).zip$/", $file, $matches) ) {
 			// Date on the file is UTC
