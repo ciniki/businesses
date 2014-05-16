@@ -998,6 +998,15 @@ function ciniki_businesses_main() {
 					'_':{'label':'Information', 'fn':'M.startApp(\'ciniki.info.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		if( M.curBusiness.modules['ciniki.marketing'] != null ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.marketing = {'label':'Marketing', 'fn':'M.startApp(\'ciniki.marketing.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Marketing', 'fn':'M.startApp(\'ciniki.marketing.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		if( M.curBusiness.modules['ciniki.web'] != null ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.website = {'label':'Website', 'fn':'M.startApp(\'ciniki.web.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
