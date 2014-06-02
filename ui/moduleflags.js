@@ -145,6 +145,13 @@ function ciniki_businesses_moduleflags() {
 							'1':{'name':'Levels'},
 						}}}};
 				}
+				if( M.curBusiness.modules['ciniki.marketing'] != null ) {
+					p.sections['ciniki.marketing'] = {'label':'Marketing', 'fields':{
+						'ciniki.marketing':{'label':'Marketing', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
+							'1':{'name':'Features'},
+							'2':{'name':'Feature Categories'},
+						}}}};
+				}
 				if( M.curBusiness.modules['ciniki.info'] != null ) {
 					p.sections['ciniki.info'] = {'label':'Business Information', 'fields':{
 						'ciniki.info':{'label':'Web', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
