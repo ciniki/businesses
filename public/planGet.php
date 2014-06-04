@@ -35,7 +35,8 @@ function ciniki_businesses_planGet($ciniki) {
         return $rc;
     }   
 
-	$strsql = "SELECT ciniki_business_plans.id, uuid, name, flags, monthly, modules, trial_days, description, "
+	$strsql = "SELECT ciniki_business_plans.id, uuid, name, flags, sequence, "
+		. "monthly, modules, trial_days, description, "
 		. "date_added, last_updated "
 		. "FROM ciniki_business_plans "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "

@@ -20,6 +20,7 @@ function ciniki_businesses_planAdd($ciniki) {
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
 		'name'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Name'), 
 		'flags'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Flags'), 
+		'sequence'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Sequence'), 
 		'monthly'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Monthly Price'),
 		'modules'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Modules'),
 		'trial_days'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'1', 'name'=>'Number of Trial Days'),
@@ -56,12 +57,13 @@ function ciniki_businesses_planAdd($ciniki) {
 	// FIXME: Add ability to set modules when site is added, right now default to most apps on
 	//
 	$strsql = "INSERT INTO ciniki_business_plans (uuid, business_id, "
-		. "name, flags, monthly, modules, trial_days, description, "
+		. "name, flags, sequence, monthly, modules, trial_days, description, "
 		. "date_added, last_updated ) VALUES ( "
 		. "UUID(), "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['name']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['flags']) . "', "
+		. "'" . ciniki_core_dbQuote($ciniki, $args['sequence']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['monthly']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['modules']) . "', "
 		. "'" . ciniki_core_dbQuote($ciniki, $args['trial_days']) . "', "
@@ -84,6 +86,7 @@ function ciniki_businesses_planAdd($ciniki) {
 	$changelog_fields = array(
 		'name',
 		'flags',
+		'sequence',
 		'monthly',
 		'modules',
 		'trial_days',

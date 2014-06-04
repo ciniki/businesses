@@ -13,8 +13,8 @@ function ciniki_businesses_plans() {
 			'mc', 'medium', 'sectioned', 'ciniki.businesses.plans.menu');
 		this.menu.data = {};
 		this.menu.sections = {
-			'plans':{'label':'', 'type':'simplegrid', 'num_cols':1,
-				'headerValues':null,
+			'plans':{'label':'', 'type':'simplegrid', 'num_cols':3,
+				'headerValues':['Plan','Monthly','Trial'],
 				},
 			'_buttons':{'label':'', 'buttons':{
 				'_add':{'label':'Add Plan', 'fn':'M.ciniki_businesses_plans.showEdit(\'M.ciniki_businesses_plans.showMenu();\',0);'},
@@ -23,10 +23,16 @@ function ciniki_businesses_plans() {
 		this.menu.noData = function(s) { return 'No plans added'; }
 		this.menu.sectionData = function(s) { return this.data; }
 		this.menu.cellValue = function(s, i, j, d) {
-			if( d.plan.ispublic == 'yes' ) {
-				return d.plan.name + ' (public)';
+			if( j == 0 ) {
+				if( d.plan.ispublic == 'yes' ) {
+					return d.plan.name + ' (public)';
+				}
+				return d.plan.name;
+			} else if( j == 1 ) { 
+				return d.plan.monthly; 
+			} else if( j == 2 ) { 
+				return d.plan.trial_days; 
 			}
-			return d.plan.name;
 		}
 		this.menu.rowFn = function(s, i, d) {
 			return 'M.ciniki_businesses_plans.showEdit(\'M.ciniki_businesses_plans.showMenu();\',\'' + d.plan.id + '\');';
@@ -42,6 +48,7 @@ function ciniki_businesses_plans() {
 			'info':{'label':'', 'fields':{
 				'name':{'label':'Name', 'type':'text'},
 				'flags':{'label':'', 'type':'flags', 'join':'yes', 'flags':this.planFlags},
+				'sequence':{'label':'Sequence', 'type':'text', 'size':'small'},
 				'monthly':{'label':'Monthly', 'type':'text', 'size':'small'},
 				'trial_days':{'label':'Trial', 'type':'text', 'size':'small'},
 				}},

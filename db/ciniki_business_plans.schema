@@ -14,6 +14,8 @@
 #						
 #				0x01 - Public, available on the signup page
 #
+# sequence:		The order the plans will show up in the website.
+#
 # description:	The public description of the plan, what's available with it, etc.
 # monthly:		The monthly cost of the plan.
 # modules:		The modules that will be enabled when the plan is activated, comma delimited.
@@ -27,6 +29,7 @@ create table ciniki_business_plans (
 	business_id int not null,
 	name varchar(150) not null,
 	flags tinyint unsigned not null,
+	sequence tinyint unsigned not null,
 	monthly decimal(10,2) not null,
 	modules varchar(250) not null,
 	trial_days int not null,
@@ -36,4 +39,4 @@ create table ciniki_business_plans (
 	primary key(id),
 	unique index (uuid),
 	index (business_id)
-) ENGINE=InnoDB, COMMENT='v1.01';
+) ENGINE=InnoDB, COMMENT='v1.02';

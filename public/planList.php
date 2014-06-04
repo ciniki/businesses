@@ -35,10 +35,11 @@ function ciniki_businesses_planList($ciniki) {
 	//
 	// Query the database for the plan
 	//
-	$strsql = "SELECT id, name, "
+	$strsql = "SELECT id, name, monthly, trial_days, "
 		. "IF((flags&0x01)=0x01, 'yes', 'no') AS ispublic "
 		. "FROM ciniki_business_plans "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+		. "ORDER BY sequence "
 		. "";
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');

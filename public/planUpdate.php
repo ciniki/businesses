@@ -22,6 +22,7 @@ function ciniki_businesses_planUpdate($ciniki) {
 		'plan_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plan'), 
 		'name'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Name'), 
 		'flags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Flags'), 
+		'sequence'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Sequence'), 
 		'monthly'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Monthly Price'),
 		'modules'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Modules'),
 		'trial_days'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Number of Trial Days'),
@@ -67,6 +68,7 @@ function ciniki_businesses_planUpdate($ciniki) {
 	$changelog_fields = array(
 		'name',
 		'flags',
+		'sequence',
 		'monthly',
 		'modules',
 		'trial_days',
