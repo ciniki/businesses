@@ -171,6 +171,7 @@ function ciniki_businesses_moduleflags() {
 					p.sections['ciniki.web'] = {'label':'Web', 'fields':{
 						'ciniki.web':{'label':'Web', 'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':{
 							'1':{'name':'Custom Pages'},
+							'2':{'name':'Sliders'},
 						}}}};
 				}
 
