@@ -58,6 +58,33 @@ function ciniki_businesses_getModuleFlags($ciniki) {
 	}
 	$business_modules = $rc['modules'];
 
+	//
+	// Check for the name and flags available for each module
+	//
+	foreach($business_modules as $mid => $module) {
+		//
+		// Check for info file
+		//
+		$business_modules[$mid]['proper_name'] = $module['name'];
+		$info_filename = $ciniki['config']['ciniki.core']['root_dir'] . '/' . $module['package'] . '-mods/' . $module['module'] . '/_info.ini';
+		if( file_exists($info_filename) ) {
+			$info = parse_ini_file($info_filename);
+			if( isset($info['name']) && $info['name'] != '' ) {
+				$business_modules[$mid]['proper_name'] = $info['name'];
+			} 
+		}
+		
+		//
+		// Check if flags file exists
+		//
+		$rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'private', 'flags');
+		if( $rc['stat'] == 'ok' ) {
+			$fn = $module['package'] . '_' . $module['module'] . '_flags';
+			$rc = $fn($ciniki, $business_modules);
+			$business_modules[$mid]['available_flags'] = $rc['flags'];
+		}
+	}
+
 	return array('stat'=>'ok', 'modules'=>$business_modules);
 }
 ?>
