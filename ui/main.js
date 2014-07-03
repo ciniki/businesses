@@ -697,6 +697,42 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
+		// Dealers
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x10) > 0 ) {
+//			if( menu_search == 1 ) {
+//				this.menu.sections[c] = {'label':'', 'id':'dealers', 'searchlabel':'Dealers', 
+//					'type':'livesearchgrid', 'livesearchcols':1, 'hint':'',
+//					'headerValues':null,
+//					'noData':'No dealers found',
+//					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
+//					'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');',
+//				};
+//				c++;
+//			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Dealers', 'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+//			}
+		}
+
+		// Distributors
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x100) > 0 ) {
+//			if( menu_search == 1 ) {
+//				this.menu.sections[c] = {'label':'', 'id':'distributors', 'searchlabel':'Distributors', 
+//					'type':'livesearchgrid', 'livesearchcols':1, 'hint':'',
+//					'headerValues':null,
+//					'noData':'No distributors found',
+//					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
+//					'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');',
+//				};
+//				c++;
+//			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Distributors', 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+//			}
+		}
+
 		// services module, all owners and employees and Products group
 		if( M.curBusiness.modules['ciniki.services'] != null ) { 
 //			this.menu.sections[c++] = {'label':'', 'list':{
