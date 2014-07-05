@@ -673,6 +673,11 @@ function ciniki_businesses_main() {
 			this.menu.sections[c++] = {'label':'', 'list':{
 				'_':{'label':'Courses', 'fn':'M.startApp(\'ciniki.courses.offerings\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
+		// Classes module
+		if( M.curBusiness.modules['ciniki.classes'] != null ) {
+			this.menu.sections[c++] = {'label':'', 'list':{
+				'_':{'label':'Classes', 'fn':'M.startApp(\'ciniki.classes.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+		}
 
 		if( M.curBusiness.modules['ciniki.journal'] != null ) {
 			this.menu.sections[c] = {'label':'', 'id':'journal', 'searchlabel':'Journal', 'type':'livesearchgrid', 
