@@ -472,6 +472,9 @@ function ciniki_businesses_main() {
 		if( rsp.settings != null && rsp.settings['ciniki.taxes'] != null ) {
 			M.curBusiness.taxes = {'settings':rsp.settings['ciniki.taxes']};
 		}
+		if( rsp.settings != null && rsp.settings['ciniki.products'] != null ) {
+			M.curBusiness.products = {'settings':rsp.settings['ciniki.products']};
+		}
 		if( rsp.settings != null && rsp.settings['googlemapsapikey'] != null && rsp.settings['googlemapsapikey'] != '' ) {
 			M.curBusiness.settings = {'googlemapsapikey':rsp.settings['googlemapsapikey']};
 		}

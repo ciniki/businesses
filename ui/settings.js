@@ -98,6 +98,9 @@ function ciniki_businesses_settings() {
 			this.menu.sections['advanced'] = {'label':'Advanced', 'list':{
 					'integrityfix':{'label':'Database Integrity Fix', 'fn':'M.ciniki_businesses_settings.fixallintegrity();'},
 				}};
+			if( M.curBusiness.modules['ciniki.products'] != null ) {
+				this.menu.sections['advanced']['list']['products'] = {'label':'Products', 'fn':'M.startApp(\'ciniki.products.types\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+			}
 
 			this.menu.sections['admin'] = {'label':'Admin', 'list':{
 				'modules':{'label':'Modules', 'fn':'M.startApp(\'ciniki.businesses.modules\', null, \'M.ciniki_businesses_settings.menu.show();\');'},

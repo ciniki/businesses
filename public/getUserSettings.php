@@ -114,6 +114,25 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 		foreach($mrc['modules'] as $i => $module) {
+			//
+			// Check for uiSettings in other modules
+			//
+			list($pkg, $mod) = explode('.', $module['module']['name']);
+			$rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'private', 'uiSettings');
+			if( $rc['stat'] == 'ok' ) {
+				$fn = $pkg . '_' . $mod . '_uiSettings';
+				$rc = $fn($ciniki, $args['business_id']);
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+				if( isset($rc['settings']) ) {
+					$rsp['settings'][$module['module']['name']] = $rc['settings'];
+				}
+			}
+
+			//
+			// FIXME: Move these into settings files for each module
+			//
 			if( $module['module']['name'] == 'ciniki.artcatalog' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_artcatalog_settings', 'business_id', $args['business_id'], 'ciniki.artcatalog', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
