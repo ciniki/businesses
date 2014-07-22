@@ -659,22 +659,6 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
-		if( M.curBusiness.modules['ciniki.atdo'] != null 
-			&& (M.curBusiness.modules['ciniki.atdo'].flags&0x02) > 0 ) {
-			this.menu.sections[c] = {'label':'', 'id':'tasks', 'searchlabel':'Tasks', 
-				'type':'livesearchgrid', 
-				'livesearchcols':3, 'hint':'',
-				'headerValues':['','Task','Due'],
-				'cellClasses':['multiline aligncenter','multiline','multiline'],
-				'count':M.curBusiness.modules['ciniki.atdo'].task_count,
-				'noData':'No tasks found',
-				'addFn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'add\':\'task\'});',
-				'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'tasks\':\'yes\'});',
-			};
-			menu_search = 1;
-			c++;
-		}
-
 		// Products module, all owners and employees and Products group
 		if( M.curBusiness.modules['ciniki.products'] != null ) { 
 			this.menu.sections[c] = {'label':'', 'id':'products', 'searchlabel':'Products', 
@@ -761,9 +745,21 @@ function ciniki_businesses_main() {
 			}
 		}
 
+		// Bugs/Features/Questions
+		if( M.curBusiness.modules['ciniki.bugs'] != null ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.bugs = {
+					'label':'Bug Tracking', 'fn':'M.startApp(\'ciniki.bugs.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Bug Tracking', 'fn':'M.startApp(\'ciniki.bugs.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		// Check if the remaining sections should be joined together as one section
 		// to balance the menu
-		if( c > 4 ) {
+		if( c > 4 && join < 0 ) {
 			join = 0;
 			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
 		}
@@ -784,7 +780,8 @@ function ciniki_businesses_main() {
 			this.menu.sections[c++] = {'label':'', 'list':{
 				'_':{'label':'Classes', 'fn':'M.startApp(\'ciniki.classes.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
-
+		
+		// Journal
 		if( M.curBusiness.modules['ciniki.journal'] != null ) {
 			this.menu.sections[c] = {'label':'', 'id':'journal', 'searchlabel':'Journal', 'type':'livesearchgrid', 
 				'livesearchcols':1, 'hint':'',
@@ -811,9 +808,26 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
+		// ATDO - Tasks
+		if( M.curBusiness.modules['ciniki.atdo'] != null 
+			&& (M.curBusiness.modules['ciniki.atdo'].flags&0x02) > 0 ) {
+			this.menu.sections[c] = {'label':'', 'id':'tasks', 'searchlabel':'Tasks', 
+				'type':'livesearchgrid', 
+				'livesearchcols':3, 'hint':'',
+				'headerValues':['','Task','Due'],
+				'cellClasses':['multiline aligncenter','multiline','multiline'],
+				'count':M.curBusiness.modules['ciniki.atdo'].task_count,
+				'noData':'No tasks found',
+				'addFn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'add\':\'task\'});',
+				'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'tasks\':\'yes\'});',
+			};
+			menu_search = 1;
+			c++;
+		}
+
 		// Check if the remaining sections should be joined together as one section
 		// to balance the menu
-		if( c > 4 ) {
+		if( c > 4 && join < 0 ) {
 			join = 0;
 			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
 		}
@@ -830,16 +844,11 @@ function ciniki_businesses_main() {
 			}
 		}
 
-		// Subscriptions module, all owners and employees and Subscriptions group
-		if( M.curBusiness.modules['ciniki.subscriptions'] != null ) {
-			if( join > -1 ) {
-				this.menu.sections[c].list.subscriptions = {
-					'label':'Subscriptions', 'fn':'M.startApp(\'ciniki.subscriptions.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Subscriptions', 'fn':'M.startApp(\'ciniki.subscriptions.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 && join < 0 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
 		}
 
 		// Projects module
@@ -853,6 +862,30 @@ function ciniki_businesses_main() {
 					'_':{'label':'Projects', 'fn':'M.startApp(\'ciniki.projects.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+
+		// Blog
+		if( M.curBusiness.modules['ciniki.blog'] != null ) { 
+			if( (M.curBusiness.modules['ciniki.blog'].flags&0x01) > 0 ) {
+				if( join > -1 ) {
+					this.menu.sections[c].list.blog = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'blog\'});'};
+					join++;
+				} else {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'blog\'});'}}};
+				}
+			}
+			if( (M.curBusiness.modules['ciniki.blog'].flags&0x0100) > 0 ) {
+				if( join > -1 ) {
+					this.menu.sections[c].list.blog = {'label':'Member News', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'memberblog\');'};
+					join++;
+				} else {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Member News', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'memberblog\'});'}}};
+				}
+			}
+		}
+
+		// Exhibitions
 		if( M.curBusiness.modules['ciniki.exhibitions'] != null ) {
 			if( join > -1 ) {
 				this.menu.sections[c].list.exhibitions = {
@@ -875,6 +908,15 @@ function ciniki_businesses_main() {
 //					};
 			}
 		}
+
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 && join < 0 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+		}
+
+		// ATDO - Messages/Notes/FAQ
 		if( M.curBusiness.modules['ciniki.atdo'] != null ) {
 			if( join > -1 ) {
 				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x20) > 0 ) {
@@ -923,6 +965,26 @@ function ciniki_businesses_main() {
 				}
 			}
 		}
+
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 && join < 0 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+		}
+
+		// Subscriptions module, all owners and employees and Subscriptions group
+		if( M.curBusiness.modules['ciniki.subscriptions'] != null ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.subscriptions = {
+					'label':'Subscriptions', 'fn':'M.startApp(\'ciniki.subscriptions.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Subscriptions', 'fn':'M.startApp(\'ciniki.subscriptions.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		if( M.curBusiness.modules['ciniki.media'] != null ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.media = {'label':'Media', 'fn':'M.startApp(\'ciniki.media.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
@@ -930,26 +992,6 @@ function ciniki_businesses_main() {
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Media', 'fn':'M.startApp(\'ciniki.media.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
-		if( M.curBusiness.modules['ciniki.blog'] != null ) { 
-			if( (M.curBusiness.modules['ciniki.blog'].flags&0x01) > 0 ) {
-				if( join > -1 ) {
-					this.menu.sections[c].list.blog = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'blog\'});'};
-					join++;
-				} else {
-					this.menu.sections[c++] = {'label':'', 'list':{
-						'_':{'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'blog\'});'}}};
-				}
-			}
-			if( (M.curBusiness.modules['ciniki.blog'].flags&0x0100) > 0 ) {
-				if( join > -1 ) {
-					this.menu.sections[c].list.blog = {'label':'Member News', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'memberblog\');'};
-					join++;
-				} else {
-					this.menu.sections[c++] = {'label':'', 'list':{
-						'_':{'label':'Member News', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'memberblog\'});'}}};
-				}
 			}
 		}
 		if( M.curBusiness.modules['ciniki.events'] != null ) { 
@@ -979,24 +1021,6 @@ function ciniki_businesses_main() {
 					'_':{'label':'Gallery', 'fn':'M.startApp(\'ciniki.gallery.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-		if( M.curBusiness.modules['ciniki.directory'] != null ) { 
-			if( join > -1 ) {
-				this.menu.sections[c].list.directory = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
-		if( M.curBusiness.modules['ciniki.links'] != null ) { 
-			if( join > -1 ) {
-				this.menu.sections[c].list.links = {'label':'Links', 'fn':'M.startApp(\'ciniki.links.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Links', 'fn':'M.startApp(\'ciniki.links.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
 		if( M.curBusiness.modules['ciniki.recipes'] != null ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.recipes = {
@@ -1005,16 +1029,6 @@ function ciniki_businesses_main() {
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Recipes', 'fn':'M.startApp(\'ciniki.recipes.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
-		if( M.curBusiness.modules['ciniki.bugs'] != null ) { 
-			if( join > -1 ) {
-				this.menu.sections[c].list.bugs = {
-					'label':'Bug Tracking', 'fn':'M.startApp(\'ciniki.bugs.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Bug Tracking', 'fn':'M.startApp(\'ciniki.bugs.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
 		if( M.curBusiness.modules['ciniki.toolbox'] != null ) { 
@@ -1101,6 +1115,24 @@ function ciniki_businesses_main() {
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Sponsors', 'fn':'M.startApp(\'ciniki.sponsors.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+		if( M.curBusiness.modules['ciniki.directory'] != null ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.directory = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+		if( M.curBusiness.modules['ciniki.links'] != null ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.links = {'label':'Links', 'fn':'M.startApp(\'ciniki.links.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Links', 'fn':'M.startApp(\'ciniki.links.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
 		if( M.curBusiness.modules['ciniki.info'] != null ) { 
