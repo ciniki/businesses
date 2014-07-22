@@ -190,7 +190,7 @@ function ciniki_businesses_main() {
 					} else if( d.item.image_id > 0 ) {
 						return '<img width="75px" height="75px" src=\'' + M.api.getBinaryURL('ciniki.artcatalog.getImage', {'business_id':M.curBusinessID, 'image_id':d.item.image_id, 'version':'thumbnail', 'maxwidth':'75'}) + '\' />';
 					} else {
-						return '<img width="75px" height="75px" src=\'/ciniki-manage-themes/default/img/noimage_75.jpg\' />';
+						return '<img width="75px" height="75px" src=\'/ciniki-mods/core/ui/themes/default/img/noimage_75.jpg\' />';
 					}
 				} else if( j == 1 ) {
 					var sold = '';
