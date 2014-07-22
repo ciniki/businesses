@@ -47,6 +47,27 @@ function ciniki_businesses_main() {
 					}); 
 				return true;
 			}
+			else if( this.sections[s].id == 'members' && value != '' ) {
+				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'member_status':'10'}, 
+					function(rsp) { 
+						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.customers); 
+					}); 
+				return true;
+			}
+			else if( this.sections[s].id == 'dealers' && value != '' ) {
+				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'dealer_status':'10'}, 
+					function(rsp) { 
+						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.customers); 
+					}); 
+				return true;
+			}
+			else if( this.sections[s].id == 'distributors' && value != '' ) {
+				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'distributor_status':'10'}, 
+					function(rsp) { 
+						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.customers); 
+					}); 
+				return true;
+			}
 			else if( this.sections[s].id == 'tasks' && value != '' ) {
 				M.api.getJSONBgCb('ciniki.atdo.tasksSearchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10'}, 
 					function(rsp) { 
@@ -86,7 +107,8 @@ function ciniki_businesses_main() {
 				if( j == 0 ) { return 'multiline slice_0'; }
 				return 'schedule_appointment';
 			}
-			else if( this.sections[s].id == 'customers' ) {
+			else if( this.sections[s].id == 'customers' || this.sections[s].id == 'members'
+				|| this.sections[s].id == 'dealers' || this.sections[s].id == 'distributors' ) {
 				return '';
 			}
 			else if( this.sections[s].id == 'tasks' ) {
@@ -150,11 +172,16 @@ function ciniki_businesses_main() {
 				}
 				return '';
 			}
-			else if( this.sections[s].id == 'customers' ) {
+			else if( this.sections[s].id == 'customers' 
+				|| this.sections[s].id == 'members' 
+				|| this.sections[s].id == 'dealers' 
+				|| this.sections[s].id == 'distributors'
+				) {
 				return d.customer.display_name;
 			}
 			else if( this.sections[s].id == 'products' ) {
-				return (d.product.category!=''?d.product.category:'Uncategorized') + ' - ' + d.product.name;
+//				return (d.product.category!=''?d.product.category:'Uncategorized') + ' - ' + d.product.name;
+				return d.product.name;
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
 				if( j == 0 ) {
@@ -206,6 +233,15 @@ function ciniki_businesses_main() {
 			else if( this.sections[s].id == 'customers' ) {
 				return 'M.startApp(\'ciniki.customers.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':' + d.customer.id + '})';
 			}
+			else if( this.sections[s].id == 'members' ) {
+				return 'M.startApp(\'ciniki.customers.members\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':' + d.customer.id + '})';
+			}
+			else if( this.sections[s].id == 'dealers' ) {
+				return 'M.startApp(\'ciniki.customers.dealers\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':' + d.customer.id + '})';
+			}
+			else if( this.sections[s].id == 'distributors' ) {
+				return 'M.startApp(\'ciniki.customers.distributors\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':' + d.customer.id + '})';
+			}
 			else if( this.sections[s].id == 'tasks' ) {
 				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'atdo_id\':' + d.task.id + '})';
 			}
@@ -236,7 +272,16 @@ function ciniki_businesses_main() {
 				M.startApp('ciniki.calendars.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'search': search_str});
 			}
 			else if( this.sections[s].id == 'customers' ) {
-				M.startApp('ciniki.customers.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'search': search_str});
+				M.startApp('ciniki.customers.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'search': search_str,'type':'customers'});
+			}
+			else if( this.sections[s].id == 'members' ) {
+				M.startApp('ciniki.customers.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'search': search_str,'type':'members'});
+			}
+			else if( this.sections[s].id == 'dealers' ) {
+				M.startApp('ciniki.customers.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'search': search_str,'type':'dealers'});
+			}
+			else if( this.sections[s].id == 'distributors' ) {
+				M.startApp('ciniki.customers.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'search': search_str,'type':'distributors'});
 			}
 			else if( this.sections[s].id == 'tasks' ) {
 				M.startApp('ciniki.atdo.main',null,'M.ciniki_businesses_main.showMenu();','mc',{'tasksearch': search_str});
@@ -550,25 +595,6 @@ function ciniki_businesses_main() {
 				this.menu.sections[c] = {'label':'Menu', 'list':{}};
 			}
 		}
-		//
-		// Members
-		//
-		if( M.curBusiness.modules['ciniki.customers'] != null 
-			&& (M.curBusiness.modules['ciniki.customers'].flags&0x02) > 0 ) {
-			if( menu_search == 1 ) {
-				this.menu.sections[c] = {'label':'', 'id':'members', 'searchlabel':'Members', 'type':'livesearchgrid', 
-					'livesearchcols':1, 'hint':'',
-					'headerValues':null,
-					'noData':'No members found',
-					'addFn':'M.startApp(\'ciniki.customers.memberedit\', null, \'M.ciniki_businesses_main.showMenu();\');',
-					'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');',
-				};
-				c++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Members', 'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
 		// Art Catalog
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
 			if( M.curBusiness.modules['ciniki.sapos'] != null ) {
@@ -640,7 +666,8 @@ function ciniki_businesses_main() {
 		}
 
 		if( M.curBusiness.modules['ciniki.atdo'] != null ) {
-			this.menu.sections[c] = {'label':'', 'id':'tasks', 'searchlabel':'Tasks', 'type':'livesearchgrid', 
+			this.menu.sections[c] = {'label':'', 'id':'tasks', 'searchlabel':'Tasks', 
+				'type':'livesearchgrid', 
 				'livesearchcols':3, 'hint':'',
 				'headerValues':['','Task','Due'],
 				'cellClasses':['multiline aligncenter','multiline','multiline'],
@@ -650,6 +677,19 @@ function ciniki_businesses_main() {
 				'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'tasks\':\'yes\'});',
 			};
 			menu_search = 1;
+			c++;
+		}
+
+		// Products module, all owners and employees and Products group
+		if( M.curBusiness.modules['ciniki.products'] != null ) { 
+			this.menu.sections[c] = {'label':'', 'id':'products', 'searchlabel':'Products', 
+				'type':'livesearchgrid', 
+				'livesearchcols':1, 'hint':'',
+				'headerValues':null,
+				'noData':'No products found',
+				'fn':'M.startApp(\'ciniki.products.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
+				'addFn':'M.startApp(\'ciniki.products.edit\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':0});',
+			};
 			c++;
 		}
 
@@ -671,6 +711,61 @@ function ciniki_businesses_main() {
 					'_':{'label':'Customers', 'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		//
+		// Members
+		//
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x02) > 0 ) {
+			if( menu_search == 1 ) {
+				this.menu.sections[c] = {'label':'', 'id':'members', 'searchlabel':'Members', 'type':'livesearchgrid', 
+					'livesearchcols':1, 'hint':'',
+					'headerValues':null,
+					'noData':'No members found',
+					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':0,\'member\':\'yes\'});',
+					'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');',
+				};
+				c++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Members', 'fn':'M.startApp(\'ciniki.customers.members\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+		// Dealers
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x10) > 0 ) {
+			if( menu_search == 1 ) {
+				this.menu.sections[c] = {'label':'', 'id':'dealers', 'searchlabel':'Dealers', 
+					'type':'livesearchgrid', 'livesearchcols':1, 'hint':'',
+					'headerValues':null,
+					'noData':'No dealers found',
+					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':0,\'dealer\':\'yes\'});',
+					'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');',
+				};
+				c++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Dealers', 'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
+		// Distributors
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x100) > 0 ) {
+			if( menu_search == 1 ) {
+				this.menu.sections[c] = {'label':'', 'id':'distributors', 'searchlabel':'Distributors', 
+					'type':'livesearchgrid', 'livesearchcols':1, 'hint':'',
+					'headerValues':null,
+					'noData':'No distributors found',
+					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':0,\'distributor\':\'yes\'});',
+					'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');',
+				};
+				c++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Distributors', 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		// Courses module
 		if( M.curBusiness.modules['ciniki.courses'] != null ) {
 			this.menu.sections[c++] = {'label':'', 'list':{
@@ -692,53 +787,6 @@ function ciniki_businesses_main() {
 			};
 			menu_search = 1;
 			c++;
-		}
-
-		// Products module, all owners and employees and Products group
-		if( M.curBusiness.modules['ciniki.products'] != null ) { 
-			this.menu.sections[c] = {'label':'', 'id':'products', 'searchlabel':'Products', 'type':'livesearchgrid', 
-				'livesearchcols':1, 'hint':'',
-				'headerValues':null,
-				'noData':'No products found',
-				'fn':'M.startApp(\'ciniki.products.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
-			};
-			c++;
-		}
-
-		// Dealers
-		if( M.curBusiness.modules['ciniki.customers'] != null 
-			&& (M.curBusiness.modules['ciniki.customers'].flags&0x10) > 0 ) {
-//			if( menu_search == 1 ) {
-//				this.menu.sections[c] = {'label':'', 'id':'dealers', 'searchlabel':'Dealers', 
-//					'type':'livesearchgrid', 'livesearchcols':1, 'hint':'',
-//					'headerValues':null,
-//					'noData':'No dealers found',
-//					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
-//					'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');',
-//				};
-//				c++;
-//			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Dealers', 'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-//			}
-		}
-
-		// Distributors
-		if( M.curBusiness.modules['ciniki.customers'] != null 
-			&& (M.curBusiness.modules['ciniki.customers'].flags&0x100) > 0 ) {
-//			if( menu_search == 1 ) {
-//				this.menu.sections[c] = {'label':'', 'id':'distributors', 'searchlabel':'Distributors', 
-//					'type':'livesearchgrid', 'livesearchcols':1, 'hint':'',
-//					'headerValues':null,
-//					'noData':'No distributors found',
-//					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
-//					'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');',
-//				};
-//				c++;
-//			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Distributors', 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-//			}
 		}
 
 		// services module, all owners and employees and Products group
