@@ -613,12 +613,6 @@ function ciniki_businesses_main() {
 					'_':{'label':'Art Catalog', 'fn':'M.startApp(\'ciniki.artcatalog.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-		// Art Gallery
-		if( M.curBusiness.modules['ciniki.artgallery'] != null ) {
-			this.menu.sections[c++] = {'label':'', 'list':{
-				'_':{'label':'Exhibitions', 'fn':'M.startApp(\'ciniki.artgallery.exhibitions\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-		}
-
 		// Wine production module, all owners, employees and wine production group
 		if( M.curBusiness.modules['ciniki.wineproduction'] != null ) {
 			this.menu.sections[c] = {'label':'', 'id':'wineproduction', 'searchlabel':'Wine Production', 'type':'livesearchgrid', 'livesearchcols':8, 'hint':'',
@@ -764,6 +758,19 @@ function ciniki_businesses_main() {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Distributors', 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
+		}
+
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+		}
+
+		// Art Gallery
+		if( M.curBusiness.modules['ciniki.artgallery'] != null ) {
+			this.menu.sections[c++] = {'label':'', 'list':{
+				'_':{'label':'Exhibitions', 'fn':'M.startApp(\'ciniki.artgallery.exhibitions\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 
 		// Courses module
