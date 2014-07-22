@@ -659,7 +659,8 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
-		if( M.curBusiness.modules['ciniki.atdo'] != null ) {
+		if( M.curBusiness.modules['ciniki.atdo'] != null 
+			&& (M.curBusiness.modules['ciniki.atdo'].flags&0x02) > 0 ) {
 			this.menu.sections[c] = {'label':'', 'id':'tasks', 'searchlabel':'Tasks', 
 				'type':'livesearchgrid', 
 				'livesearchcols':3, 'hint':'',
@@ -876,36 +877,50 @@ function ciniki_businesses_main() {
 		}
 		if( M.curBusiness.modules['ciniki.atdo'] != null ) {
 			if( join > -1 ) {
-				this.menu.sections[c].list.messages = {
-					'label':'Messages',
-					'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'messages\':\'yes\'});',
-					'count':M.curBusiness.modules['ciniki.atdo'].message_count,
-					};
-				this.menu.sections[c].list.notes = {
-					'label':'Notes',
-						'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'notes\':\'yes\'});',
-						'count':M.curBusiness.modules['ciniki.atdo'].notes_count,
-					};
-				this.menu.sections[c].list.faq = {
-					'label':'FAQ', 
-					'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'faq\':\'yes\'});',
-					};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Messages',
+				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x20) > 0 ) {
+					this.menu.sections[c].list.messages = {
+						'label':'Messages',
 						'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'messages\':\'yes\'});',
 						'count':M.curBusiness.modules['ciniki.atdo'].message_count,
-						}}
-					};
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Notes',
-						'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\' ,{\'notes\':\'yes\'});',
-						'count':M.curBusiness.modules['ciniki.atdo'].notes_count,
-						}}
-					};
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'FAQ', 'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'faq\':\'yes\'});'}}};
+						};
+					join++;
+				}
+				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x10) > 0 ) {
+					this.menu.sections[c].list.notes = {
+						'label':'Notes',
+							'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'notes\':\'yes\'});',
+							'count':M.curBusiness.modules['ciniki.atdo'].notes_count,
+						};
+					join++;
+				}
+				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x08) > 0 ) {
+					this.menu.sections[c].list.faq = {
+						'label':'FAQ', 
+						'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'faq\':\'yes\'});',
+						};
+					join++;
+				}
+			} else {
+				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x20) > 0 ) {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Messages',
+							'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'messages\':\'yes\'});',
+							'count':M.curBusiness.modules['ciniki.atdo'].message_count,
+							}}
+						};
+				}
+				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x10) > 0 ) {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Notes',
+							'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\' ,{\'notes\':\'yes\'});',
+							'count':M.curBusiness.modules['ciniki.atdo'].notes_count,
+							}}
+						};
+				}
+				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x08) > 0 ) {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'FAQ', 'fn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'faq\':\'yes\'});'}}};
+				}
 			}
 		}
 		if( M.curBusiness.modules['ciniki.media'] != null ) { 
