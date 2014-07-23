@@ -101,11 +101,20 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	// FIXME: Add check to see which groups the user is part of, and only hand back the module list
 	//        for what they have access to.
 	//
-	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module FROM ciniki_business_modules "
+	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags "
+		. "FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND status = 1 "
 		. "";
-	$mrc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
+	$mrc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.businesses', array(
+		array('container'=>'modules', 'fname'=>'name',
+			'fields'=>array('name', 'package', 'module', 'flags')),
+		));
+	if( $mrc['stat'] != 'ok' ) {
+		return $mrc;
+	}
+//	$mrc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
 	//
 	// Check for any modules which should have some settings loaded as well
@@ -117,72 +126,73 @@ function ciniki_businesses_getUserSettings($ciniki) {
 			//
 			// Check for uiSettings in other modules
 			//
-			list($pkg, $mod) = explode('.', $module['module']['name']);
-			$rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'private', 'uiSettings');
+//			list($pkg, $mod) = explode('.', $module['module']['name']);
+			
+			$rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'private', 'uiSettings');
 			if( $rc['stat'] == 'ok' ) {
-				$fn = $pkg . '_' . $mod . '_uiSettings';
-				$rc = $fn($ciniki, $args['business_id']);
+				$fn = $module['package'] . '_' . $module['module'] . '_uiSettings';
+				$rc = $fn($ciniki, $mrc['modules'], $args['business_id']);
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
 				if( isset($rc['settings']) ) {
-					$rsp['settings'][$module['module']['name']] = $rc['settings'];
+					$rsp['settings'][$module['name']] = $rc['settings'];
 				}
 			}
 
 			//
 			// FIXME: Move these into settings files for each module
 			//
-			if( $module['module']['name'] == 'ciniki.artcatalog' ) {
+			if( $module['name'] == 'ciniki.artcatalog' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_artcatalog_settings', 'business_id', $args['business_id'], 'ciniki.artcatalog', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.artcatalog'] = $rc['settings'];
 				}
 			}
-			if( $module['module']['name'] == 'ciniki.atdo' ) {
+			if( $module['name'] == 'ciniki.atdo' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.atdo'] = $rc['settings'];
 				}
 			}
-			if( $module['module']['name'] == 'ciniki.bugs' ) {
+			if( $module['name'] == 'ciniki.bugs' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_bug_settings', 'business_id', $args['business_id'], 'ciniki.bugs', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.bugs'] = $rc['settings'];
 				} 
 			}
-			if( $module['module']['name'] == 'ciniki.customers' ) {
-				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_customer_settings', 'business_id', $args['business_id'], 'ciniki.customers', 'settings', '');
-				if( $rc['stat'] == 'ok' ) {
-					$rsp['settings']['ciniki.customers'] = $rc['settings'];
-				} 
-			}
-			if( $module['module']['name'] == 'ciniki.services' ) {
+//			if( $module['name'] == 'ciniki.customers' ) {
+//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_customer_settings', 'business_id', $args['business_id'], 'ciniki.customers', 'settings', '');
+//				if( $rc['stat'] == 'ok' ) {
+//					$rsp['settings']['ciniki.customers'] = $rc['settings'];
+//				} 
+//			}
+			if( $module['name'] == 'ciniki.services' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_service_settings', 'business_id', $args['business_id'], 'ciniki.services', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.services'] = $rc['settings'];
 				} 
 			}
-			if( $module['module']['name'] == 'ciniki.mail' ) {
+			if( $module['name'] == 'ciniki.mail' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_mail_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'mail');
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.mail'] = $rc['settings'];
 				} 
 			}
-			if( $module['module']['name'] == 'ciniki.sapos' ) {
+			if( $module['name'] == 'ciniki.sapos' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_sapos_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'paypal-api');
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.sapos'] = $rc['settings'];
 				} 
 			}
-			if( $module['module']['name'] == 'ciniki.taxes' ) {
+			if( $module['name'] == 'ciniki.taxes' ) {
 				ciniki_core_loadMethod($ciniki, 'ciniki', 'taxes', 'private', 'taxTypes');
 				$rc = ciniki_taxes_taxTypes($ciniki, $args['business_id']);
 				if( $rc['stat'] == 'ok' ) {
 					$rsp['settings']['ciniki.taxes'] = array('types'=>$rc['types']);
 				} 
 			}
-			if( $module['module']['name'] == 'ciniki.exhibitions' ) {
+			if( $module['name'] == 'ciniki.exhibitions' ) {
 				if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
 					$rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
 				}
