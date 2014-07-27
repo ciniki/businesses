@@ -23,10 +23,23 @@
 //
 function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	//
+	// Get the list of modules
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
+	$rc = ciniki_businesses_checkModuleAccess($ciniki, $business_id, 'ciniki', 'businesses');
+	// Ignore if businesses module is not in the list, it's on by default
+	if( $rc['stat'] != 'ok' && $rc['err']['code'] != '696' ) {
+		return $rc;
+	}
+	// Normally there is a check here to see if permissions denied, but not used in this case
+	// just want to get the modules.
+	$modules = $rc['modules'];
+
+	//
 	// Sysadmins are allowed full access
 	//
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		return array('stat'=>'ok');
+		return array('stat'=>'ok', 'modules'=>$modules);
 	}
 
 	//
@@ -35,7 +48,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	if( $method == 'ciniki.businesses.getUserBusinesses' 
 		|| $method == 'ciniki.businesses.getUserModules' 
 		) {
-		return array('stat'=>'ok');
+		return array('stat'=>'ok', 'modules'=>$modules);
 	}
 
 	//
@@ -133,7 +146,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		//
 		if( isset($rc['rows']) && isset($rc['rows'][0]) 
 			&& $rc['rows'][0]['user_id'] > 0 && $rc['rows'][0]['user_id'] == $ciniki['session']['user']['id'] ) {
-			return array('stat'=>'ok');
+			return array('stat'=>'ok', 'modules'=>$modules);
 		}
 	}
 

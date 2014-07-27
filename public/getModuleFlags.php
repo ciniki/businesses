@@ -59,6 +59,14 @@ function ciniki_businesses_getModuleFlags($ciniki) {
 	$business_modules = $rc['modules'];
 
 	//
+	// Check for ciniki.businesses
+	//
+	if( !isset($business_modules['ciniki.businesses']) ) {
+		$business_modules['ciniki.businesses'] = array('name'=>'Businesses', 
+			'package'=>'ciniki', 'module'=>'businesses', 'flags'=>'0');
+	}
+
+	//
 	// Check for the name and flags available for each module
 	//
 	foreach($business_modules as $mid => $module) {

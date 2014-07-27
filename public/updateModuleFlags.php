@@ -42,6 +42,7 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, module, status "
 		. "FROM ciniki_business_modules WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";	
@@ -77,21 +78,53 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
 	//
 	foreach($mod_list as $module) {
 		$name = $module['package'] . '.' . $module['name'];
+		
 		if( isset($ciniki['request']['args'][$name]) ) {
-			$strsql = "UPDATE ciniki_business_modules SET "
-				. "flags = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$name]) . "', "
-				. "last_updated = UTC_TIMESTAMP() "
-				. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-				. "AND package = '" . ciniki_core_dbQuote($ciniki, $module['package']) . "' "
-				. "AND module = '" . ciniki_core_dbQuote($ciniki, $module['name']) . "' "
-				. "";
-			$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
-			if( $rc['stat'] != 'ok' ) {
-				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-				return $rc;
+			//
+			// Add the module if it doesn't exist
+			//
+			if( !isset($business_modules[$name]) ) {
+				$strsql = "INSERT INTO ciniki_business_modules (business_id, package, module, "
+					. "status, flags, ruleset, date_added, last_updated) VALUES ("
+					. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. ", '" . ciniki_core_dbQuote($ciniki, $module['package']) . "' "
+					. ", '" . ciniki_core_dbQuote($ciniki, $module['name']) . "' "
+					. ", '2'"
+					. ", '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$name]) . "' "
+					. ", ''"
+					. ", UTC_TIMESTAMP(), UTC_TIMESTAMP() "
+					. ")";
+				$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
+				if( $rc['stat'] != 'ok' ) {
+					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+					return $rc;
+				} 
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+					$args['business_id'], 1, 'ciniki_business_modules', $name, 'status', '2');
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+					$args['business_id'], 1, 'ciniki_business_modules', $name, 'flags', 
+					$ciniki['request']['args'][$name]);
 			} 
-			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-				2, 'ciniki_business_modules', $name, 'flags', $ciniki['request']['args'][$name]);
+			//
+			// Update the existing module
+			//
+			else {
+				$strsql = "UPDATE ciniki_business_modules SET "
+					. "flags = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$name]) . "', "
+					. "last_updated = UTC_TIMESTAMP() "
+					. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+					. "AND package = '" . ciniki_core_dbQuote($ciniki, $module['package']) . "' "
+					. "AND module = '" . ciniki_core_dbQuote($ciniki, $module['name']) . "' "
+					. "";
+				$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+				if( $rc['stat'] != 'ok' ) {
+					ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+					return $rc;
+				} 
+				ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
+					$args['business_id'], 2, 'ciniki_business_modules', $name, 'flags', 
+					$ciniki['request']['args'][$name]);
+			}
 		}
 	}
 

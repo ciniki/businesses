@@ -11,10 +11,10 @@
 //
 function ciniki_businesses_flags($ciniki, $modules) {
 	$flags = array(
-//		array('flag'=>array('bit'=>'1', 'name'=>'Employees')),
-		array('flag'=>array('bit'=>'2', 'name'=>'Sales Reps')),
-//		array('flag'=>array('bit'=>'3', 'name'=>'')),
-//		array('flag'=>array('bit'=>'4', 'name'=>'')),
+//		array('flag'=>array('bit'=>'1', 'name'=>'Employees', 'group'=>'ciniki.employees')),
+		array('flag'=>array('bit'=>'2', 'name'=>'Sales Reps', 'group'=>'ciniki.salesreps')),
+		array('flag'=>array('bit'=>'3', 'name'=>'Warehouse', 'group'=>'ciniki.warehouse')),
+		array('flag'=>array('bit'=>'4', 'name'=>'Marketing', 'group'=>'ciniki.marketing')),
 //		array('flag'=>array('bit'=>'5', 'name'=>'')),
 //		array('flag'=>array('bit'=>'6', 'name'=>'')),
 //		array('flag'=>array('bit'=>'7', 'name'=>'')),

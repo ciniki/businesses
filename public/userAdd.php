@@ -26,8 +26,8 @@ function ciniki_businesses_userAdd(&$ciniki) {
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
 		'user_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'User'), 
 		'package'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Package'), 
-		'permission_group'=>array('required'=>'yes', 'blank'=>'no', 
-			'validlist'=>array('owners', 'employees'), 'name'=>'Permissions'), 
+		'permission_group'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Permissions'),
+//			'validlist'=>array('owners', 'employees'), 'name'=>'Permissions'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -41,6 +41,34 @@ function ciniki_businesses_userAdd(&$ciniki) {
 	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.userAdd');
 	if( $ac['stat'] != 'ok' ) {
 		return $ac;
+	}
+	$modules = $ac['modules'];
+
+	//
+	// Get the flags for this module and send back the permission groups available
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'flags');
+	$rc = ciniki_businesses_flags($ciniki, $modules);
+	$flags = $rc['flags'];
+
+	//
+	// Check the permission group is valid
+	//
+	if( $args['permission_group'] != 'owners' && $args['permission_group'] != 'employees' ) {
+		$found = 'no';
+		foreach($flags as $flag) {
+			$flag = $flag['flag'];
+			// Make sure permission_group is enabled, and
+			if( $flag['group'] = $args['permission_group'] . '.' . $args['package']
+				&& ($modules['ciniki.businesses']['flags']&pow(2, $flag['bit']-1)) > 0 
+				) {
+				$found = 'yes';
+				break;
+			}
+		}
+		if( $found == 'no' ) {
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1841', 'msg'=>'Invalid permissions'));
+		}
 	}
 
 	//

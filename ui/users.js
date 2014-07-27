@@ -19,26 +19,7 @@ function ciniki_businesses_users() {
 			'ciniki_businesses_users', 'users',
 			'mc', 'medium', 'sectioned', 'ciniki.businesses.users');
 		this.users.data = {};
-		this.users.sections = {
-			'ciniki.owners':{'label':'Owners', 'type':'simplegrid', 'num_cols':1, 
-				'headerValues':null,
-				'cellClasses':[''],
-				'addTxt':'Add Owner',
-				'addFn':'M.startApp(\'ciniki.users.add\', null, \'M.ciniki_businesses_users.addOwner(data);\');',
-				},
-			'ciniki.employees':{'label':'Employees', 'type':'simplegrid', 'num_cols':1, 
-				'headerValues':null,
-				'cellClasses':[''],
-				'addTxt':'Add Employee',
-				'addFn':'M.startApp(\'ciniki.users.add\', null, \'M.ciniki_businesses_users.addEmployee(data);\');',
-				},
-			'ciniki.salesresp':{'label':'Sales Reps', 'type':'simplegrid', 'num_cols':1, 
-				'headerValues':null,
-				'cellClasses':[''],
-				'addTxt':'Add Sales Rep',
-				'addFn':'M.startApp(\'ciniki.users.add\', null, \'M.ciniki_businesses_users.addSalesRep(data);\');',
-				},
-		};
+		this.users.sections = {};
 		this.users.cellValue = function(s, i, j, d) { return d.user.firstname + ' ' + d.user.lastname; }	
 		this.users.rowFn = function(s, i, d) { return 'M.ciniki_businesses_users.showEdit(\'M.ciniki_businesses_users.showUsers();\',\'' + s + '\',\'' + d.user.user_id + '\');'; }
 		this.users.noData = function() { return 'No users'; }
@@ -52,6 +33,8 @@ function ciniki_businesses_users() {
 			'ciniki_businesses_users', 'edit',
 			'mc', 'medium', 'sectioned', 'ciniki.businesses.users.edit');
 		this.edit.data = {};
+		this.edit.user_package = '';
+		this.edit.user_permission_group = '';
 		this.edit.sections = {
 			'info':{'label':'Login', 'list':{
 				'firstname':{'label':'First', 'type':'noedit'},
@@ -81,7 +64,7 @@ function ciniki_businesses_users() {
 				}},
 			'_buttons':{'label':'', 'buttons':{
 				'save':{'label':'Save', 'fn':'M.ciniki_businesses_users.saveDetails();'},
-				'delete':{'label':'Remove', },
+				'delete':{'label':'Remove',},
 				}},
 			};
 		this.edit.listLabel = function(s, i, d) { return d.label; }
@@ -117,12 +100,33 @@ function ciniki_businesses_users() {
 			alert('App Error');
 			return false;
 		} 
-
-		if( (M.curBusiness.modules['ciniki.businesses'].flags&0x02) > 0 ) {
-			this.users.sections['ciniki.salesreps'].visible = 'yes';
-		} else {
-			this.users.sections['ciniki.salesreps'].visible = 'no';
-		}
+		
+//		this.users.sections = {
+//			'ciniki.owners':{'label':'Owners', 'type':'simplegrid', 'num_cols':1, 
+//				'headerValues':null,
+//				'cellClasses':[''],
+//				'addTxt':'Add Owner',
+//				'addFn':'M.startApp(\'ciniki.users.add\', null, \'M.ciniki_businesses_users.addOwner(data);\');',
+//				},
+//			'ciniki.employees':{'label':'Employees', 'type':'simplegrid', 'num_cols':1, 
+//				'headerValues':null,
+//				'cellClasses':[''],
+//				'addTxt':'Add Employee',
+//				'addFn':'M.startApp(\'ciniki.users.add\', null, \'M.ciniki_businesses_users.addEmployee(data);\');',
+//				},
+//		};
+//		if( M.curBusiness.modules['ciniki.businesses'] != null ) {
+//			if( (M.curBusiness.modules['ciniki.businesses'].flags&0x04) > 0 ) {
+//				this.users.sections['ciniki.warehouse'].visible = 'yes';
+//			} else {
+//				this.users.sections['ciniki.warehouse'].visible = 'no';
+//			}
+//			if( (M.curBusiness.modules['ciniki.businesses'].flags&0x08) > 0 ) {
+//				this.users.sections['ciniki.marketing'].visible = 'yes';
+//			} else {
+//				this.users.sections['ciniki.marketing'].visible = 'no';
+//			}
+//		}
 
 		this.showUsers(cb);
 	}
@@ -133,7 +137,7 @@ function ciniki_businesses_users() {
 		// we have the current data.  If the user switches businesses, then we
 		// want this data reloaded.
 		//
-		var rsp = M.api.getJSONCb('ciniki.businesses.userList', {'id':M.curBusinessID}, function(rsp) {
+		M.api.getJSONCb('ciniki.businesses.userList', {'business_id':M.curBusinessID}, function(rsp) {
 			if( rsp.stat != 'ok' ) {
 				M.api.err(rsp);
 				return false;
@@ -141,11 +145,19 @@ function ciniki_businesses_users() {
 			var p = M.ciniki_businesses_users.users;
 			p.reset();
 			p.data = [];
-			p.sections['ciniki.owners'].list = [];
-			p.sections['ciniki.employees'].list = [];
-			p.sections['ciniki.salesreps'].list = [];
 
 			// Add the user lists into the proper sections
+			p.sections = {};
+			for(i in rsp.permission_groups) {
+				p.sections[i] = {'label':rsp.permission_groups[i].name,
+					'type':'simplegrid',
+					'num_cols':1,
+					'headerValues':null,
+					'cellClasses':[''],
+					'addTxt':'Add',
+					'addFn':'M.ciniki_businesses_users.showAdd(\'' + i + '\');',
+					};
+			}
 			for(i in rsp.groups) {
 				if( p.sections[rsp.groups[i].group.permission_group] != null ) {
 					p.data[rsp.groups[i].group.permission_group] = rsp.groups[i].group.users;
@@ -156,21 +168,15 @@ function ciniki_businesses_users() {
 		});
 	}
 
-	this.showEdit = function(cb, s, uid) {
-		if( uid != null ) {
-			this.edit.user_id = uid;
+	this.showEdit = function(cb, s, uid, mod) {
+		if( uid != null ) { this.edit.user_id = uid; }
+		if( s != null ) { 
+			var g = s.split('.');
+			this.edit.package = g[0];
+			this.edit.permission_group = g[1];
 		}
-		if( s == 'ciniki.owners' ) {
-			this.edit.sections._buttons.buttons.delete.label = 'Remove Owner';
-			this.edit.sections._buttons.buttons.delete.fn = 'M.ciniki_businesses_users.removeOwner(' + this.edit.user_id + ');';
-		} else if( s == 'ciniki.employees') {
-			this.edit.sections._buttons.buttons.delete.label = 'Remove Employee';
-			this.edit.sections._buttons.buttons.delete.fn = 'M.ciniki_businesses_users.removeEmployee(' + this.edit.user_id + ');';
-		} else if( s == 'ciniki.salesreps') {
-			this.edit.sections._buttons.buttons.delete.label = 'Remove Sales Rep';
-			this.edit.sections._buttons.buttons.delete.fn = 'M.ciniki_businesses_users.removeSalesRep(' + this.edit.user_id + ');';
-		}
-		var rsp = M.api.getJSONCb('ciniki.businesses.userDetails', 
+		this.edit.sections._buttons.buttons.delete.fn = 'M.ciniki_businesses_users.removeUser(' + this.edit.user_id + ');';
+		M.api.getJSONCb('ciniki.businesses.userDetails', 
 			{'business_id':M.curBusinessID, 'user_id':this.edit.user_id}, function(rsp) {
 				if( rsp.stat != 'ok' ) {
 					M.api.err(rsp);
@@ -215,94 +221,39 @@ function ciniki_businesses_users() {
 		}
 	}
 
+	this.showAdd = function(s) {
+		var g = s.split('.');
+		this.cur_package = g[0];
+		this.cur_permission_group = g[1];
+		M.startApp('ciniki.users.add',null,'M.ciniki_businesses_users.addUser(data);');
+	};
+
 	// 
 	// Submit the form
 	//
-	this.addOwner = function(data) {
+	this.addUser = function(data) {
 		if( data != null && data.id > 0 ) {
 			var rsp = M.api.getJSONCb('ciniki.businesses.userAdd', 
 				{'business_id':M.curBusinessID, 'user_id':data.id, 
-				'package':'ciniki', 'permission_group':'owners'}, function(rsp) {
+				'package':this.cur_package, 'permission_group':this.cur_permission_group}, function(rsp) {
 					if( rsp.stat != 'ok' ) {
 						M.api.err(rsp);
 						return false;
 					}
 					M.ciniki_businesses_users.showUsers();
 				});
+		} else {
+			M.ciniki_businesses_users.showUsers();
 		}
-		return false;
+//		return false;
 	}
 
-	this.addEmployee = function(data) {
-		if( data != null && data.id > 0 ) {
-			var rsp = M.api.getJSONCb('ciniki.businesses.userAdd', 
-				{'business_id':M.curBusinessID, 'user_id':data.id, 
-				'package':'ciniki', 'permission_group':'employees'}, function(rsp) {
-					if( rsp.stat != 'ok' ) {
-						M.api.err(rsp);
-						return false;
-					}
-					M.ciniki_businesses_users.showUsers();
-				});
-		}
-		return false;
-	}
-
-	this.addSalesRep = function(data) {
-		if( data != null && data.id > 0 ) {
-			var rsp = M.api.getJSONCb('ciniki.businesses.userAdd', 
-				{'business_id':M.curBusinessID, 'user_id':data.id, 
-				'package':'ciniki', 'permission_group':'salesreps'}, function(rsp) {
-					if( rsp.stat != 'ok' ) {
-						M.api.err(rsp);
-						return false;
-					}
-					M.ciniki_businesses_users.showUsers();
-				});
-		}
-		return false;
-	}
-
-	this.removeOwner = function(id) {
+	this.removeUser = function(id) {
 		if( id != null && id > 0 ) {
 			if( confirm('Are you sure you want to remove this user as an Owner?') ) {
 				var rsp = M.api.getJSONCb('ciniki.businesses.userRemove', 
 					{'business_id':M.curBusinessID, 'user_id':id, 
-					'package':'ciniki', 'permission_group':'owners'}, function(rsp) {
-						if( rsp.stat != 'ok' ) {
-							M.api.err(rsp);
-							return false;
-						}
-						M.ciniki_businesses_users.showUsers();
-					});
-			}
-		}
-		return false;
-	}
-
-	this.removeEmployee = function(id) {
-		if( id != null && id > 0 ) {
-			if( confirm('Are you sure you want to remove this user as an Employee?') ) {
-				var rsp = M.api.getJSONCb('ciniki.businesses.userRemove', 
-					{'business_id':M.curBusinessID, 'user_id':id, 
-					'package':'ciniki', 'permission_group':'employees'}, function(rsp) {
-						if( rsp.stat != 'ok' ) {
-							M.api.err(rsp);
-							return false;
-						}
-						M.ciniki_businesses_users.showUsers();
-					});
-			}
-		}
-		return false;
-	}
-
-	this.removeSalesRep = function(id) {
-		if( id != null && id > 0 ) {
-			if( confirm('Are you sure you want to remove this user as an Sales Rep?') ) {
-				var rsp = M.api.getJSONCb('ciniki.businesses.userRemove', 
-					{'business_id':M.curBusinessID, 'user_id':id, 
-					'package':'ciniki', 'permission_group':'salesrep'}, function(rsp) {
+					'package':this.edit.package, 'permission_group':this.edit.permission_group}, function(rsp) {
 						if( rsp.stat != 'ok' ) {
 							M.api.err(rsp);
 							return false;
