@@ -12,6 +12,10 @@
 # package:		The package the user is part of, default 'ciniki'.
 #
 # permission_group:		The group the user is a part of. (owners, employees), future roles (sysadmin, accountant, assistant, etc)
+#
+#				owners - complete access to business database and all information
+#				employees - reduced set of permssions
+#				salesreps - sales rep
 # 
 # status:		0 - unknown
 # 				10 - active

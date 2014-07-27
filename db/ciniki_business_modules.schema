@@ -20,6 +20,7 @@
 #
 # flags:					Module specific flags.  This allows for different features/sections 
 #							of a module to be enabled/disabled.
+#							Allows for 64 different flags.
 #
 # ruleset:					The ruleset name from the modules private/getRulesets.php file.
 #							There are no standards flags, they are set within the module.
@@ -36,11 +37,11 @@ create table ciniki_business_modules (
 	package varchar(50) not null,
 	module varchar(50) not null,
 	status tinyint not null,
-	flags smallint unsigned not null,
+	flags bigint unsigned not null,
 	ruleset varchar(50) not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	last_change datetime not null,
 	primary key (business_id, package, module),
 	index (last_updated)
-) ENGINE=InnoDB, COMMENT='v1.03';
+) ENGINE=InnoDB, COMMENT='v1.04';
