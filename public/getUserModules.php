@@ -5,6 +5,8 @@
 // This method will return the list of modules the user has access to and are turned on for the business.
 // The UI can use this to decide what menu items to display.
 //
+// **NOTE** Any changed in this method should be duplicated to getUserSettings.
+//
 // Arguments
 // ---------
 // api_key:
