@@ -16,6 +16,8 @@
 #				owners - complete access to business database and all information
 #				employees - reduced set of permssions
 #				salesreps - sales rep
+#				warehouse - warehouse staff, shippers, receivers
+#				marketing - access to social media, blogging, etc
 # 
 # status:		0 - unknown
 # 				10 - active
@@ -33,6 +35,7 @@ create table ciniki_business_users (
 	uuid char(36) not null,
 	business_id int not null,
 	user_id int not null,
+	eid varchar(50) not null,
 	package varchar(50) not null,
 	permission_group varchar(50) not null,
 	status tinyint unsigned not null,
@@ -41,4 +44,4 @@ create table ciniki_business_users (
 	last_login datetime not null,
 	primary key (id),
 	unique index (business_id, user_id, package, permission_group)
-) ENGINE=InnoDB, COMMENT='v1.05';
+) ENGINE=InnoDB, COMMENT='v1.06';

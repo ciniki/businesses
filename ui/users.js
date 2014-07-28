@@ -43,6 +43,9 @@ function ciniki_businesses_users() {
 				'email':{'label':'Email', 'type':'noedit'},
 				'display_name':{'label':'Display', 'type':'noedit'},
 				}},
+			'_eid':{'label':'', 'active':'no', 'fields':{
+				'eid':{'label':'External ID', 'type':'text'},
+				}},
 			'details':{'label':'Contact Info', 'type':'simpleform', 'fields':{
 				'employee.title':{'label':'Title', 'type':'text'},
 				'contact.phone.number':{'label':'Phone', 'type':'text'},
@@ -127,6 +130,14 @@ function ciniki_businesses_users() {
 //				this.users.sections['ciniki.marketing'].visible = 'no';
 //			}
 //		}
+
+		if( M.curBusiness.modules['ciniki.businesses'] != null 
+			&& (M.curBusiness.modules['ciniki.businesses'].flags&0x010000) > 0 
+			) {
+			this.edit.sections._eid.active = 'yes';
+		} else {
+			this.edit.sections._eid.active = 'no';
+		}
 
 		this.showUsers(cb);
 	}

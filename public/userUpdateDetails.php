@@ -26,6 +26,7 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
 		'user_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'User'), 
+		'eid'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'External ID'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -56,6 +57,40 @@ function ciniki_businesses_userUpdateDetails(&$ciniki) {
 	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
+	}
+
+	//
+	// Check if eid needs updating
+	//
+	if( isset($args['eid']) ) {
+		$strsql = "SELECT id "
+			. "FROM ciniki_business_users "
+			. "WHERE user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+			. "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+			. "";
+		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'item');
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		$existing_users = (isset($rc['rows'])?$rc['rows']:array());
+		$strsql = "UPDATE ciniki_business_users SET "
+			. "eid = '" . ciniki_core_dbQuote($ciniki, $args['eid']) . "' "
+			. ", last_updated = UTC_TIMESTAMP() "
+			. "WHERE user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+			. "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+			. "";
+		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+		if( $rc['stat'] != 'ok' ) {
+			ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+			return $rc;
+		}
+		foreach($existing_users as $user) {
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 
+				'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_users', $user['id'], 'eid', $args['eid']);
+			$ciniki['syncqueue'][] = array('push'=>'ciniki.businesses.user', 
+				'args'=>array('id'=>$user['id']));
+		}
 	}
 
 	//

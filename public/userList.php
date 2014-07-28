@@ -52,7 +52,9 @@ function ciniki_businesses_userList($ciniki) {
 	if( isset($modules['ciniki.businesses']) ) {
 		foreach($flags as $flag) {
 			$flag = $flag['flag'];
-			if( ($modules['ciniki.businesses']['flags']&pow(2, $flag['bit']-1)) > 0 ) {
+			if( isset($flag['group']) 
+				&& ($modules['ciniki.businesses']['flags']&pow(2, $flag['bit']-1)) > 0 
+				) {
 				$rsp['permission_groups'][$flag['group']] = array('name'=>$flag['name']);
 			}
 		}

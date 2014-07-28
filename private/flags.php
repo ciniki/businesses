@@ -27,6 +27,8 @@ function ciniki_businesses_flags($ciniki, $modules) {
 //		array('flag'=>array('bit'=>'14', 'name'=>'')),
 //		array('flag'=>array('bit'=>'15', 'name'=>'')),
 //		array('flag'=>array('bit'=>'16', 'name'=>'')),
+		// 0x010000
+		array('flag'=>array('bit'=>'17', 'name'=>'External ID')),
 		);
 
 	return array('stat'=>'ok', 'flags'=>$flags);

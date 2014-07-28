@@ -40,7 +40,7 @@ function ciniki_businesses_userDetails($ciniki) {
 	//
 	// Get details for a user
 	//
-	$strsql = "SELECT ciniki_business_users.user_id, ciniki_users.username, "
+	$strsql = "SELECT ciniki_business_users.user_id, ciniki_business_users.eid, ciniki_users.username, "
 		. "ciniki_users.firstname, ciniki_users.lastname, "
 		. "ciniki_users.email, ciniki_users.display_name, "
 		. "ciniki_business_user_details.detail_key, ciniki_business_user_details.detail_value "
@@ -54,7 +54,7 @@ function ciniki_businesses_userDetails($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
 		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 
-			'fields'=>array('user_id', 'firstname', 'lastname', 'username', 'email', 'display_name'),
+			'fields'=>array('user_id', 'eid', 'firstname', 'lastname', 'username', 'email', 'display_name'),
 			'details'=>array('detail_key'=>'detail_value'),
 			),
 		));

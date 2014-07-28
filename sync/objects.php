@@ -37,6 +37,7 @@ function ciniki_businesses_sync_objects($ciniki, &$sync, $business_id, $args) {
 		'table'=>'ciniki_business_users',
 		'fields'=>array(
 			'user_id'=>array('ref'=>'ciniki.users.user'),
+			'eid'=>array(),
 			'package'=>array(),
 			'permission_group'=>array(),
 			'status'=>array(),

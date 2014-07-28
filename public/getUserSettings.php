@@ -104,7 +104,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags "
 		. "FROM ciniki_business_modules "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND status = 1 "
+		. "AND (status = 1 OR status = 2) " // Added or mandatory
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
 	$mrc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.businesses', array(
@@ -207,6 +207,8 @@ function ciniki_businesses_getUserSettings($ciniki) {
 			// Check for any information required to display business menu
 			// This section taken from getUserModules
 			//
+
+			// NOTE: Also make sure to update in getUserModules
 
 			//
 			// Get the current exhibition to display the menu at the top

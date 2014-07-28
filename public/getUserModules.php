@@ -47,7 +47,9 @@ function ciniki_businesses_getUserModules($ciniki) {
 	$strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags "
 		. "FROM ciniki_business_modules "
 		. "WHERE ciniki_business_modules.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND ciniki_business_modules.status = 1 "
+		. "AND (ciniki_business_modules.status = 1 "
+			. "OR ciniki_business_modules.status = 2 "
+			. ") "
 		. "";
 	$rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
