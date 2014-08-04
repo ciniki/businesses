@@ -534,11 +534,11 @@ function ciniki_businesses_main() {
 		//
 		// Show the menu, which loads modules and display up to date message counts, etc.
 		//
-		this.showMenuFinish(rsp);
+		this.showMenuFinish(rsp, 'yes');
 	};
 	
 	this.showMenu = function() {
-		// FIXME: Remove, no longer needed
+		// FIXME: Remove, no longer needed (ACTUALLY still used on return)
 		//
 		// Get the modules enabled for the business, along with message counts, etc.
 		//
@@ -548,11 +548,11 @@ function ciniki_businesses_main() {
 					M.api.err(r);
 					return false;
 				}
-				M.ciniki_businesses_main.showMenuFinish(r);
+				M.ciniki_businesses_main.showMenuFinish(r, 'no');
 		});
 	}
 
-	this.showMenuFinish = function(r) {
+	this.showMenuFinish = function(r, autoopen) {
 		var modules = {};
 		for(i in r.modules) {
 			modules[r.modules[i].module.name] = r.modules[i].module;
@@ -1203,6 +1203,14 @@ function ciniki_businesses_main() {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Click Tracker', 'fn':'M.startApp(\'ciniki.clicktracker.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
+		}
+
+		//
+		// Check if we should autoopen the submenu when there is only one menu item.
+		//
+		if( autoopen == 'yes' && c == 1 
+			&& this.menu.sections[0].list != null && this.menu.sections[0].list._.fn != null ) {
+			eval(this.menu.sections[0].list._.fn);
 		}
 
 		//
