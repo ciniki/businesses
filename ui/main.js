@@ -1209,7 +1209,9 @@ function ciniki_businesses_main() {
 		// Check if we should autoopen the submenu when there is only one menu item.
 		//
 		if( autoopen == 'yes' && c == 1 
-			&& this.menu.sections[0].list != null && this.menu.sections[0].list._.fn != null ) {
+			&& this.menu.sections[0].list != null 
+			&& this.menu.sections[0].list._ != null 
+			&& this.menu.sections[0].list._.fn != null ) {
 			eval(this.menu.sections[0].list._.fn);
 		}
 
