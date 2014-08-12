@@ -32,17 +32,25 @@ function ciniki_businesses_purge($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.purge');
-	if( $rc['stat'] != 'ok' ) {
+	if( $rc['stat'] != 'ok' && $rc['err']['code'] != '691' && $rc['err']['code'] != '692' ) {
 		return $rc;
 	}
-	$modules = $rc['modules'];
+
+	//
+	// Make sure a sysadmin.  This check needs to be here because we ignore suspended/deleted 
+	// businesses above, which then doesn't check perms.  Only sysadmins have access
+	// to this method.
+	//
+	if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1916', 'msg'=>'Permission denied'));
+	}
 
 	//
 	// Make sure a sysadmin is running this function. This has been checked in
 	// the checkAccess function, but good idea to double check.
 	//
 	if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1915', 'msg'=>'You must be a sysadmin to purge a business'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1919', 'msg'=>'You must be a sysadmin to purge a business'));
 	}
 
 	//
@@ -58,7 +66,7 @@ function ciniki_businesses_purge($ciniki) {
 		return $rc;
 	}
 	if( !isset($rc['business']) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1916', 'msg'=>'Business not found'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1920', 'msg'=>'Business not found'));
 	}
 	$business = $rc['business'];
 

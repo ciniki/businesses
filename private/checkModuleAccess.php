@@ -4,10 +4,6 @@
 // -----------
 // This function will verify the business is active, and the module is active.
 //
-// Info
-// ----
-// Status: beta
-//
 // Arguments
 // ---------
 // ciniki:

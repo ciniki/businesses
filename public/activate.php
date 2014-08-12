@@ -32,8 +32,17 @@ function ciniki_businesses_activate($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
 	$rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.activate');
-	if( $rc['stat'] != 'ok' ) {
+	if( $rc['stat'] != 'ok' && $rc['err']['code'] != '691' && $rc['err']['code'] != '692' ) {
 		return $rc;
+	}
+
+	//
+	// Make sure a sysadmin.  This check needs to be here because we ignore suspended/deleted 
+	// businesses above, which then doesn't check perms.  Only sysadmins have access
+	// to this method.
+	//
+	if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1921', 'msg'=>'Permission denied'));
 	}
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuoteRequestArg');
