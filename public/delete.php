@@ -38,8 +38,9 @@ function ciniki_businesses_delete($ciniki) {
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuoteRequestArg');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-	$strsql = "UPDATE ciniki_businesses SET status = 60 "
-		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'";
+	$strsql = "UPDATE ciniki_businesses SET status = 60, last_updated = UTC_TIMESTAMP() "
+		. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'"
+		. "";
 	return ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
 }
 ?>

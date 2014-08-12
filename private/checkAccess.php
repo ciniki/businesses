@@ -28,7 +28,7 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
 	$rc = ciniki_businesses_checkModuleAccess($ciniki, $business_id, 'ciniki', 'businesses');
 	// Ignore if businesses module is not in the list, it's on by default
-	if( $rc['stat'] != 'ok' && $rc['err']['code'] != '696' ) {
+	if( $rc['stat'] != 'ok' && $rc['err']['code'] != '696' && $rc['err']['code'] != '692' ) {
 		return $rc;
 	}
 	// Normally there is a check here to see if permissions denied, but not used in this case
