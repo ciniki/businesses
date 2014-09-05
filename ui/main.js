@@ -97,6 +97,13 @@ function ciniki_businesses_main() {
 					}); 
 				return true;
 			}
+			else if( this.sections[s].id == 'sapos_orders' && value != '' ) {
+				M.api.getJSONBgCb('ciniki.sapos.invoiceSearch', {'business_id':M.curBusinessID, 
+					'start_needle':value, 'sort':'reverse', 'limit':'10'}, function(rsp) { 
+						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.invoices); 
+					}); 
+				return true;
+			}
 		};
 		this.menu.liveSearchResultClass = function(s, f, i, j, d) {
 			if( this.sections[s].id == 'wineproduction' ) {
@@ -116,9 +123,6 @@ function ciniki_businesses_main() {
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
 				return this.sections[s].cellClasses[j];
-			}
-			else if( this.sections[s].id == 'sapos' ) {
-				return '';
 			}
 			return '';
 		};
@@ -215,7 +219,7 @@ function ciniki_businesses_main() {
 					return '<span class="maintext">' + d.item.catalog_number + '</span><span class="subtext">' + d.item.location + '</span>';
 				}
 			}
-			else if( this.sections[s].id == 'sapos' ) {
+			else if( this.sections[s].id == 'sapos' || this.sections[s].id == 'sapos_orders' ) {
 				switch (j) {
 					case 0: return d.invoice.invoice_number;
 					case 1: return d.invoice.invoice_date;
@@ -252,7 +256,7 @@ function ciniki_businesses_main() {
 			else if( this.sections[s].id == 'artcatalog' ) {
 				return 'M.startApp(\'ciniki.artcatalog.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'artcatalog_id\':' + d.item.id + '})';
 			}
-			else if( this.sections[s].id == 'sapos' ) {
+			else if( this.sections[s].id == 'sapos' || this.sections[s].id == 'sapos_orders' ) {
 				return 'M.startApp(\'ciniki.sapos.invoice\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'invoice_id\':' + d.invoice.id + '})';
 			}
 			return null;
@@ -642,6 +646,24 @@ function ciniki_businesses_main() {
 		}
 
 		//
+		// Order management menu
+		//
+		if( M.curBusiness.modules['ciniki.sapos'] != null 
+			&& (M.curBusiness.modules['ciniki.sapos'].flags&0x60) > 0 // Order or Shipping enabled
+			) {
+			this.menu.sections[c] = {'label':'', 'id':'sapos_orders', 'searchlabel':'Orders', 'type':'livesearchgrid', 
+				'livesearchcols':5, 'hint':'',
+				'headerValues':['Invoice #','Date','Customer','Amount','Status'],
+				'cellClasses':['','',''],
+				'noData':'No orders found',
+				'addFn':'M.startApp(\'ciniki.sapos.invoice\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
+				'fn':'M.startApp(\'ciniki.sapos.orders\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
+			};
+			menu_search = 1;
+			c++;
+		}
+
+		//
 		// Simple Accounting/POS/Invoicing/Expenses module
 		//
 		if( M.curBusiness.modules['ciniki.sapos'] != null ) {
@@ -678,7 +700,10 @@ function ciniki_businesses_main() {
 		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x01) > 0 ) {
 			var label = 'Customers';
-			if( M.curBusiness.customers != null && M.curBusiness.customers.settings['ui-labels-customers'] != null) {
+			if( M.curBusiness.customers != null 
+				&& M.curBusiness.customers.settings['ui-labels-customers'] != null
+				&& M.curBusiness.customers.settings['ui-labels-customers'] != ''
+				) {
 				label = M.curBusiness.customers.settings['ui-labels-customers'];
 			}
 			if( menu_search == 1 ) {
