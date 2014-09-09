@@ -184,12 +184,12 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.mail'] = $rc['settings'];
 				} 
 			}
-			if( $module['name'] == 'ciniki.sapos' ) {
-				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_sapos_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'paypal-api');
-				if( $rc['stat'] == 'ok' ) {
-					$rsp['settings']['ciniki.sapos'] = $rc['settings'];
-				} 
-			}
+//			if( $module['name'] == 'ciniki.sapos' ) {
+//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_sapos_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'paypal-api');
+//				if( $rc['stat'] == 'ok' ) {
+//					$rsp['settings']['ciniki.sapos'] = $rc['settings'];
+//				} 
+//			}
 //			if( $module['name'] == 'ciniki.taxes' ) {
 //				ciniki_core_loadMethod($ciniki, 'ciniki', 'taxes', 'private', 'taxTypes');
 //				$rc = ciniki_taxes_taxTypes($ciniki, $args['business_id']);
