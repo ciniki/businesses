@@ -36,10 +36,30 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	$modules = $rc['modules'];
 
 	//
+	// Get the list of permission_groups the user is a part of
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
+	$strsql = "SELECT permission_group FROM ciniki_business_users "
+		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+		. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+		. "AND package = 'ciniki' "
+		. "AND status = 10 "	// Active user
+		. "";
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList');
+	$rc = ciniki_core_dbQueryList($ciniki, $strsql, 'ciniki.businesses', 'groups', 'permission_group');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	if( !isset($rc['groups']) ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2021', 'msg'=>'Access denied'));
+	}
+	$groups = $rc['groups'];
+
+	//
 	// Sysadmins are allowed full access
 	//
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
-		return array('stat'=>'ok', 'modules'=>$modules);
+		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
 	}
 
 	//
@@ -48,7 +68,14 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 	if( $method == 'ciniki.businesses.getUserBusinesses' 
 		|| $method == 'ciniki.businesses.getUserModules' 
 		) {
-		return array('stat'=>'ok', 'modules'=>$modules);
+		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
+	}
+
+	//
+	// If no business is specified, all functions are for sysadmin only
+	//
+	if( $business_id == 0 ) {
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2020', 'msg'=>'Access denied'));
 	}
 
 	//
@@ -62,44 +89,6 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.userUpdateDetails',
 		'ciniki.businesses.backupList',
 		'ciniki.businesses.backupDownload',
-//		'ciniki.businesses.logoGet',
-//		'ciniki.businesses.logoSave',
-//		'ciniki.businesses.logoDelete',
-		);
-	//
-	// Check the session user is a business owner or employee
-	//
-	if( $business_id > 0 ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
-		//
-		// Find any users which are owners of the requested business_id
-		//
-		$strsql = "SELECT business_id, user_id FROM ciniki_business_users "
-			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
-			. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
-			. "AND package = 'ciniki' "
-			. "AND status = 10 "	// Active owner
-			. "AND (permission_group = 'owners') "
-			. "";
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
-		if( $rc['stat'] != 'ok' ) {
-			return $rc;
-		}
-		//
-		// If the user has permission, return ok
-		//
-		if( isset($rc['rows']) && isset($rc['rows'][0]) 
-			&& $rc['rows'][0]['user_id'] > 0 && $rc['rows'][0]['user_id'] == $ciniki['session']['user']['id'] ) {
-			return array('stat'=>'ok');
-		}
-	}
-
-	//
-	// Limit the functions the business owner has access to.  Any
-	// other methods will be denied access.
-	//
-	$available_methods = array(
 		'ciniki.businesses.getDetailHistory',
 		'ciniki.businesses.getDetails',
 		'ciniki.businesses.getModuleHistory',
@@ -117,37 +106,41 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.settingsIntlGet',
 		'ciniki.businesses.settingsIntlUpdate',
 		);
-	if( !in_array($method, $available_methods) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'57', 'msg'=>'Access denied'));
+	if( in_array($method, $owner_methods) && in_array('owners', $groups) ) {
+		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
 	}
 
 	//
-	// Check the session user is a business owner or employee
+	// Limit the functions the business owner has access to.  Any
+	// other methods will be denied access.
 	//
-	if( $business_id > 0 ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
-		//
-		// Find any users which are owners of the requested business_id
-		//
-		$strsql = "SELECT business_id, user_id FROM ciniki_business_users "
-			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
-			. "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
-			. "AND package = 'ciniki' "
-			. "AND status = 10 "	// Active owner or employee
-			. "AND (permission_group = 'owners' OR permission_group = 'employees') "
-			. "";
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
-		if( $rc['stat'] != 'ok' ) {
-			return $rc;
-		}
-		//
-		// If the user has permission, return ok
-		//
-		if( isset($rc['rows']) && isset($rc['rows'][0]) 
-			&& $rc['rows'][0]['user_id'] > 0 && $rc['rows'][0]['user_id'] == $ciniki['session']['user']['id'] ) {
-			return array('stat'=>'ok', 'modules'=>$modules);
-		}
+	$employee_methods = array(
+		'ciniki.businesses.getDetailHistory',
+		'ciniki.businesses.getDetails',
+		'ciniki.businesses.getModuleHistory',
+		'ciniki.businesses.getModuleRulesetHistory',
+		'ciniki.businesses.getModuleRulesets',
+		'ciniki.businesses.getModules',
+		'ciniki.businesses.getUserSettings',
+		'ciniki.businesses.getOwners',
+		'ciniki.businesses.employees',
+		'ciniki.businesses.updateDetails',
+		'ciniki.businesses.updateModuleRulesets',
+		'ciniki.businesses.subscriptionInfo',
+		'ciniki.businesses.subscriptionChangeCurrency',
+		'ciniki.businesses.subscriptionCancel',
+		'ciniki.businesses.settingsIntlGet',
+		'ciniki.businesses.settingsIntlUpdate',
+		);
+	if( in_array($method, $employee_methods) && in_array('employees', $groups) ) {
+		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
+	}
+
+	$salesreps_methods = array(
+		'ciniki.businesses.getUserSettings',
+		);
+	if( in_array($method, $salesreps_methods) && in_array('salesreps', $groups) ) {
+		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
 	}
 
 	//

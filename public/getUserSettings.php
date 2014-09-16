@@ -41,6 +41,8 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
+	$modules = $rc['modules'];
+	$groups = $rc['groups'];
 
 	//
 	// Setup the default return array
