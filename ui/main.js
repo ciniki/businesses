@@ -575,7 +575,7 @@ function ciniki_businesses_main() {
 		this.menu.sections = {};
 		var menu_search = 0;
 		if( M.curBusiness.modules['ciniki.exhibitions'] != null && r.exhibitions != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			for(i in r.exhibitions) {
 				this.menu.sections[c] = {'label':r.exhibitions[i].exhibition.name, 'list':{}};
 //					'gallery':{'label':'Gallery', 
@@ -604,7 +604,7 @@ function ciniki_businesses_main() {
 		}
 		// Art Catalog
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			if( M.curBusiness.modules['ciniki.sapos'] != null ) {
 				this.menu.sections[c] = {'label':'', 'id':'artcatalog', 'searchlabel':'Art Catalog', 
 					'type':'livesearchgrid', 'livesearchcols':3, 'hint':'',
@@ -623,7 +623,7 @@ function ciniki_businesses_main() {
 		}
 		// Wine production module, all owners, employees and wine production group
 		if( M.curBusiness.modules['ciniki.wineproduction'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c] = {'label':'', 'id':'wineproduction', 'searchlabel':'Wine Production', 'type':'livesearchgrid', 'livesearchcols':8, 'hint':'',
 				'headerValues':['INV#', 'Wine', 'Type', 'BD', 'OD', 'SD', 'RD', 'FD'],
 				'dataMaps':['invoice_number', 'wine_and_customer', 'wine_type_and_length', 'bottling_date', 'order_date', 'start_date', 'racking_date', 'filtering_date'],
@@ -636,7 +636,7 @@ function ciniki_businesses_main() {
 		}
 
 		if( M.curBusiness.modules['ciniki.calendars'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var cal_dt = new Date();
 			var cal_date = cal_dt.getFullYear() + '-' + (cal_dt.getMonth()+1) + '-' + cal_dt.getDate();
 			this.menu.sections[c] = {'label':'', 'id':'calendars', 'searchlabel':'Calendars', 'type':'livesearchgrid', 
@@ -655,7 +655,7 @@ function ciniki_businesses_main() {
 		//
 		if( M.curBusiness.modules['ciniki.sapos'] != null 
 			&& (M.curBusiness.modules['ciniki.sapos'].flags&0x60) > 0 // Order or Shipping enabled
-			&& (perms.owners != null || perms.employees != null)) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1)) {
 			this.menu.sections[c] = {'label':'', 'id':'sapos_orders', 'searchlabel':'Orders', 'type':'livesearchgrid', 
 				'livesearchcols':5, 'hint':'',
 				'headerValues':['Invoice #','Date','Customer','Amount','Status'],
@@ -672,7 +672,7 @@ function ciniki_businesses_main() {
 		// Simple Accounting/POS/Invoicing/Expenses module
 		//
 		if( M.curBusiness.modules['ciniki.sapos'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c] = {'label':'', 'id':'sapos', 'searchlabel':'Accounting', 'type':'livesearchgrid', 
 				'livesearchcols':5, 'hint':'',
 				'headerValues':['Invoice #','Date','Customer','Amount','Status'],
@@ -690,7 +690,7 @@ function ciniki_businesses_main() {
 
 		// Products module, all owners and employees and Products group
 		if( M.curBusiness.modules['ciniki.products'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			this.menu.sections[c] = {'label':'', 'id':'products', 'searchlabel':'Products', 
 				'type':'livesearchgrid', 
 				'livesearchcols':1, 'hint':'',
@@ -706,7 +706,7 @@ function ciniki_businesses_main() {
 		// Add a space to the label, to create a separate section appearance
 		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x01) > 0 
-			&& (perms.owners != null || perms.employees != null || perms.salesreps != null) ) {
+			&& (perms.owners != null || perms.employees != null || perms.salesreps != null || (M.userPerms&0x01) == 1) ) {
 			var label = 'Customers';
 			if( M.curBusiness.customers != null 
 				&& M.curBusiness.customers.settings['ui-labels-customers'] != null
@@ -733,7 +733,7 @@ function ciniki_businesses_main() {
 		//
 		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x02) > 0 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var label = 'Members';
 			if( M.curBusiness.customers != null && M.curBusiness.customers.settings['ui-labels-members'] != null) {
 				label = M.curBusiness.customers.settings['ui-labels-members'];
@@ -755,7 +755,7 @@ function ciniki_businesses_main() {
 		// Dealers
 		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x10) > 0 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var label = 'Dealers';
 			if( M.curBusiness.customers != null && M.curBusiness.customers.settings['ui-labels-dealers'] != null) {
 				label = M.curBusiness.customers.settings['ui-labels-dealers'];
@@ -778,7 +778,7 @@ function ciniki_businesses_main() {
 		// Distributors
 		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x100) > 0 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var label = 'Distributors';
 			if( M.curBusiness.customers != null && M.curBusiness.customers.settings['ui-labels-distributors'] != null) {
 				label = M.curBusiness.customers.settings['ui-labels-distributors'];
@@ -800,7 +800,7 @@ function ciniki_businesses_main() {
 
 		// Bugs/Features/Questions
 		if( M.curBusiness.modules['ciniki.bugs'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.bugs = {
 					'label':'Bug Tracking', 'fn':'M.startApp(\'ciniki.bugs.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
@@ -820,27 +820,27 @@ function ciniki_businesses_main() {
 
 		// Art Gallery
 		if( M.curBusiness.modules['ciniki.artgallery'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c++] = {'label':'', 'list':{
 				'_':{'label':'Exhibitions', 'fn':'M.startApp(\'ciniki.artgallery.exhibitions\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 
 		// Courses module
 		if( M.curBusiness.modules['ciniki.courses'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c++] = {'label':'', 'list':{
 				'_':{'label':'Courses', 'fn':'M.startApp(\'ciniki.courses.offerings\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 		// Classes module
 		if( M.curBusiness.modules['ciniki.classes'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c++] = {'label':'', 'list':{
 				'_':{'label':'Classes', 'fn':'M.startApp(\'ciniki.classes.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 		
 		// Journal
 		if( M.curBusiness.modules['ciniki.journal'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c] = {'label':'', 'id':'journal', 'searchlabel':'Journal', 'type':'livesearchgrid', 
 				'livesearchcols':1, 'hint':'',
 				'headerValues':null,
@@ -854,7 +854,7 @@ function ciniki_businesses_main() {
 
 		// services module, all owners and employees and Products group
 		if( M.curBusiness.modules['ciniki.services'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 //			this.menu.sections[c++] = {'label':'', 'list':{
 //				'_':{'label':'Services', 'fn':'M.startApp(\'ciniki.services.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			this.menu.sections[c] = {'label':'', 'id':'services', 'searchlabel':'Services', 'type':'livesearchgrid', 
@@ -870,7 +870,7 @@ function ciniki_businesses_main() {
 		// ATDO - Tasks
 		if( M.curBusiness.modules['ciniki.atdo'] != null 
 			&& (M.curBusiness.modules['ciniki.atdo'].flags&0x02) > 0 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			this.menu.sections[c] = {'label':'', 'id':'tasks', 'searchlabel':'Tasks', 
 				'type':'livesearchgrid', 
 				'livesearchcols':3, 'hint':'',
@@ -894,7 +894,7 @@ function ciniki_businesses_main() {
 
 		// Wine production schedule
 		if( M.curBusiness.modules['ciniki.wineproduction'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			if( join > -1 ) {
 				this.menu.sections[c].list.wineproductionschedule = {
 					'label':'Production Schedule', 'fn':'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'schedule\':\'today\'});'};
@@ -914,7 +914,7 @@ function ciniki_businesses_main() {
 
 		// Projects module
 		if( M.curBusiness.modules['ciniki.projects'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			if( join > -1 ) {
 				this.menu.sections[c].list.projects = {
 					'label':'Projects', 'fn':'M.startApp(\'ciniki.projects.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
@@ -927,7 +927,7 @@ function ciniki_businesses_main() {
 
 		// Blog
 		if( M.curBusiness.modules['ciniki.blog'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( (M.curBusiness.modules['ciniki.blog'].flags&0x01) > 0 ) {
 				if( join > -1 ) {
 					this.menu.sections[c].list.blog = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'blogtype\':\'blog\'});'};
@@ -950,7 +950,7 @@ function ciniki_businesses_main() {
 
 		// Exhibitions
 		if( M.curBusiness.modules['ciniki.exhibitions'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			if( join > -1 ) {
 				this.menu.sections[c].list.exhibitions = {
 					'label':'Exhibitions', 
@@ -982,7 +982,7 @@ function ciniki_businesses_main() {
 
 		// ATDO - Messages/Notes/FAQ
 		if( M.curBusiness.modules['ciniki.atdo'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			if( join > -1 ) {
 				if( (M.curBusiness.modules['ciniki.atdo'].flags&0x20) > 0 ) {
 					this.menu.sections[c].list.messages = {
@@ -1040,7 +1040,7 @@ function ciniki_businesses_main() {
 
 		// Subscriptions module, all owners and employees and Subscriptions group
 		if( M.curBusiness.modules['ciniki.subscriptions'] != null 
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			if( join > -1 ) {
 				this.menu.sections[c].list.subscriptions = {
 					'label':'Subscriptions', 'fn':'M.startApp(\'ciniki.subscriptions.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
@@ -1052,7 +1052,7 @@ function ciniki_businesses_main() {
 		}
 
 		if( M.curBusiness.modules['ciniki.media'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.media = {'label':'Media', 'fn':'M.startApp(\'ciniki.media.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1062,7 +1062,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.events'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.events = {'label':'Events', 'fn':'M.startApp(\'ciniki.events.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1072,7 +1072,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.workshops'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.workshops = {'label':'Workshops', 'fn':'M.startApp(\'ciniki.workshops.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1082,7 +1082,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.gallery'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.gallery = {'label':'Gallery', 'fn':'M.startApp(\'ciniki.gallery.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1092,7 +1092,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.recipes'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.recipes = {
 					'label':'Recipes', 'fn':'M.startApp(\'ciniki.recipes.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
@@ -1103,7 +1103,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.toolbox'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.toolbox = {
 					'label':'Toolbox', 'fn':'M.startApp(\'ciniki.toolbox.excel\', null, \'M.ciniki_businesses_main.showMenu();\');'};
@@ -1114,7 +1114,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.filedepot'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.filedepot = {
 					'label':'File Depot', 'fn':'M.startApp(\'ciniki.filedepot.main\', null, \'M.ciniki_businesses_main.showMenu();\');'
@@ -1127,7 +1127,7 @@ function ciniki_businesses_main() {
 		}
 
 		if( M.curBusiness.modules['ciniki.systemdocs'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.systemdocs = {'label':'System Documentation', 'fn':'M.startApp(\'ciniki.systemdocs.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1137,7 +1137,7 @@ function ciniki_businesses_main() {
 				}
 		}
 		if( M.curBusiness.modules['ciniki.newsletters'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.newsletters = {'label':'Newsletters', 'fn':'M.startApp(\'ciniki.newsletters.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1147,7 +1147,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( (M.userPerms&0x01) == 0x01 &&  M.curBusiness.modules['ciniki.artclub'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.artclub = {'label':'Club Info', 'fn':'M.startApp(\'ciniki.artclub.info\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1167,7 +1167,7 @@ function ciniki_businesses_main() {
 //		}
 
 		if( M.curBusiness.modules['ciniki.mail'] != null && (M.curBusiness.modules['ciniki.mail'].flags&0x01) == 0x01 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.mailings = {'label':'Mailings', 'fn':'M.startApp(\'ciniki.mail.mailings\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1177,7 +1177,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.surveys'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.surveys = {'label':'Surveys', 'fn':'M.startApp(\'ciniki.surveys.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1187,7 +1187,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.sponsors'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.sponsors = {'label':'Sponsors', 'fn':'M.startApp(\'ciniki.sponsors.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1197,7 +1197,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.directory'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.directory = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1207,7 +1207,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.links'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.links = {'label':'Links', 'fn':'M.startApp(\'ciniki.links.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1217,7 +1217,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.info'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.info = {'label':'Information', 'fn':'M.startApp(\'ciniki.info.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1227,7 +1227,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.marketing'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.marketing = {'label':'Marketing', 'fn':'M.startApp(\'ciniki.marketing.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1237,7 +1237,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.web'] != null 
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.website = {'label':'Website', 'fn':'M.startApp(\'ciniki.web.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
@@ -1247,7 +1247,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		if( M.curBusiness.modules['ciniki.newsaggregator'] != null
-			&& (perms.owners != null || perms.employees != null) ) { 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.newsaggregator = {'label':'News', 
 					'fn':'M.startApp(\'ciniki.newsaggregator.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
@@ -1289,7 +1289,7 @@ function ciniki_businesses_main() {
 		if( M.curBusiness.modules['ciniki.atdo'] != null && M.curBusiness.atdo != null
 			&& M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != null 
 			&& M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != ''
-			&& (perms.owners != null || perms.employees != null) ) {
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var rsp = M.api.getJSON('ciniki.atdo.tasksList', {'business_id':M.curBusiness.id,
 				'category':M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID], 'assigned':'yes'});
 			if( rsp.stat != 'ok' ) {
