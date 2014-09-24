@@ -6,8 +6,8 @@
 # Fields
 # ------
 # id:			The unique ID for this business_user.
-# business_id: 	The id of the business.
-# user_id:		The id of the user.
+# business_id: 	The ID of the business.
+# user_id:		The ID of the user.
 #
 # package:		The package the user is part of, default 'ciniki'.
 #

@@ -65,6 +65,7 @@ function ciniki_businesses_userList($ciniki) {
 	//
 	$strsql = "SELECT ciniki_business_users.user_id, "
 		. "ciniki_users.firstname, ciniki_users.lastname, ciniki_users.display_name, ciniki_users.email, "
+		. "ciniki_business_users.eid, "
 		. "CONCAT_WS('.', ciniki_business_users.package, ciniki_business_users.permission_group) AS permission_group "
 		. "FROM ciniki_business_users, ciniki_users "
 		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
@@ -74,8 +75,10 @@ function ciniki_businesses_userList($ciniki) {
 		. "";
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
-		array('container'=>'groups', 'fname'=>'permission_group', 'name'=>'group', 'fields'=>array('permission_group')),
-		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 'fields'=>array('user_id', 'firstname', 'lastname', 'display_name', 'email')),
+		array('container'=>'groups', 'fname'=>'permission_group', 'name'=>'group', 
+			'fields'=>array('permission_group')),
+		array('container'=>'users', 'fname'=>'user_id', 'name'=>'user', 
+			'fields'=>array('user_id', 'eid', 'firstname', 'lastname', 'display_name', 'email')),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
