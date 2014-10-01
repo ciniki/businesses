@@ -92,6 +92,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 		. "FROM ciniki_business_users "
 		. "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
 		. "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+		. "AND ciniki_business_users.status = 10 "
 		. "";
 	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'permissions', 'group', array('stat'=>'ok', 'permissions'=>array()));
 	if( $rc['stat'] != 'ok' ) {
