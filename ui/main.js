@@ -661,7 +661,7 @@ function ciniki_businesses_main() {
 				'headerValues':['Invoice #','Date','Customer','Amount','Status'],
 				'cellClasses':['','',''],
 				'noData':'No orders found',
-				'addFn':'M.startApp(\'ciniki.sapos.invoice\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
+				'addFn':'M.startApp(\'ciniki.sapos.invoice\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':\'0\',\'invoice_type\':\'40\'});',
 				'fn':'M.startApp(\'ciniki.sapos.orders\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
 			};
 			menu_search = 1;
