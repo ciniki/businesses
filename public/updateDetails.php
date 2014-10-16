@@ -136,6 +136,7 @@ function ciniki_businesses_updateDetails(&$ciniki) {
 		'contact.email.address',
 		'ciniki.manage.css',
 		'social-facebook-url',
+		'social-twitter-business-name',
 		'social-twitter-username',
 		'social-flickr-url',
 		'social-etsy-url',

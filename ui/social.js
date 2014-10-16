@@ -13,6 +13,7 @@ function ciniki_businesses_social() {
 				'social-facebook-url':{'label':'Page URL', 'type':'text'},
 				}},
 			'twitter':{'label':'Twitter', 'fields':{
+				'social-twitter-business-name':{'label':'Business Name', 'type':'text'},
 				'social-twitter-username':{'label':'Username', 'type':'text'},
 				}},
 			'flickr':{'label':'Flickr', 'fields':{
@@ -61,6 +62,11 @@ function ciniki_businesses_social() {
 			alert('App Error');
 			return false;
 		} 
+
+		//
+		// Setup hint for twitter business name
+		//
+		M.ciniki_businesses_social.main.sections.twitter.fields['social-twitter-business-name'].hint = M.curBusiness.name;
 		
 		//
 		// Load details
@@ -75,6 +81,7 @@ function ciniki_businesses_social() {
 				M.ciniki_businesses_social.main.data = rsp.details;
 				M.ciniki_businesses_social.main.show();
 		});
+		
 	}
 
 	// 
