@@ -176,8 +176,13 @@ function ciniki_businesses_main() {
 				}
 				return '';
 			}
-			else if( this.sections[s].id == 'customers' 
-				|| this.sections[s].id == 'members' 
+			else if( this.sections[s].id == 'customers' ) {
+				switch(j) {
+					case 0: return d.customer.display_name;
+					case 1: return d.customer.status_text;
+				}
+			}
+			else if( this.sections[s].id == 'members' 
 				|| this.sections[s].id == 'dealers' 
 				|| this.sections[s].id == 'distributors'
 				) {
@@ -262,6 +267,11 @@ function ciniki_businesses_main() {
 			return null;
 		};
 		this.menu.liveSearchResultRowStyle = function(s, f, i, d) {
+			if( this.sections[s].id == 'customers' ) {
+				if( M.curBusiness.customers.settings['ui-colours-customer-status-' + d.customer.status] != null ) {
+					return 'background: ' + M.curBusiness.customers.settings['ui-colours-customer-status-' + d.customer.status];
+				}
+			}
 			if( this.sections[s].id == 'tasks' ) {
 				if( d.task.status != 'closed' ) { return 'background: ' + M.curBusiness.atdo.settings['tasks.priority.' + d.task.priority]; }
 				else { return 'background: ' + M.curBusiness.atdo.settings['tasks.status.60']; }
@@ -716,8 +726,8 @@ function ciniki_businesses_main() {
 			}
 			if( menu_search == 1 ) {
 				this.menu.sections[c] = {'label':'', 'id':'customers', 'searchlabel':label, 'type':'livesearchgrid', 
-					'livesearchcols':1, 'hint':'',
-					'headerValues':null,
+					'livesearchcols':2, 'hint':'',
+					'headerValues':['Customer', 'Status'],
 					'noData':'No ' + label + ' found',
 					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
 					'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
