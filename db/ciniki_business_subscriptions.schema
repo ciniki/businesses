@@ -25,6 +25,7 @@
 #
 # currency:				USD, CAD - The currency the business pays in.
 # monthly:				The monthly amount to be payed.
+# yearly:				The yearly amount to be payed.
 # discount_percent:		The discount to be applied in a percentage.
 # discount_amount:		The discount to be applied in a dollar value.
 # payment_type:			Must be 'paypal', but others might be allowed in the future.
@@ -57,6 +58,7 @@ create table ciniki_business_subscriptions (
 	trial_days int not null,
 	currency varchar(20) not null,
 	monthly decimal(10,2) not null,
+	yearly decimal(10,2) not null,
 	discount_percent int not null,
 	discount_amount int not null,
 	payment_type varchar(20) not null,
@@ -72,4 +74,4 @@ create table ciniki_business_subscriptions (
 	last_updated datetime not null,
 	primary key (id),
 	unique index (business_id)
-) ENGINE=InnoDB, COMMENT='v1.03';
+) ENGINE=InnoDB, COMMENT='v1.04';

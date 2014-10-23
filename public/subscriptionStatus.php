@@ -34,9 +34,10 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
 		. "IFNULL(ciniki_business_subscriptions.status, 0) AS status, "
 		. "trial_days, payment_type, payment_frequency, "
 		. "currency, "
-		. "IFNULL(monthly,0) as monthly, "
+		. "IFNULL(monthly,0)+(IFNULL(yearly,0)/12) as monthly, "
+		. "IFNULL(yearly,0)+(IFNULL(monthly,0)*12) as yearly, "
 //		. "IFNULL(monthly,0) as monthly_total, "
-		. "IFNULL(monthly,0)*12 AS yearly, "
+//		. "IFNULL(monthly,0)*12 AS yearly, "
 //		. "IFNULL(monthly,0)*12 AS yearly_total, "
 		. "paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(signup_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.signup_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS signup_date, "
@@ -68,6 +69,15 @@ function ciniki_businesses_subscriptionStatus($ciniki) {
 				'payment_frequency'=>array('10'=>'monthly', '20'=>'yearly'),
 				)),
 		));
+	if( isset($rc['statuses']) ) {
+		foreach($rc['statuses'] as $sid => $status) {
+			$rc['statuses'][$sid]['status']['monthly'] = number_format($status['status']['monthly'], 2);
+			$rc['statuses'][$sid]['status']['yearly'] = number_format($status['status']['yearly'], 2);
+			foreach($status['status']['businesses'] as $bid => $business) {
+				$rc['statuses'][$sid]['status']['businesses'][$bid]['business']['monthly'] = number_format($business['business']['monthly'], 2);
+			}
+		}
+	}
 	return $rc;
 }
 ?>

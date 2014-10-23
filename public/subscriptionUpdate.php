@@ -22,6 +22,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 		'status'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Status'),
 		'currency'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Currency'),
 		'monthly'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Monthly'),
+		'yearly'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Yearly'),
 		'trial_days'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Trial'),
 		'trial_start_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Trial Start'),
 		'payment_type'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Payment Type'),
@@ -66,7 +67,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 	//
 	// Get the existing subscription information
 	//
-	$strsql = "SELECT id, status, signup_date, trial_days, currency, monthly "
+	$strsql = "SELECT id, status, signup_date, trial_days, currency, monthly, yearly "
 		. "FROM ciniki_business_subscriptions "
 		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "";
@@ -76,7 +77,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 	}
 	if( !isset($rc['subscription']) ) {
 		$strsql = "INSERT INTO ciniki_business_subscriptions (business_id, signup_date, trial_start_date, status, "
-			. "trial_days, currency, monthly, payment_type, payment_frequency, paid_until, last_payment_date, notes, "
+			. "trial_days, currency, monthly, yearly, payment_type, payment_frequency, paid_until, last_payment_date, notes, "
 			. "date_added, last_updated) VALUES ("
 			. "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
 			. "UTC_TIMESTAMP(), ";
@@ -104,6 +105,11 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['monthly']) . "', ";
 		} else {
 			$strsql .= "'10.00', ";
+		}
+		if( isset($args['yearly']) && $args['yearly'] != '' ) {
+			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['yearly']) . "', ";
+		} else {
+			$strsql .= "0, ";
 		}
 		if( isset($args['payment_type']) ) {
 			$strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['payment_type']) . "', ";
@@ -150,6 +156,10 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
 				2, 'ciniki_business_subscriptions', $subscription_id, 'monthly', $args['monthly']);
 		}
+		if( isset($args['yearly']) && $args['yearly'] != '' ) {
+			ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+				2, 'ciniki_business_subscriptions', $subscription_id, 'yearly', $args['yearly']);
+		}
 
 	} else {
 		$subscription = $rc['subscription'];
@@ -183,6 +193,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
 			'status',
 			'currency',
 			'monthly',
+			'yearly',
 			'trial_days',
 			'trial_start_date',
 			'last_payment_date',

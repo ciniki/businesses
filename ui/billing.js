@@ -29,7 +29,8 @@ function ciniki_businesses_billing() {
 			'subscription':{'label':'Subscription', 'type':'simplelist', 'list':{
 				'status_text':{'label':'Status'},
 				'currency':{'label':'Currency'},
-				'monthly':{'label':'Amount'},
+				'monthly':{'label':'Monthly Amount'},
+				'yearly':{'label':'Yearly Amount'},
 				'trial':{'label':'Trial remaining'},
 				'last_payment_date':{'label':'Last Payment'},
 				}},
@@ -79,6 +80,7 @@ function ciniki_businesses_billing() {
 				'status':{'label':'Status', 'type':'select', 'options':this.statusOptions},
 				'currency':{'label':'Currency', 'type':'text', 'size':'small'},
 				'monthly':{'label':'Monthly', 'type':'text', 'size':'small'},
+				'yearly':{'label':'Yearly', 'type':'text', 'size':'small'},
 				'payment_type':{'label':'Type', 'type':'toggle', 'toggles':this.paymentTypes},
 				'payment_frequency':{'label':'Frequency', 'type':'toggle', 'toggles':this.paymentFrequencies},
 				'last_payment_date':{'label':'Last Payment', 'type':'text', 'size':'medium'},
@@ -182,6 +184,35 @@ function ciniki_businesses_billing() {
 			this.menu.sections._paypal.html += '<input type="hidden" name="a3" value="' + rsp.subscription.monthly + '">'
 				+ '<input type="hidden" name="p3" value="1">'
 				+ '<input type="hidden" name="t3" value="M">'
+				+ '<input type="hidden" name="src" value="1">'
+				+ '<input type="hidden" name="no_shipping" value="1">'
+				+ '<input type="hidden" name="notify_url" value="' + rsp.paypal.ipn + '">'
+				+ '</form>'
+				+ '';
+			this.menu.sections._paypal_button.visible = 'yes';
+			this.menu.sections._paypal_button.buttons.subscribe.label = 'Subscribe';
+		}
+		else if( (rsp.subscription.yearly > 0 && rsp.subscription.paypal_subscr_id == '') || rsp.subscription.status == 60 ) {
+			//
+			// Display subscribe button
+			//
+			this.menu.sections._paypal.visible = 'yes';
+			this.menu.sections._paypal.html = '<form id="paypal_form" action="' + rsp.paypal.url + '" method="post">'
+				+ '<input type="hidden" name="cmd" value="_xclick-subscriptions">'
+				+ '<input type="hidden" name="business" value="' + rsp.paypal.business + '">'
+				+ '<input type="hidden" name="item_name" value="' + rsp.paypal.prefix + ' - ' + M.curBusiness.name + '">'
+				+ '<input type="hidden" name="item_number" value="' + rsp.subscription.uuid + '">'
+				+ '<input type="hidden" name="currency_code" value="' + rsp.subscription.currency + '">'
+				+ '';
+			if( rsp.subscription.trial_remaining > 0 ) {
+				this.menu.sections._paypal.html += '<input type="hidden" name="a1" value="0.00">'
+					+ '<input type="hidden" name="p1" value="' + rsp.subscription.trial_remaining + '">'
+					+ '<input type="hidden" name="t1" value="D">'
+					+ '';
+			}
+			this.menu.sections._paypal.html += '<input type="hidden" name="a3" value="' + rsp.subscription.yearly + '">'
+				+ '<input type="hidden" name="p3" value="1">'
+				+ '<input type="hidden" name="t3" value="Y">'
 				+ '<input type="hidden" name="src" value="1">'
 				+ '<input type="hidden" name="no_shipping" value="1">'
 				+ '<input type="hidden" name="notify_url" value="' + rsp.paypal.ipn + '">'

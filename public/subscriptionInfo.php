@@ -41,7 +41,7 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 	// Get the billing information from the subscription table
 	//
 	$strsql = "SELECT ciniki_businesses.name, ciniki_businesses.uuid, ciniki_business_subscriptions.status, signup_date, trial_days, "
-		. "currency, monthly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
+		. "currency, monthly, yearly, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
 		. "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.last_payment_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
 		. "DATE_FORMAT(paid_until, '%b %e, %Y') AS paid_until, "
 		. "DATE_FORMAT(trial_start_date, '%b %e, %Y') AS trial_start_date, "
