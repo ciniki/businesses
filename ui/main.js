@@ -1290,7 +1290,10 @@ function ciniki_businesses_main() {
 			&& this.menu.sections[0].list != null 
 			&& this.menu.sections[0].list._ != null 
 			&& this.menu.sections[0].list._.fn != null ) {
+			this.menu.autoopen = 'skipped';
 			eval(this.menu.sections[0].list._.fn);
+		} else {
+			this.menu.autoopen = 'no';
 		}
 
 		//
