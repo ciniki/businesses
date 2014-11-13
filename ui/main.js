@@ -709,6 +709,7 @@ function ciniki_businesses_main() {
 				'fn':'M.startApp(\'ciniki.products.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
 				'addFn':'M.startApp(\'ciniki.products.edit\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':0});',
 			};
+			menu_search = 1;
 			c++;
 		}
 
@@ -1071,6 +1072,13 @@ function ciniki_businesses_main() {
 					'_':{'label':'Media', 'fn':'M.startApp(\'ciniki.media.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 && join < 0 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+		}
+
 		if( M.curBusiness.modules['ciniki.events'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
@@ -1091,6 +1099,13 @@ function ciniki_businesses_main() {
 					'_':{'label':'Workshops', 'fn':'M.startApp(\'ciniki.workshops.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 && join < 0 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+		}
+
 		if( M.curBusiness.modules['ciniki.gallery'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
