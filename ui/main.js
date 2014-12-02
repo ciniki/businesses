@@ -190,7 +190,10 @@ function ciniki_businesses_main() {
 			}
 			else if( this.sections[s].id == 'products' ) {
 //				return (d.product.category!=''?d.product.category:'Uncategorized') + ' - ' + d.product.name;
-				return d.product.name;
+				switch(j) {
+					case 0: return d.product.name;
+					case 1: return d.product.inventory_current_num;
+				}
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
 				if( j == 0 ) {
@@ -709,6 +712,13 @@ function ciniki_businesses_main() {
 				'fn':'M.startApp(\'ciniki.products.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
 				'addFn':'M.startApp(\'ciniki.products.edit\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':0});',
 			};
+			if( (M.curBusiness.modules['ciniki.products'].flags&0x04) > 0 ) {
+				this.menu.sections[c].livesearchcols = 2;
+				this.menu.sections[c].headerValues = ['Product', 'Inventory'];
+			} else {
+				this.menu.sections[c].livesearchcols = 1;
+				this.menu.sections[c].headerValues = null;
+			}
 			menu_search = 1;
 			c++;
 		}
