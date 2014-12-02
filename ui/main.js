@@ -77,7 +77,7 @@ function ciniki_businesses_main() {
 			}
 			else if( this.sections[s].id == 'products' && value != '' ) {
 				M.api.getJSONBgCb('ciniki.products.productSearch', {'business_id':M.curBusinessID, 
-					'start_needle':value, 'status':1, 'limit':'10'}, 
+					'start_needle':value, 'status':1, 'limit':'10', 'reserved':'yes'}, 
 					function(rsp) { 
 						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.products); 
 					}); 
@@ -192,7 +192,7 @@ function ciniki_businesses_main() {
 //				return (d.product.category!=''?d.product.category:'Uncategorized') + ' - ' + d.product.name;
 				switch(j) {
 					case 0: return d.product.name;
-					case 1: return d.product.inventory_current_num;
+					case 1: return d.product.inventory_current_num + (d.product.inventory_reserved!=null?' <span class="subdue">[' + d.product.inventory_reserved + ']</span>':'');
 				}
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
@@ -714,7 +714,7 @@ function ciniki_businesses_main() {
 			};
 			if( (M.curBusiness.modules['ciniki.products'].flags&0x04) > 0 ) {
 				this.menu.sections[c].livesearchcols = 2;
-				this.menu.sections[c].headerValues = ['Product', 'Inventory'];
+				this.menu.sections[c].headerValues = ['Product', 'Inv [Rsv]'];
 			} else {
 				this.menu.sections[c].livesearchcols = 1;
 				this.menu.sections[c].headerValues = null;
