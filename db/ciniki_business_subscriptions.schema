@@ -21,6 +21,7 @@
 #
 # signup_date:			The UTC date and time the business was created in the system.  
 #						This is used to calculated the trial period.
+# trial_start_date:		The start date of the trial.
 # trial_days:			The number of days the trial should last.
 #
 # currency:				USD, CAD - The currency the business pays in.
@@ -45,6 +46,9 @@
 # paypal_amount:		The amount set in the subscription at paypal, updated from IPN.
 #
 # last_payment_date:	The UTC date and time the last payment was received.
+# paid_until:			The UTC date and time the business is paid up until.
+#
+# notes:				Any notes on the business.
 #
 # date_added:			The UTC date and time the record was created.
 # last_updated:			The UTC date and time the record was last_updated.

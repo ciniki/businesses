@@ -6,8 +6,11 @@
 # Fields
 # ------
 # id:			The unique ID for this business_user.
+# uuid:			The Univeral Unique ID.
 # business_id: 	The ID of the business.
+#
 # user_id:		The ID of the user.
+# eid:			The external id of the user if linked to other business systems.
 #
 # package:		The package the user is part of, default 'ciniki'.
 #
