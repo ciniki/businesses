@@ -741,7 +741,7 @@ function ciniki_businesses_main() {
 					'livesearchcols':2, 'hint':'',
 					'headerValues':['Customer', 'Status'],
 					'noData':'No ' + label + ' found',
-					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\');',
+					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':0});',
 					'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
 				};
 				c++;
