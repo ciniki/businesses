@@ -538,6 +538,9 @@ function ciniki_businesses_main() {
 		var modules = {};
 		for(i in rsp.modules) {
 			modules[rsp.modules[i].module.name] = rsp.modules[i].module;
+			if( rsp.settings != null && rsp.settings[rsp.modules[i].module.name] != null ) {
+				modules[rsp.modules[i].module.name].settings = rsp.settings[rsp.modules[i].module.name];
+			}
 		}
 		M.curBusiness.modules = modules;
 
