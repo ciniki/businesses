@@ -469,9 +469,12 @@ function ciniki_businesses_main() {
 		// Setup employees
 		//
 		M.curBusiness.employees = {};
+		var ct = 0;
 		for(i in rsp.users) {
 			M.curBusiness.employees[rsp.users[i].user.id] = rsp.users[i].user.display_name;
+			ct++;
 		}
+		M.curBusiness.numEmployees = ct;
 
 		// 
 		// Setup business permissions for the user
