@@ -1123,6 +1123,23 @@ function ciniki_businesses_main() {
 			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
 		}
 
+		if( M.curBusiness.modules['ciniki.marketplaces'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.marketplaces = {'label':'Market Places', 'fn':'M.startApp(\'ciniki.marketplaces.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Market Places', 'fn':'M.startApp(\'ciniki.marketplaces.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+		// Check if the remaining sections should be joined together as one section
+		// to balance the menu
+		if( c > 4 && join < 0 ) {
+			join = 0;
+			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+		}
+
 		if( M.curBusiness.modules['ciniki.gallery'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
