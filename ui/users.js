@@ -93,12 +93,14 @@ function ciniki_businesses_users() {
 		this.edit.addClose('Cancel');
 	}
 
-	this.start = function(cb, appPrefix) {
+	this.start = function(cb, ap, aG) {
+		args = {}
+		if( aG != null ) { args = eval(aG); }
 		//
 		// Create the app container if it doesn't exist, and clear it out
 		// if it does exist.
 		//
-		var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_users', 'yes');
+		var appContainer = M.createContainer(ap, 'ciniki_businesses_users', 'yes');
 		if( appContainer == null ) {
 			alert('App Error');
 			return false;
@@ -139,7 +141,11 @@ function ciniki_businesses_users() {
 			this.edit.sections._eid.active = 'no';
 		}
 
-		this.showUsers(cb);
+		if( args.user_id != null && args.user_id > 0 ) {
+			this.showEdit(cb, null, args.user_id, null);
+		} else {
+			this.showUsers(cb);
+		}
 	}
 
 	this.showUsers = function(cb) {
@@ -225,7 +231,7 @@ function ciniki_businesses_users() {
 						M.api.err(rsp);
 						return false;
 					}
-					M.ciniki_businesses_users.showUsers();
+					M.ciniki_businesses_users.edit.close();
 				});
 		} else {
 			this.edit.close();	
