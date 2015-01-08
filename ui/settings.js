@@ -81,6 +81,11 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.sapos'] != null ) {
 			this.menu.sections['']['list']['sapos'] = {'label':'Accounting', 'fn':'M.startApp(\'ciniki.sapos.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.blog'] != null 
+			&& M.curBusiness.modules['ciniki.mail'] != null 
+			) {
+			this.menu.sections['']['list']['sapos'] = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		if( M.curBusiness.modules['ciniki.mail'] != null ) {
 			this.menu.sections['']['list']['mail'] = {'label':'Mail', 'fn':'M.startApp(\'ciniki.mail.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 //			if( (M.userPerms&0x01) == 0x01 ) {
