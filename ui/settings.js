@@ -95,6 +95,9 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
 			this.menu.sections['']['list']['backups'] = {'label':'Backups', 'fn':'M.startApp(\'ciniki.businesses.backups\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.donations'] != null ) {
+			this.menu.sections['']['list']['donations'] = {'label':'Donations', 'fn':'M.startApp(\'ciniki.donations.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		
 		if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
 			//
