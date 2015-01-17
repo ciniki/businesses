@@ -437,10 +437,14 @@ function ciniki_businesses_main() {
 		}
 		this.menu.cb = cb;
 
+		this.openBusinessSettings();
+	}
+
+	this.openBusinessSettings = function() {
 		// 
 		// Get the list of owners and employees for the business
 		//
-		var rsp = M.api.getJSONCb('ciniki.businesses.getUserSettings', 
+		M.api.getJSONCb('ciniki.businesses.getUserSettings', 
 			{'business_id':M.curBusinessID}, function(rsp) {
 				if( rsp.stat != 'ok' ) {
 					M.api.err(rsp);
@@ -580,7 +584,7 @@ function ciniki_businesses_main() {
 		if( M.userID > 0 && 
 			( (M.userPerms&0x01) == 0x01 || M.curBusiness.permissions.owners != null )
 			) {
-			this.menu.addButton('settings', 'Settings', 'M.startApp(\'ciniki.businesses.settings\',null,\'M.ciniki_businesses_main.menu.show();\');');
+			this.menu.addButton('settings', 'Settings', 'M.startApp(\'ciniki.businesses.settings\',null,\'M.ciniki_businesses_main.openBusinessSettings();\');');
 		}
 
 		var c = 0;
