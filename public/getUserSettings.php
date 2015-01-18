@@ -131,11 +131,10 @@ function ciniki_businesses_getUserSettings($ciniki) {
 			// Add the module to the list of modules to hand back
 			//
 			$rsp['modules'][$count] = array('module'=>$module);
+
 			//
 			// Check for uiSettings in other modules
 			//
-//			list($pkg, $mod) = explode('.', $module['module']['name']);
-			
 			$rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'hooks', 'uiSettings');
 			if( $rc['stat'] == 'ok' ) {
 				$fn = $rc['function_call'];
@@ -151,12 +150,12 @@ function ciniki_businesses_getUserSettings($ciniki) {
 			//
 			// FIXME: Move these into settings files for each module
 			//
-			if( $module['name'] == 'ciniki.artcatalog' ) {
-				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_artcatalog_settings', 'business_id', $args['business_id'], 'ciniki.artcatalog', 'settings', '');
-				if( $rc['stat'] == 'ok' ) {
-					$rsp['settings']['ciniki.artcatalog'] = $rc['settings'];
-				}
-			}
+//			if( $module['name'] == 'ciniki.artcatalog' ) {
+//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_artcatalog_settings', 'business_id', $args['business_id'], 'ciniki.artcatalog', 'settings', '');
+//				if( $rc['stat'] == 'ok' ) {
+//					$rsp['settings']['ciniki.artcatalog'] = $rc['settings'];
+//				}
+//			}
 			if( $module['name'] == 'ciniki.atdo' ) {
 				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
@@ -189,7 +188,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 			
 			//
 			// Check for any information required to display business menu
-			// This section taken from getUserModules
+			// This section taken from getUserModules, and done together to reduce requests
 			//
 
 			// NOTE: Also make sure to update in getUserModules

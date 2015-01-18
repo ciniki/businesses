@@ -45,7 +45,7 @@ function ciniki_businesses_settings() {
 				'intl':{'label':'Localization', 'fn':'M.startApp(\'ciniki.businesses.intl\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
 				'billing':{'label':'Billing', 'fn':'M.startApp(\'ciniki.businesses.billing\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
 				}}};
-		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
+		if( M.curBusiness.modules['ciniki.artcatalog'] != null && M.curBusiness.modules['ciniki.taxes'] != null ) {
 			this.menu.sections['']['list']['artcatalog'] = {'label':'Art Catalog', 'fn':'M.startApp(\'ciniki.artcatalog.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.customers'] != null ) {
