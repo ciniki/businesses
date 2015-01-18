@@ -136,10 +136,10 @@ function ciniki_businesses_getUserSettings($ciniki) {
 			//
 //			list($pkg, $mod) = explode('.', $module['module']['name']);
 			
-			$rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'private', 'uiSettings');
+			$rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'hooks', 'uiSettings');
 			if( $rc['stat'] == 'ok' ) {
-				$fn = $module['package'] . '_' . $module['module'] . '_uiSettings';
-				$rc = $fn($ciniki, $mrc['modules'], $args['business_id']);
+				$fn = $rc['function_call'];
+				$rc = $fn($ciniki, $args['business_id'], array('modules'=>$mrc['modules']));
 				if( $rc['stat'] != 'ok' ) {
 					return $rc;
 				}
@@ -169,12 +169,6 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.bugs'] = $rc['settings'];
 				} 
 			}
-//			if( $module['name'] == 'ciniki.customers' ) {
-//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_customer_settings', 'business_id', $args['business_id'], 'ciniki.customers', 'settings', '');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.customers'] = $rc['settings'];
-//				} 
-//			}
 			if( $module['name'] == 'ciniki.services' ) {
 				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_service_settings', 'business_id', $args['business_id'], 'ciniki.services', 'settings', '');
 				if( $rc['stat'] == 'ok' ) {
@@ -187,19 +181,6 @@ function ciniki_businesses_getUserSettings($ciniki) {
 					$rsp['settings']['ciniki.mail'] = $rc['settings'];
 				} 
 			}
-//			if( $module['name'] == 'ciniki.sapos' ) {
-//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_sapos_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'paypal-api');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.sapos'] = $rc['settings'];
-//				} 
-//			}
-//			if( $module['name'] == 'ciniki.taxes' ) {
-//				ciniki_core_loadMethod($ciniki, 'ciniki', 'taxes', 'private', 'taxTypes');
-//				$rc = ciniki_taxes_taxTypes($ciniki, $args['business_id']);
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.taxes'] = array('types'=>$rc['types']);
-//				} 
-//			}
 //			if( $module['name'] == 'ciniki.exhibitions' ) {
 				if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
 					$rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
