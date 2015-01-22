@@ -980,6 +980,22 @@ function ciniki_businesses_main() {
 			}
 		}
 
+		//
+		// Members
+		//
+		if( M.curBusiness.modules['ciniki.customers'] != null 
+			&& (M.curBusiness.modules['ciniki.customers'].flags&0x02) > 0 
+			&& M.curBusiness.modules['ciniki.membersonly'] != null
+			) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.membersonly = {'label':'Members Only', 'fn':'M.startApp(\'ciniki.membersonly.pages\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Members Only', 'fn':'M.startApp(\'ciniki.membersonly.pages\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});'}}};
+			}
+		}
+
 		// Exhibitions
 		if( M.curBusiness.modules['ciniki.exhibitions'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
