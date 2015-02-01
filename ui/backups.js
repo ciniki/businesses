@@ -56,6 +56,6 @@ function ciniki_businesses_backups() {
 	}
 
 	this.downloadBackup = function(bid) {
-		window.open(M.api.getUploadURL('ciniki.businesses.backupDownload', {'business_id':M.curBusinessID, 'backup_id':bid}));
+		M.api.openFile('ciniki.businesses.backupDownload', {'business_id':M.curBusinessID, 'backup_id':bid});
 	}
 }
