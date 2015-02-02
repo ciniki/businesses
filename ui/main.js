@@ -1479,6 +1479,14 @@ function ciniki_businesses_main() {
 			}
 		}
 
+		//
+		// Check if add to home screen should be shown
+		//
+//		if( M.device == 'ipad' && !window.navigator.standalone ) {
+//			this.menu.sections.addtohomescreen = {'label':'', 'list':{
+//				'add':{'label':'Download App', 'fn':'
+//		}
+
 		// Set size of menu based on contents
 		if( menu_search == 1 ) {
 			this.menu.size = 'medium';
