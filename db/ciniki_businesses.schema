@@ -32,6 +32,8 @@
 #				This may be done for security.
 #
 # logo_id:		The business logo stored in the module ciniki.images
+#
+# reseller_id:	The ID of the business that is the registered reseller for this business.
 #	
 # date_added:	The date and time the business was created in the database.
 # last_updated:	The date and time the business record was last updated.
@@ -47,10 +49,11 @@ create table ciniki_businesses (
 	status tinyint unsigned not null,
 	db_prefix varchar(10) not null,
 	logo_id int not null,
+	reseller_id int not null,
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),
 	index (last_updated),
 	unique index (uuid),
 	unique index (sitename)
-) ENGINE=InnoDB, COMMENT='v1.07';
+) ENGINE=InnoDB, COMMENT='v1.08';
