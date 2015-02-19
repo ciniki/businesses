@@ -1383,6 +1383,18 @@ function ciniki_businesses_main() {
 			this.menu.guided[g++] = {'label':'', 'list':{
 				'_':{'label':'Update ' + business_possession + ' business information', 'fn':'M.startApp(\'ciniki.info.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
+		if( M.curBusiness.modules['ciniki.tutorials'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.tutorials = {'label':'Tutorials', 'fn':'M.startApp(\'ciniki.tutorials.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Tutorials', 'fn':'M.startApp(\'ciniki.tutorials.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+			this.menu.guided[g++] = {'label':'', 'list':{
+				'_':{'label':'Manage ' + business_possession + ' tutorials', 'fn':'M.startApp(\'ciniki.tutorials.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+		}
 		if( M.curBusiness.modules['ciniki.marketing'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
