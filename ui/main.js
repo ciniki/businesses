@@ -193,7 +193,7 @@ function ciniki_businesses_main() {
 				switch(j) {
 					case 0: return d.product.name;
 //					case 1: return d.product.inventory_current_num + (d.product.inventory_reserved!=null?' <span class="subdue">[' + d.product.inventory_reserved + ']</span>':'');
-					case 1: return d.product.inventory_current_num + ((d.product.inventory_reserved!=null&&parseFloat(d.product.inventory_current_num)>=0)?' <span class="subdue">[' + d.product.inventory_reserved + ']</span>':'');
+					case 1: return d.product.inventory_current_num + ((d.product.rsv!=null&&parseFloat(d.product.rsv)>0)?' <span class="subdue">[' + d.product.rsv + ']</span>':'');
 				}
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
@@ -260,7 +260,12 @@ function ciniki_businesses_main() {
 			}
 			else if( this.sections[s].id == 'products' ) {
 //				return 'M.startApp(\'ciniki.products.winekits\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':' + d.product.id + '})';
-				return 'M.startApp(\'ciniki.products.product\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':\'' + d.product.id + '\'});';
+				if( M.curBusiness.permissions.owners != null 
+					|| M.curBusiness.permissions.employees != null
+					|| (M.userPerms&0x01) == 1 ) {
+					return 'M.startApp(\'ciniki.products.product\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'product_id\':\'' + d.product.id + '\'});';
+				} 
+				return '';
 			}
 			else if( this.sections[s].id == 'artcatalog' ) {
 				return 'M.startApp(\'ciniki.artcatalog.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'artcatalog_id\':' + d.item.id + '})';
@@ -750,6 +755,27 @@ function ciniki_businesses_main() {
 			this.menu.guided[g++] = {'label':'', 'list':{
 				'_':{'label':'Manage ' + business_possession + ' products', 'fn':'M.startApp(\'ciniki.products.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
+		if( M.curBusiness.modules['ciniki.products'] != null 
+			&& perms.owners == null && perms.employees == null && perms.salesreps != null ) {
+			this.menu.sections[c] = {'label':'', 'id':'products', 'searchlabel':'Products', 
+				'type':'livesearchgrid', 
+				'livesearchcols':1, 'hint':'',
+				'headerValues':null,
+				'noData':'No products found',
+				'fn':'M.startApp(\'ciniki.products.inventory\', null, \'M.ciniki_businesses_main.showMenu();\');',
+			};
+			if( (M.curBusiness.modules['ciniki.products'].flags&0x04) > 0 ) {
+				this.menu.sections[c].livesearchcols = 2;
+				this.menu.sections[c].headerValues = ['Product', 'Inv [Rsv]'];
+			} else {
+				this.menu.sections[c].livesearchcols = 1;
+				this.menu.sections[c].headerValues = null;
+			}
+			menu_search = 1;
+			c++;
+			this.menu.guided[g++] = {'label':'', 'list':{
+				'_':{'label':'Manage ' + business_possession + ' products', 'fn':'M.startApp(\'ciniki.products.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+		}
 
 		// Customer module, all owners and employees
 		// Add a space to the label, to create a separate section appearance
@@ -768,7 +794,7 @@ function ciniki_businesses_main() {
 					'livesearchcols':2, 'hint':'',
 					'headerValues':['Customer', 'Status'],
 					'noData':'No ' + label + ' found',
-					'addFn':'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':0});',
+					'addFn':(perms.owners!=null||perms.employees!=null||(M.userPerms&0x01)==1)?'M.startApp(\'ciniki.customers.edit\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'customer_id\':0});':'',
 					'fn':'M.startApp(\'ciniki.customers.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
 				};
 				c++;
@@ -919,7 +945,7 @@ function ciniki_businesses_main() {
 
 		// services module, all owners and employees and Products group
 		if( M.curBusiness.modules['ciniki.services'] != null 
-			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
+			&& (perms.owners != null || perms.employees != null || perms.salesreps != null || (M.userPerms&0x01) == 1) ) { 
 //			this.menu.sections[c++] = {'label':'', 'list':{
 //				'_':{'label':'Services', 'fn':'M.startApp(\'ciniki.services.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			this.menu.sections[c] = {'label':'', 'id':'services', 'searchlabel':'Services', 'type':'livesearchgrid', 
