@@ -21,7 +21,7 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
+function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
 	//
 	// Get the list of modules
 	//
@@ -105,6 +105,8 @@ function ciniki_businesses_checkAccess($ciniki, $business_id, $method) {
 		'ciniki.businesses.subscriptionCancel',
 		'ciniki.businesses.settingsIntlGet',
 		'ciniki.businesses.settingsIntlUpdate',
+		'ciniki.businesses.settingsAPIsGet',
+		'ciniki.businesses.settingsAPIsUpdate',
 		);
 	if( in_array($method, $owner_methods) && in_array('owners', $groups) ) {
 		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);

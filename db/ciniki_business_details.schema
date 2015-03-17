@@ -36,6 +36,9 @@
 # - social-vimeo-url = <string>
 # - social-instagram-username = <string>
 #
+# Remote services API connections
+# - apis-dropbox-access-token
+#
 # Set up the international settings for the business.  This is used
 # 
 # - intl-default-locale = <string> Default to en_US

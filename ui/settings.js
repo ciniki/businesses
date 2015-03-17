@@ -98,6 +98,11 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.donations'] != null ) {
 			this.menu.sections['']['list']['donations'] = {'label':'Donations', 'fn':'M.startApp(\'ciniki.donations.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.directory'] != null 
+			&& (M.curBusiness.modules['ciniki.directory'].flags&0x01) > 0
+			) {
+			this.menu.sections['']['list']['directory'] = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		
 		if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
 			//
@@ -108,6 +113,11 @@ function ciniki_businesses_settings() {
 				}};
 			if( M.curBusiness.modules['ciniki.products'] != null ) {
 				this.menu.sections['advanced']['list']['products'] = {'label':'Products', 'fn':'M.startApp(\'ciniki.products.types\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+			}
+			if( M.curBusiness.modules['ciniki.directory'] != null 
+				&& (M.curBusiness.modules['ciniki.directory'].flags&0x01) > 0
+				) {
+				this.menu.sections['advanced']['list']['apis'] = {'label':'Connected Services', 'fn':'M.startApp(\'ciniki.businesses.apis\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 			}
 
 			this.menu.sections['admin'] = {'label':'Admin', 'list':{
