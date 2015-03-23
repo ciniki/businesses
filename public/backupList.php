@@ -80,6 +80,10 @@ function ciniki_businesses_backupList($ciniki) {
 	}
 	closedir($dh);
 
+	//
+	// FIXME: Add sort to backups array
+	//
+
 	return array('stat'=>'ok', 'backups'=>$backups);
 }
 ?>
