@@ -84,7 +84,7 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.blog'] != null 
 			&& M.curBusiness.modules['ciniki.mail'] != null 
 			) {
-			this.menu.sections['']['list']['sapos'] = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+			this.menu.sections['']['list']['blog'] = {'label':'Blog', 'fn':'M.startApp(\'ciniki.blog.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.mail'] != null ) {
 			this.menu.sections['']['list']['mail'] = {'label':'Mail', 'fn':'M.startApp(\'ciniki.mail.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
