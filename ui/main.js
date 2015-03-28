@@ -540,6 +540,9 @@ function ciniki_businesses_main() {
 		if( rsp.settings != null && rsp.settings['ciniki.products'] != null ) {
 			M.curBusiness.products = {'settings':rsp.settings['ciniki.products']};
 		}
+		if( rsp.settings != null && rsp.settings['ciniki.fatt'] != null ) {
+			M.curBusiness.fatt = {'settings':rsp.settings['ciniki.fatt']};
+		}
 		if( rsp.settings != null && rsp.settings['googlemapsapikey'] != null && rsp.settings['googlemapsapikey'] != '' ) {
 			M.curBusiness.settings = {'googlemapsapikey':rsp.settings['googlemapsapikey']};
 		}
