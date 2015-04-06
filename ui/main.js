@@ -885,7 +885,7 @@ function ciniki_businesses_main() {
 		// The FATT certifications
 		//
 		if( M.curBusiness.modules['ciniki.fatt'] != null ) {
-			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x20) > 0 ) {
+			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x10) > 0 ) {
 				if( join > -1 ) {
 					this.menu.sections[c].list.fattcerts = {
 						'label':'Certifications', 'fn':'M.startApp(\'ciniki.fatt.certs\',null,\'M.ciniki_businesses_main.showMenu();\');'};
