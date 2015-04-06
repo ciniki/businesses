@@ -881,6 +881,42 @@ function ciniki_businesses_main() {
 				'_':{'label':'Manage the distributors', 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 
+		//
+		// The FATT certifications
+		//
+		if( M.curBusiness.modules['ciniki.fatt'] != null ) {
+			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x20) > 0 ) {
+				if( join > -1 ) {
+					this.menu.sections[c].list.fattcerts = {
+						'label':'Certifications', 'fn':'M.startApp(\'ciniki.fatt.certs\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+					join++;
+				} else {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Certifications', 'fn':'M.startApp(\'ciniki.fatt.certs\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+				}
+			}
+			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x01) > 0 ) {
+				if( join > -1 ) {
+					this.menu.sections[c].list.fattofferings = {
+						'label':'Courses', 'fn':'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+					join++;
+				} else {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Courses', 'fn':'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+				}
+			}
+			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x01) > 0 ) {
+				if( join > -1 ) {
+					this.menu.sections[c].list.fattofferings = {
+						'label':'Devices', 'fn':'M.startApp(\'ciniki.fatt.devices\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+					join++;
+				} else {
+					this.menu.sections[c++] = {'label':'', 'list':{
+						'_':{'label':'Devices', 'fn':'M.startApp(\'ciniki.fatt.devices\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+				}
+			}
+		}
+
 		// Bugs/Features/Questions
 		if( M.curBusiness.modules['ciniki.bugs'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
