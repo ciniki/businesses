@@ -116,6 +116,9 @@ function ciniki_businesses_settings() {
 			) {
 			this.menu.sections['']['list']['directory'] = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.tutorials'] != null ) {
+			this.menu.sections['']['list']['tutorials'] = {'label':'Tutorials', 'fn':'M.startApp(\'ciniki.tutorials.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		
 		if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
 			//
