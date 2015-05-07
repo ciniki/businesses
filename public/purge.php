@@ -103,7 +103,7 @@ function ciniki_businesses_purge($ciniki) {
 
 	foreach($modules as $module) {
 		if( $module['package'] == 'ciniki'
-			&& ($module['name'] == 'core' || $module['name'] == 'businesses') ) {
+			&& ($module['name'] == 'core' || $module['name'] == 'businesses' || $module['name'] == 'users') ) {
 			// Skip these modules
 			continue;
 		}
