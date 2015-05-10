@@ -11,26 +11,28 @@ function ciniki_businesses_add() {
 		this.add.data = null;
 		this.add.sections = {
 			'general':{'label':'General', 'fields':{
+				'plan_id':{'label':'Plan', 'type':'select', 'options':{}},
+				'payment_type':{'label':'Payment', 'type':'select', 'options':{'yearlycheque':'Yearly Cheque', 'monthlypaypal':'Monthly Paypal'}},
 				'business.name':{'label':'Name', 'type':'text'},
 				'business.category':{'label':'Category', 'type':'text'},
 				'business.sitename':{'label':'Sitename', 'type':'text'},
 				'business.tagline':{'label':'Tagline', 'type':'text'},
 				}},
+			'owner':{'label':'Owner', 'fields':{
+				'owner.name.first':{'label':'First Name', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.updateContact'},
+				'owner.name.last':{'label':'Last Name', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.updateContact'},
+				'owner.name.display':{'label':'Display Name', 'type':'text'},
+				'owner.email.address':{'label':'Email', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.updateEmail'},
+				'owner.username':{'label':'Username', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.checkUsername'},
+				'owner.password':{'label':'Password', 'type':'text'},
+				}},
 			'contact':{'label':'Contact', 'fields':{
 				'contact.person.name':{'label':'Name', 'type':'text'},
+				'contact.email.address':{'label':'Email', 'type':'text'},
 				'contact.phone.number':{'label':'Phone', 'type':'text'},
-				'contact.cell.number':{'label':'Phone', 'type':'text'},
+				'contact.cell.number':{'label':'Cell', 'type':'text'},
 				'contact.tollfree.number':{'label':'Tollfree', 'type':'text'},
 				'contact.fax.number':{'label':'Fax', 'type':'text'},
-				'contact.email.address':{'label':'Email', 'type':'text'},
-				}},
-			'owner':{'label':'Owner', 'fields':{
-				'owner.name.first':{'label':'First Name', 'type':'text'},
-				'owner.name.last':{'label':'Last Name', 'type':'text'},
-				'owner.name.display':{'label':'Display Name', 'type':'text'},
-				'owner.email.address':{'label':'Email', 'type':'text'},
-				'owner.username':{'label':'Username', 'type':'text'},
-				'owner.password':{'label':'Password', 'type':'password'},
 				}},
 			'address':{'label':'Address', 'fields':{
 				'contact.address.street1':{'label':'Street', 'type':'text'},
@@ -48,6 +50,34 @@ function ciniki_businesses_add() {
 		this.add.fieldValue = function(s, i, d) { 
 			if( s == 'modules' ) { return 0; }
 			return ''; 
+		}
+		this.add.updateContact = function(s, fid) {
+			var f = this.formValue('owner.name.first');
+			var l = this.formValue('owner.name.last');
+			if( f != '' && l != '' ) {
+				this.setFieldValue('contact.person.name', f + ' ' + l);
+				this.setFieldValue('owner.name.display', f + ' ' + l[0]);
+			} else if( f != '' ) {
+				this.setFieldValue('contact.person.name', f);
+				this.setFieldValue('owner.name.display', f);
+			} else if( l != '' ) {
+				this.setFieldValue('contact.person.name', l);
+			}
+		}
+		this.add.updateEmail = function(s, fid) {
+			this.setFieldValue('contact.email.address', this.formValue('owner.email.address'));
+		}
+		this.add.checkUsername = function(s, fid) {
+			M.api.getJSONBgCb('ciniki.users.checkUsernameAvailable', 
+				{'business_id':0, 'username':this.formValue('owner.username')}, function(rsp) {
+					if( rsp.stat != 'ok' ) {
+						M.api.err(rsp);
+						return false;
+					}
+					if( rsp.exists == 'yes' ) {
+						alert('Username taken');
+					}
+				});
 		}
 		this.add.addButton('save', 'Save', 'M.ciniki_businesses_add.save();');
 		this.add.addClose('Cancel');
@@ -68,14 +98,13 @@ function ciniki_businesses_add() {
 			return false;
 		} 
 
-
 		//
 		// Get the detail for the user.  Do this for each request, to make sure
 		// we have the current data.  If the user switches businesses, then we
 		// want this data reloaded.
 		//
 		var rsp = M.api.getJSONCb('ciniki.businesses.getModules', 
-			{'business_id':0}, function(rsp) {
+			{'business_id':0, 'plans':'yes'}, function(rsp) {
 				if( rsp.stat != 'ok' ) {
 					M.api.err(rsp);
 					return false;
@@ -90,6 +119,12 @@ function ciniki_businesses_add() {
 					p.sections['modules']['fields'][m.package + '.' + m.name] = {
 						'id':m.name, 'label':m.label, 'type':'toggle', 'toggles':{'0':' Off ', '1':' On '},
 						};
+				}
+				p.sections.general.fields.plan_id.options = {'0':'None'};
+				if( rsp.plans != null ) {
+					for(i in rsp.plans) {
+						p.sections.general.fields.plan_id.options[rsp.plans[i].plan.id] = rsp.plans[i].plan.name;
+					}
 				}
 				p.show(cb);
 			});
@@ -120,19 +155,22 @@ function ciniki_businesses_add() {
 				}
 
 				var business_id = rsp.id;
-				var c = M.ciniki_businesses_add.add.serializeFormSection('no', 'modules');
-				var rsp = M.api.postJSONCb('ciniki.businesses.updateModules', 
-					{'business_id':business_id}, c, function(rsp) {
-						if( rsp.stat != 'ok' ) {
-							M.api.err(rsp);
-							return false;
-						}
-						M.ciniki_businesses_add.add.close();
-					});
+				if( M.ciniki_businesses_add.add.formValue('plan_id') == 0 ) {
+					var c = M.ciniki_businesses_add.add.serializeFormSection('no', 'modules');
+					var rsp = M.api.postJSONCb('ciniki.businesses.updateModules', 
+						{'business_id':business_id}, c, function(rsp) {
+							if( rsp.stat != 'ok' ) {
+								M.api.err(rsp);
+								return false;
+							}
+							M.ciniki_businesses_add.add.close();
+						});
+				} else {
+					M.ciniki_businesses_add.add.close();
+				}
 			});
 		} else {
 			this.add.close();
 		}
 	}
 }
-

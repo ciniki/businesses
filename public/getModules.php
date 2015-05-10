@@ -28,6 +28,7 @@ function ciniki_businesses_getModules($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'plans'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Plans'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -81,9 +82,37 @@ function ciniki_businesses_getModules($ciniki) {
 			$count++;
 		}
 	}
+
+	$rsp = array('stat'=>'ok', 'modules'=>$modules);
 	
+	//
+	// Get the list of available plans for the business
+	// 
+	if( isset($args['plans']) && $args['plans'] == 'yes' ) {
+		if( $args['business_id'] == '0' ) {
+			$args['business_id'] = $ciniki['config']['ciniki.core']['master_business_id'];
+		}
+		//
+		// Query the database for the plan
+		//
+		$strsql = "SELECT id, name, monthly, trial_days "
+			. "FROM ciniki_business_plans "
+			. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+			. "ORDER BY sequence "
+			. "";
 
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
+		$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+			array('container'=>'plans', 'fname'=>'id', 'name'=>'plan', 'fields'=>array('id', 'name', 'monthly')),
+			));
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		if( isset($rc['plans']) ) {
+			$rsp['plans'] = $rc['plans'];
+		}
+	}
 
-	return array('stat'=>'ok', 'modules'=>$modules);
+	return $rsp;
 }
 ?>
