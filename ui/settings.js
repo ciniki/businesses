@@ -119,6 +119,9 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.tutorials'] != null ) {
 			this.menu.sections['']['list']['tutorials'] = {'label':'Tutorials', 'fn':'M.startApp(\'ciniki.tutorials.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.reseller'] != null ) {
+			this.menu.sections['']['list']['reseller'] = {'label':'Reseller', 'fn':'M.startApp(\'ciniki.reseller.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		
 		if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
 			//

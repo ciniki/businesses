@@ -241,10 +241,18 @@ function ciniki_businesses_add(&$ciniki) {
 	// Add the business owner
 	//
 	if( $user_id > 0 ) {
-		$strsql = "INSERT INTO ciniki_business_users (business_id, user_id, "
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUUID');
+		$rc = ciniki_core_dbUUID($ciniki, 'ciniki.businesses');
+		if( $rc['stat'] != 'ok' ) {
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2369', 'msg'=>'Unable to get a new UUID', 'err'=>$rc['err']));
+		}
+		$business_user_uuid = $rc['uuid'];
+		
+		$strsql = "INSERT INTO ciniki_business_users (business_id, user_id, uuid, "
 			. "package, permission_group, status, date_added, last_updated) VALUES ("
 			. "'" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 			. ", '" . ciniki_core_dbQuote($ciniki, $user_id) . "' "
+			. ", '" . ciniki_core_dbQuote($ciniki, $business_user_uuid) . "' "
 			. ", 'ciniki', 'owners', 10, UTC_TIMESTAMP(), UTC_TIMESTAMP())";
 		$rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
 		if( $rc['stat'] != 'ok' ) {
@@ -353,10 +361,6 @@ function ciniki_businesses_add(&$ciniki) {
 		}
 
 		//
-		// FIXME: Link together the subscription and the invoice 
-		//
-
-		//
 		// Add the subscription plan
 		//
 		if( isset($args['payment_type']) && $args['payment_type'] == 'monthlypaypal' ) {
@@ -421,17 +425,67 @@ function ciniki_businesses_add(&$ciniki) {
 	}
 
 	//
-	// FIXME: Send welcome email with login information
-	//
-
-
-
-	//
 	// Commit the changes
 	//
 	$rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
+	}
+
+	//
+	// Send welcome email with login information
+	//
+	if( isset($args['owner.email.address']) && $args['owner.email.address'] != ''
+		&& $args['owner.username'] != '' ) {
+		//
+		// Load the business mail template
+		//
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'mail', 'private', 'loadBusinessTemplate');
+		$rc = ciniki_mail_loadBusinessTemplate($ciniki, $ciniki['config']['ciniki.core']['master_business_id'], array('title'=>'Welcome'));
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		$template = $rc['template'];
+		$theme = $rc['theme'];
+
+		//
+		// Create the email
+		//
+		$subject = "Welcome to Ciniki";
+		$manager_url = $ciniki['config']['ciniki.core']['manage.url'];
+		$msg = "<tr><td style='" . $theme['td_body'] . "'>"
+			. "<p style='" . $theme['p'] . "'>"
+			. 'Thank you for choosing the Ciniki platform to manage your business. '
+			. "Please save this email for future reference.  We've included some important information and links below."
+			. "</p>\n\n<p style='" . $theme['p'] . "'>"
+			. "To get started, you can login at <a style='" . $theme['a'] . "' href='$manager_url'>$manager_url</a> with your email address and the password shown below."
+			. "</p>\n\n<p style='" . $theme['p'] . "'>"
+			. "";
+		$msg .= "<p style='" . $theme['p'] . "'>"
+			. "Email: " . $args['owner.email.address'] . "<br/>\n"
+			. "Username: " . $args['owner.username'] . "<br/>\n"
+			. "Password: " . $args['owner.password'] . "<br/>\n"
+			. "Ciniki Manager: <a style='" . $theme['a'] . "' href='$manager_url'>$manager_url</a><br/>\n"
+			. "";
+		if( isset($plan) && preg_match('/ciniki\.web/', $plan['modules']) ) {
+			$weburl = "http://" . $ciniki['config']['ciniki.web']['master.domain'] . '/' . $args['business.sitename'] . "<br/>\n";
+			$msg .= "Your website: <a style='" . $theme['a'] . "' href='$weburl'>$weburl</a><br/>\n";
+		}
+		$msg .= "</p>\n\n";
+
+		$htmlmsg = $template['html_header']
+			. $msg
+			. $template['html_footer']
+			. "";
+		$textmsg = $template['text_header']
+			. strip_tags($msg)
+			. $template['text_footer']
+			. "";
+		$ciniki['emailqueue'][] = array('to'=>$args['owner.email.address'],
+			'subject'=>$subject,
+			'htmlmsg'=>$htmlmsg,
+			'textmsg'=>$textmsg,
+			);
 	}
 
 	return array('stat'=>'ok', 'id'=>$business_id);
