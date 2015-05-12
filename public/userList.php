@@ -47,8 +47,10 @@ function ciniki_businesses_userList($ciniki) {
 
 	$rsp = array('stat'=>'ok', 'permission_groups'=>array(
 		'ciniki.owners'=>array('name'=>'Owners'),
-		'ciniki.employees'=>array('name'=>'Employees'),
 		));
+	if( ($modules['ciniki.businesses']['flags']&0x01) == 1 ) {
+		$rsp['permission_groups']['ciniki.employees'] = array('name'=>'Employees');
+	}
 	if( isset($modules['ciniki.businesses']) ) {
 		foreach($flags as $flag) {
 			$flag = $flag['flag'];
