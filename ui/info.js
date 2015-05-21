@@ -12,7 +12,7 @@ function ciniki_businesses_info() {
 		this.info.sections = {
 			'general':{'label':'General', 'fields':{
 				'business.name':{'label':'Name', 'type':'text'},
-				'business.sitename':{'label':'Sitename', 'type':'text'},
+				'business.sitename':{'label':'Sitename', 'visible':'no', 'type':'text'},
 				'business.tagline':{'label':'Tagline', 'type':'text'},
 				}},
 			'contact':{'label':'Contact', 'fields':{
@@ -50,7 +50,8 @@ function ciniki_businesses_info() {
 			alert('App Error');
 			return false;
 		} 
-		
+	
+		this.info.sections.general.fields['business.sitename'].visible = (M.userPerms&0x01)==1?'yes':'no';
 
 		//
 		// Get the detail for the business.  
