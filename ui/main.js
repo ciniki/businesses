@@ -676,8 +676,8 @@ function ciniki_businesses_main() {
 		if( M.curBusiness.modules['ciniki.calendars'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var cal_dt = new Date();
-			var cal_date = cal_dt.getFullYear() + '-' + (cal_dt.getMonth()+1) + '-' + cal_dt.getDate();
-			this.menu.sections[c] = {'label':'', 'id':'calendars', 'searchlabel':'Calendars', 'type':'livesearchgrid', 
+			var cal_date = cal_dt.toISOString().substring(0,10);
+			this.menu.sections[c] = {'label':'', 'id':'calendars', 'searchlabel':'Calendar', 'type':'livesearchgrid', 
 				'livesearchtype':'appointments', 'livesearchcols':2, 'hint':'',
 				'headerValues':null,
 				'noData':'No appointments found',
