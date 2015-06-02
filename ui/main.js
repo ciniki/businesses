@@ -673,6 +673,20 @@ function ciniki_businesses_main() {
 				'_':{'label':'Manage the wine production', 'fn':'M.startApp(\'ciniki.wineproduction.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 
+		// Properties
+		if( M.curBusiness.modules['ciniki.propertyrentals'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.propertyrentals = {
+					'label':'Properties', 'fn':'M.startApp(\'ciniki.propertyrentals.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Properties', 'fn':'M.startApp(\'ciniki.propertyrentals.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+			c++;
+		}
+
 		if( M.curBusiness.modules['ciniki.calendars'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var cal_dt = new Date();

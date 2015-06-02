@@ -100,16 +100,17 @@ function ciniki_businesses_settings() {
 		}
 		// Firstaid Tracking and Training settings
 		if( M.curBusiness.modules['ciniki.fatt'] != null ) {
-			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x01) > 0 ) {
-				this.menu.sections['']['list']['fattcourses'] = {'label':'Courses', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'courses\'});'};
-				this.menu.sections['']['list']['fattinstructors'] = {'label':'Instructors', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'instructors\'});'};
-			}
-			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x10) > 0 ) {
-				this.menu.sections['']['list']['fattcerts'] = {'label':'Certifications', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'certs\'});'};
-			}
-			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x04) > 0 ) {
-				this.menu.sections['']['list']['fattlocations'] = {'label':'Locations', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'locations\'});'};
-			}
+				this.menu.sections['']['list']['fatt'] = {'label':'First Aid', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+//			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x01) > 0 ) {
+//				this.menu.sections['']['list']['fattcourses'] = {'label':'Courses', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'courses\'});'};
+//				this.menu.sections['']['list']['fattinstructors'] = {'label':'Instructors', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'instructors\'});'};
+//			}
+//			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x10) > 0 ) {
+//				this.menu.sections['']['list']['fattcerts'] = {'label':'Certifications', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'certs\'});'};
+//			}
+//			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x04) > 0 ) {
+//				this.menu.sections['']['list']['fattlocations'] = {'label':'Locations', 'fn':'M.startApp(\'ciniki.fatt.settings\',null,\'M.ciniki_businesses_settings.menu.show();\',\'mc\',{\'manage\':\'locations\'});'};
+//			}
 		}
 		if( M.curBusiness.modules['ciniki.directory'] != null 
 			&& (M.curBusiness.modules['ciniki.directory'].flags&0x01) > 0
