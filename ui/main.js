@@ -1254,6 +1254,16 @@ function ciniki_businesses_main() {
 			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
 		}
 
+		if( M.curBusiness.modules['ciniki.filmschedule'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
+			if( join > -1 ) {
+				this.menu.sections[c].list.events = {'label':'Schedule', 'fn':'M.startApp(\'ciniki.filmschedule.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Schedule', 'fn':'M.startApp(\'ciniki.filmschedule.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		if( M.curBusiness.modules['ciniki.events'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
