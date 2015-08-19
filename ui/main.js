@@ -682,7 +682,9 @@ function ciniki_businesses_main() {
 				'headerValues':null,
 				'noData':'No appointments found',
 				'addFn':'M.startApp(\'ciniki.atdo.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'add\':\'appointment\'});',
-				'fn':'M.startApp(\'ciniki.calendars.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'date\':\'' + cal_date + '\'});',
+// FIXME: Removed cal_date from options, Aug 18, 2015, remove commented line after 1 month
+//				'fn':'M.startApp(\'ciniki.calendars.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'date\':\'' + cal_date + '\'});',
+				'fn':'M.startApp(\'ciniki.calendars.main\', null, \'M.ciniki_businesses_main.showMenu();\');',
 			};
 			this.menu.guided[g++] = {'label':'', 'list':{
 				'_':{'label':'See my schedule', 'fn':'M.startApp(\'ciniki.calendars.main\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'date\':\'' + cal_date + '\'});'}}};
