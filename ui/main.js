@@ -657,6 +657,26 @@ function ciniki_businesses_main() {
 			this.menu.guided[g++] = {'label':'', 'list':{
 					'_':{'label':'Update my art catalog', 'fn':'M.startApp(\'ciniki.artcatalog.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
+		// Writing Catalog
+		if( M.curBusiness.modules['ciniki.writingcatalog'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
+			business_possession = 'my';
+			if( M.curBusiness.modules['ciniki.sapos'] != null ) {
+				this.menu.sections[c] = {'label':'', 'id':'writingcatalog', 'searchlabel':'Writing Catalog', 
+					'type':'livesearchgrid', 'livesearchcols':3, 'hint':'',
+					'headerValues':null,
+					'cellClasses':['thumbnail','multiline','multiline'],
+					'noData':'No writings found',
+					'addFn':'M.startApp(\'ciniki.writingcatalog.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'writingcatalog_id\':0});',
+					'fn':'M.startApp(\'ciniki.writingcatalog.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{});',
+				};
+				menu_search = 1;
+				c++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Writing Catalog', 'fn':'M.startApp(\'ciniki.writingcatalog.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 		// Wine production module, all owners, employees and wine production group
 		if( M.curBusiness.modules['ciniki.wineproduction'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
