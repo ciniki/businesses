@@ -1244,6 +1244,19 @@ function ciniki_businesses_main() {
 //				'_':{'label':'Reseller Manager', 'fn':'M.startApp(\'ciniki.reseller.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 
+		// Materia Medica
+		if( M.curBusiness.modules['ciniki.materiamedica'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.materiamedica = {
+					'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		// Subscriptions module, all owners and employees and Subscriptions group
 		if( M.curBusiness.modules['ciniki.subscriptions'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
