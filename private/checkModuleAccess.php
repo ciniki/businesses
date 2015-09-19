@@ -45,7 +45,7 @@ function ciniki_businesses_checkModuleAccess(&$ciniki, $business_id, $package, $
 	$ciniki['business']['modules'] = $modules;
 
 	if( !isset($rc['modules'][$package . '.' . $module]) ) {
-		return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('pkg'=>'ciniki', 'code'=>'696', 'msg'=>'Module disabled'));
+		return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('pkg'=>'ciniki', 'code'=>'696', 'msg'=>"Module '$package.$module' disabled"));
 	}
 
 	//
