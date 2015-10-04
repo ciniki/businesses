@@ -1448,14 +1448,12 @@ function ciniki_businesses_main() {
 		if( M.curBusiness.modules['ciniki.mail'] != null && (M.curBusiness.modules['ciniki.mail'].flags&0x01) == 0x01 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
-				this.menu.sections[c].list.mailings = {'label':'Mailings', 'fn':'M.startApp(\'ciniki.mail.mailings\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				this.menu.sections[c].list.mail = {'label':'Mail', 'fn':'M.startApp(\'ciniki.mail.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Mailings', 'fn':'M.startApp(\'ciniki.mail.mailings\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+					'_':{'label':'Mail', 'fn':'M.startApp(\'ciniki.mail.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
-//			this.menu.guided[g++] = {'label':'', 'list':{
-//				'_':{'label':'Email a mailing list', 'fn':'M.startApp(\'ciniki.mail.mailings\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 		}
 		if( M.curBusiness.modules['ciniki.donations'] != null ) {
 			if( join > -1 ) {
