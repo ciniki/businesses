@@ -1445,7 +1445,7 @@ function ciniki_businesses_main() {
 					'_':{'label':'Campaigns', 'fn':'M.startApp(\'ciniki.campaigns.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-		if( M.curBusiness.modules['ciniki.mail'] != null && (M.curBusiness.modules['ciniki.mail'].flags&0x01) == 0x01 
+		if( M.curBusiness.modules['ciniki.mail'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
 				this.menu.sections[c].list.mail = {'label':'Mail', 'fn':'M.startApp(\'ciniki.mail.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
