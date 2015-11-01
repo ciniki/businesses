@@ -19,6 +19,9 @@ function ciniki_businesses_social() {
 			'flickr':{'label':'Flickr', 'fields':{
 				'social-flickr-url':{'label':'Photostream URL', 'type':'text'},
 				}},
+			'linkedin':{'label':'Linked In', 'fields':{
+				'social-linkedin-url':{'label':'URL', 'type':'text'},
+				}},
 			'etsy':{'label':'Etsy', 'fields':{
 				'social-etsy-url':{'label':'Shop URL', 'type':'text'},
 				}},

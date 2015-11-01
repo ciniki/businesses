@@ -145,6 +145,7 @@ function ciniki_businesses_updateDetails(&$ciniki) {
 		'social-youtube-username',
 		'social-vimeo-url',
 		'social-instagram-username',
+		'social-linkedin-url',
 		);
 	foreach($ciniki['request']['args'] as $arg_name => $arg_value) {
 		if( in_array($arg_name, $allowed_keys) ) {
