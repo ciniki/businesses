@@ -35,7 +35,7 @@ function ciniki_businesses_social() {
 				'social-instagram-username':{'label':'Username', 'type':'text'},
 				}},
 			'youtube':{'label':'Youtube', 'fields':{
-				'social-youtube-username':{'label':'Username', 'type':'text'},
+				'social-youtube-url':{'label':'URL', 'type':'text'},
 				}},
 			'vimeo':{'label':'Vimeo', 'fields':{
 				'social-vimeo-url':{'label':'URL', 'type':'text'},

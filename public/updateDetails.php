@@ -142,7 +142,7 @@ function ciniki_businesses_updateDetails(&$ciniki) {
 		'social-etsy-url',
 		'social-pinterest-username',
 		'social-tumblr-username',
-		'social-youtube-username',
+		'social-youtube-url',
 		'social-vimeo-url',
 		'social-instagram-username',
 		'social-linkedin-url',
