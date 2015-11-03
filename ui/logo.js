@@ -16,7 +16,7 @@ function ciniki_businesses_logo() {
 		//
 		this.edit.data = {'image_id':0};
 		this.edit.sections = {
-			'_image':{'label':'Logo', 'type':'simpleform', 'fields':{
+			'_image':{'label':'Logo', 'type':'imageform', 'fields':{
 				'image_id':{'label':'', 'hidelabel':'yes', 'controls':'all', 'type':'image_id'},
 				}},
 			'_save':{'label':'', 'buttons':{

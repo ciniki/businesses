@@ -56,7 +56,7 @@ function ciniki_businesses_users() {
 				}},
 //			'_web':{'label':'Web Options', 'visible':'no', 'type':'simpleform', 'fields':{
 //				}},
-			'_image':{'label':'Image', 'fields':{
+			'_image':{'label':'Image', 'type':'imageform', 'fields':{
 				'employee-bio-image':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
 				}},
 			'_image_caption':{'label':'', 'visible':'no', 'fields':{
