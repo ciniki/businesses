@@ -123,7 +123,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	// Check for any modules which should have some settings loaded as well
 	//
 	$count = 0;
-	if( $mrc['stat'] == 'ok' ) {
+	if( $mrc['stat'] == 'ok' && isset($mrc['modules']) ) {
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQuery');
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 		foreach($mrc['modules'] as $i => $module) {
