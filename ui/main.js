@@ -379,9 +379,7 @@ function ciniki_businesses_main() {
 
 	this.start = function(cb, ap, aG) {
 		args = {};
-		if( aG != null ) {
-			args = eval(aG);
-		}
+		if( aG != null ) { args = eval(aG); }
 
 		//
 		// Create the app container if it doesn't exist, and clear it out
@@ -879,6 +877,41 @@ function ciniki_businesses_main() {
 			}
 		}
 
+        //
+        // Trade alerts
+        //
+		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
+            // Airlocks, 
+			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x01) > 0 ) {
+                // Owners/employees can add trade
+			    if( (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
+                    if( join > -1 ) {
+                        this.menu.sections[c].list.airlocktrade = {
+                            'label':'Airlock Trade', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Airlock Trade', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'}}};
+                    }
+                }
+                // Owners can manage airlocks
+			    if( (perms.owners != null || (M.userPerms&0x01) == 1) ) {
+                    if( join > -1 ) {
+                        this.menu.sections[c].list.airlocks = {
+                            'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                    }
+                }
+            }
+
+            // Trades
+			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0100) > 0 ) {
+            }
+        }
+
 		//
 		// The FATT certifications
 		//
@@ -1127,6 +1160,19 @@ function ciniki_businesses_main() {
 			this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
 		}
 
+		// Materia Medica
+		if( M.curBusiness.modules['ciniki.materiamedica'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.materiamedica = {
+					'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		// ATDO - Messages/Notes/FAQ
 		if( M.curBusiness.modules['ciniki.atdo'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
@@ -1195,19 +1241,6 @@ function ciniki_businesses_main() {
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Reseller', 'fn':'M.startApp(\'ciniki.reseller.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
-
-		// Materia Medica
-		if( M.curBusiness.modules['ciniki.materiamedica'] != null 
-			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
-			if( join > -1 ) {
-				this.menu.sections[c].list.materiamedica = {
-					'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
 
