@@ -887,11 +887,11 @@ function ciniki_businesses_main() {
 			    if( (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
                     if( join > -1 ) {
                         this.menu.sections[c].list.airlocktrade = {
-                            'label':'Airlock Trade', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'};
+                            'label':'Create Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'};
                         join++;
                     } else {
                         this.menu.sections[c++] = {'label':'', 'list':{
-                            '_':{'label':'Airlock Trade', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'}}};
+                            '_':{'label':'Create Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'}}};
                     }
                 }
                 // Owners can manage airlocks
