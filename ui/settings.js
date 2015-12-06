@@ -55,10 +55,10 @@ function ciniki_businesses_settings() {
 			this.menu.sections['']['list']['bugs'] = {'label':'Bug Tracker', 'fn':'M.startApp(\'ciniki.bugs.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 			this.menu.sections[''].list.permissions.visible = 'yes';
 		}
-		if( M.curBusiness.modules['ciniki.questions'] != null && (M.userPerms&0x01) == 0x01 ) {
-			this.menu.sections['']['list']['questions'] = {'label':'Questions', 'fn':'M.startApp(\'ciniki.questions.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
-			this.menu.sections[''].list.permissions.visible = 'yes';
-		}
+//		if( M.curBusiness.modules['ciniki.questions'] != null && (M.userPerms&0x01) == 0x01 ) {
+//			this.menu.sections['']['list']['questions'] = {'label':'Questions', 'fn':'M.startApp(\'ciniki.questions.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
+//			this.menu.sections[''].list.permissions.visible = 'yes';
+//		}
 		if( M.curBusiness.modules['ciniki.wineproduction'] != null ) {
 			this.menu.sections['']['list']['wineproduction'] = {'label':'Wine Production', 'fn':'M.startApp(\'ciniki.wineproduction.settings\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 			this.menu.sections[''].list.permissions.visible = 'yes';
@@ -91,6 +91,9 @@ function ciniki_businesses_settings() {
 //			if( (M.userPerms&0x01) == 0x01 ) {
 //				this.menu.sections['']['list']['mailtemplates'] = {'label':'Mail Templates', 'fn':'M.startApp(\'ciniki.mail.templates\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 //			}
+		}
+		if( M.curBusiness.modules['ciniki.sms'] != null ) {
+			this.menu.sections['']['list']['sms'] = {'label':'SMS', 'fn':'M.startApp(\'ciniki.sms.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
 			this.menu.sections['']['list']['backups'] = {'label':'Backups', 'fn':'M.startApp(\'ciniki.businesses.backups\', null, \'M.ciniki_businesses_settings.menu.show();\');'};

@@ -685,6 +685,49 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
+        //
+        // Trade alerts
+        //
+		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
+            // Airlocks, 
+			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x01) > 0 ) {
+                // Owners/employees can add trade
+			    if( (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
+                    if( join > -1 ) {
+                        this.menu.sections[c].list.airlocktrade = {
+                            'label':'Create Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Create Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'}}};
+                    }
+                }
+                // Owners can manage airlocks
+			    if( (perms.owners != null || (M.userPerms&0x01) == 1) ) {
+                    if( join > -1 ) {
+                        this.menu.sections[c].list.airlocks = {
+                            'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                    }
+                }
+            }
+
+            // Trades
+			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0100) > 0 ) {
+                if( join > -1 ) {
+                    this.menu.sections[c].list.tradealerts = {
+                        'label':'Trade Alerts', 'fn':'M.startApp(\'ciniki.tradealerts.subscriptions\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                    join++;
+                } else {
+                    this.menu.sections[c++] = {'label':'', 'list':{
+                        '_':{'label':'Trade Alerts', 'fn':'M.startApp(\'ciniki.tradealerts.subscriptions\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                }
+            }
+        }
+
 		if( M.curBusiness.modules['ciniki.calendars'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
 			var cal_dt = new Date();
@@ -876,41 +919,6 @@ function ciniki_businesses_main() {
 					'_':{'label':label, 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
-
-        //
-        // Trade alerts
-        //
-		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
-            // Airlocks, 
-			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x01) > 0 ) {
-                // Owners/employees can add trade
-			    if( (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
-                    if( join > -1 ) {
-                        this.menu.sections[c].list.airlocktrade = {
-                            'label':'Create Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'};
-                        join++;
-                    } else {
-                        this.menu.sections[c++] = {'label':'', 'list':{
-                            '_':{'label':'Create Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'}}};
-                    }
-                }
-                // Owners can manage airlocks
-			    if( (perms.owners != null || (M.userPerms&0x01) == 1) ) {
-                    if( join > -1 ) {
-                        this.menu.sections[c].list.airlocks = {
-                            'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'};
-                        join++;
-                    } else {
-                        this.menu.sections[c++] = {'label':'', 'list':{
-                            '_':{'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
-                    }
-                }
-            }
-
-            // Trades
-			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0100) > 0 ) {
-            }
-        }
 
 		//
 		// The FATT certifications
