@@ -74,6 +74,7 @@ function ciniki_businesses_backupList($ciniki) {
 			$backup_date->setTimezone(new DateTimeZone($intl_timezone));
 			$backups[] = array('backup'=>array(
 				'id'=>$file,
+                'ts'=>$backup_date->format('U'),
 				'name'=>$backup_date->format('M j, Y g:i a'),
 				));
 		}
@@ -81,8 +82,14 @@ function ciniki_businesses_backupList($ciniki) {
 	closedir($dh);
 
 	//
-	// FIXME: Add sort to backups array
+	// Sort the backup list in descending order so latest backup is at the top.
 	//
+    usort($backups, function($a, $b) {
+        if( $a['backup']['ts'] == $b['backup']['ts'] ) {
+            return 0;
+        }
+        return ($a['backup']['ts'] < $b['backup']['ts'])?1:-1;
+        });
 
 	return array('stat'=>'ok', 'backups'=>$backups);
 }
