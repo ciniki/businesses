@@ -685,6 +685,18 @@ function ciniki_businesses_main() {
 			c++;
 		}
 
+		// conference manager
+		if( M.curBusiness.modules['ciniki.conferences'] != null ) {
+            if( join > -1 ) {
+                this.menu.sections[c].list.conferences = {
+                    'label':'Conference Manager', 'fn':'M.startApp(\'ciniki.conferences.main\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                join++;
+            } else {
+                this.menu.sections[c++] = {'label':'', 'list':{
+                    '_':{'label':'Conference Manager', 'fn':'M.startApp(\'ciniki.conferences.main\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+            }
+        }
+
         //
         // Trade alerts
         //
