@@ -1109,6 +1109,20 @@ function ciniki_businesses_main() {
 			}
 		}
 
+		// Artist Profiles
+		if( M.curBusiness.modules['ciniki.artistprofiles'] != null 
+			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) 
+            ) { 
+            if( join > -1 ) {
+				this.menu.sections[c].list.artistprofiles = {
+					'label':'Artist Profiles', 'fn':'M.startApp(\'ciniki.artistprofiles.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+                join++;
+            } else {
+                this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Artist Profiles', 'fn':'M.startApp(\'ciniki.artistprofiles.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+            }
+		}
+
 		// Blog
 		if( M.curBusiness.modules['ciniki.blog'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
