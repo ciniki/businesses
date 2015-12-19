@@ -142,8 +142,8 @@ function ciniki_businesses_settings() {
 			if( M.curBusiness.modules['ciniki.products'] != null ) {
 				this.menu.sections['advanced']['list']['products'] = {'label':'Products', 'fn':'M.startApp(\'ciniki.products.types\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 			}
-			if( M.curBusiness.modules['ciniki.directory'] != null 
-				&& (M.curBusiness.modules['ciniki.directory'].flags&0x01) > 0
+			if( (M.curBusiness.modules['ciniki.directory'] != null && (M.curBusiness.modules['ciniki.directory'].flags&0x01) > 0)
+			    || (M.curBusiness.modules['ciniki.artistprofiles'] != null && (M.curBusiness.modules['ciniki.artistprofiles'].flags&0x01) > 0)
 				) {
 				this.menu.sections['advanced']['list']['apis'] = {'label':'Connected Services', 'fn':'M.startApp(\'ciniki.businesses.apis\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 			}

@@ -45,8 +45,8 @@ function ciniki_businesses_settingsAPIsGet($ciniki) {
 	//
 	// Check if dropbox should be allowed
 	//
-	if( isset($ciniki['business']['modules']['ciniki.directory']['flags'])
-		&& ($ciniki['business']['modules']['ciniki.directory']['flags']&0x01) > 0
+	if( (isset($ciniki['business']['modules']['ciniki.directory']['flags']) && ($ciniki['business']['modules']['ciniki.directory']['flags']&0x01) > 0)
+	    || (isset($ciniki['business']['modules']['ciniki.artistprofiles']['flags']) && ($ciniki['business']['modules']['ciniki.artistprofiles']['flags']&0x01) > 0)
 		) {
 		$csrf = base64_encode(openssl_random_pseudo_bytes(18));
 		$_SESSION['dropbox-csrf'] = $csrf;
