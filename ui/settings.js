@@ -120,10 +120,11 @@ function ciniki_businesses_settings() {
 			) {
 			this.menu.sections['']['list']['directory'] = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
-		if( M.curBusiness.modules['ciniki.artistprofiles'] != null 
-			&& (M.curBusiness.modules['ciniki.artistprofiles'].flags&0x01) > 0
-			) {
+		if( M.curBusiness.modules['ciniki.artistprofiles'] != null && (M.curBusiness.modules['ciniki.artistprofiles'].flags&0x01) > 0) {
 			this.menu.sections['']['list']['artistprofiles'] = {'label':'Artist Profiles', 'fn':'M.startApp(\'ciniki.artistprofiles.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
+		if( M.curBusiness.modules['ciniki.products'] != null && (M.curBusiness.modules['ciniki.products'].flags&0x0100) > 0) {
+			this.menu.sections['']['list']['products'] = {'label':'Products', 'fn':'M.startApp(\'ciniki.products.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.tutorials'] != null ) {
 			this.menu.sections['']['list']['tutorials'] = {'label':'Tutorials', 'fn':'M.startApp(\'ciniki.tutorials.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
