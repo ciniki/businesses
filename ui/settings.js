@@ -126,6 +126,9 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.products'] != null && (M.curBusiness.modules['ciniki.products'].flags&0x0100) > 0) {
 			this.menu.sections['']['list']['products'] = {'label':'Products', 'fn':'M.startApp(\'ciniki.products.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
+			this.menu.sections['']['list']['tradealerts'] = {'label':'Trade Alerts', 'fn':'M.startApp(\'ciniki.tradealerts.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		if( M.curBusiness.modules['ciniki.subscriptions'] != null ) {
 			this.menu.sections['']['list']['subscriptions'] = {'label':'Subscriptions', 'fn':'M.startApp(\'ciniki.subscriptions.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
