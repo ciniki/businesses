@@ -73,6 +73,8 @@ function ciniki_businesses_hooks_businessDetails($ciniki, $business_id, $args) {
 		if( $rc['stat'] == 'ok' ) {
 			// Remove the http from the url
 			$rsp['details']['contact-website-url'] = preg_replace('/http:\/\/www\./', '', $rc['url']);
+			$rsp['details']['domain-base-url'] = preg_replace('/http:\/\/www\./', '', $rc['url']);
+			$rsp['details']['ssl-domain-base-url'] = preg_replace('/https?\/\/www\./', '', $rc['secure_url']);
 		}
 	}
 	
