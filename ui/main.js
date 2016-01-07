@@ -1439,15 +1439,24 @@ function ciniki_businesses_main() {
 			}
 		}
 
-		if( M.curBusiness.modules['ciniki.campaigns'] != null ) {
+		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
 			if( join > -1 ) {
-				this.menu.sections[c].list.campaigns = {'label':'Campaigns', 'fn':'M.startApp(\'ciniki.campaigns.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				this.menu.sections[c].list.campaigns = {'label':'Campaigns', 'fn':'M.startApp(\'ciniki.tradealerts.campaigns\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Campaigns', 'fn':'M.startApp(\'ciniki.campaigns.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+					'_':{'label':'Campaigns', 'fn':'M.startApp(\'ciniki.tradealerts.campaigns\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+//		if( M.curBusiness.modules['ciniki.campaigns'] != null ) {
+//			if( join > -1 ) {
+//				this.menu.sections[c].list.campaigns = {'label':'Campaigns', 'fn':'M.startApp(\'ciniki.campaigns.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+//				join++;
+//			} else {
+//				this.menu.sections[c++] = {'label':'', 'list':{
+//					'_':{'label':'Campaigns', 'fn':'M.startApp(\'ciniki.campaigns.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+//			}
+//		}
 		if( M.curBusiness.modules['ciniki.mail'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
 			if( join > -1 ) {
@@ -1539,6 +1548,16 @@ function ciniki_businesses_main() {
 		}
 		if( M.curBusiness.modules['ciniki.landingpages'] != null 
 			&& (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
+            if( M.curBusiness.modules['ciniki.tradealerts'] != null 
+                && (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) { 
+                if( join > -1 ) {
+                    this.menu.sections[c].list.landingpages = {'label':'Landing Page Forms', 'fn':'M.startApp(\'ciniki.tradealerts.forms\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+                    join++;
+                } else {
+                    this.menu.sections[c++] = {'label':'', 'list':{
+                        '_':{'label':'Landing Page Forms', 'fn':'M.startApp(\'ciniki.tradealerts.forms\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+                }
+            }
 			if( join > -1 ) {
 				this.menu.sections[c].list.landingpages = {'label':'Landing Pages', 'fn':'M.startApp(\'ciniki.landingpages.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
