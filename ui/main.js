@@ -1439,7 +1439,7 @@ function ciniki_businesses_main() {
 			}
 		}
 
-		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
+		if( M.curBusiness.modules['ciniki.tradealerts'] != null && (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0200) > 0 ) {
 			if( join > -1 ) {
 				this.menu.sections[c].list.campaigns = {'label':'Campaigns', 'fn':'M.startApp(\'ciniki.tradealerts.campaigns\', null, \'M.ciniki_businesses_main.showMenu();\');'};
 				join++;
