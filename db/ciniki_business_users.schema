@@ -21,6 +21,7 @@
 #				salesreps - sales rep
 #				warehouse - warehouse staff, shippers, receivers
 #				marketing - access to social media, blogging, etc
+#               reseller - The reseller who has control over some things.
 # 
 # status:		0 - unknown
 # 				10 - active

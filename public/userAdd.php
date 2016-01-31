@@ -66,6 +66,9 @@ function ciniki_businesses_userAdd(&$ciniki) {
 				break;
 			}
 		}
+        if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 && $args['permission_group'] == 'resellers' ) {
+            $found = 'yes';
+        }
 		if( $found == 'no' ) {
 			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1841', 'msg'=>'Invalid permissions'));
 		}

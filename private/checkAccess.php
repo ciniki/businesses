@@ -112,6 +112,25 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
 		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
 	}
 
+    //
+    // The following methods are available to resellers
+    //
+	$reseller_methods = array(
+        'ciniki.businesses.getModules',
+	    'ciniki.businesses.updateModules',
+        'ciniki.businesses.getModuleFlags',
+	    'ciniki.businesses.updateModuleFlags',
+        'ciniki.businesses.domainAdd',
+	    'ciniki.businesses.domainGet',
+	    'ciniki.businesses.domainList',
+	    'ciniki.businesses.domainUpdate',
+        );
+	if( (in_array($method, $owner_methods) || in_array($method, $reseller_methods))
+        && in_array('resellers', $groups) 
+        ) {
+		return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
+	}
+
 	//
 	// Limit the functions the business owner has access to.  Any
 	// other methods will be denied access.

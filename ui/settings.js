@@ -95,7 +95,7 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.sms'] != null ) {
 			this.menu.sections['']['list']['sms'] = {'label':'SMS', 'fn':'M.startApp(\'ciniki.sms.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
-		if( M.curBusiness.modules['ciniki.artcatalog'] != null ) {
+		if( M.curBusiness.modules['ciniki.artcatalog'] != null && (M.curBusiness.modules['ciniki.businesses'].flags&0x020000) > 0 ) {
 			this.menu.sections['']['list']['backups'] = {'label':'Backups', 'fn':'M.startApp(\'ciniki.businesses.backups\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.donations'] != null ) {
@@ -141,8 +141,11 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.reseller'] != null ) {
 			this.menu.sections['']['list']['reseller'] = {'label':'Reseller', 'fn':'M.startApp(\'ciniki.reseller.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
-		
-		if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
+	
+        //
+        // Advaned options for Sysadmins or resellers
+        //
+		if( M.userID > 0 && ((M.userPerms&0x01) == 0x01 || M.curBusiness.permissions.resellers != null) ) {
 			//
 			// Setup the advanced section
 			//

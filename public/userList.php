@@ -61,6 +61,9 @@ function ciniki_businesses_userList($ciniki) {
 			}
 		}
 	}
+    if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
+        $rsp['permission_groups']['ciniki.resellers'] = array('name'=>'Resellers');
+    }
 
 	//
 	// Get the list of users who have access to this business
