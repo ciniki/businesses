@@ -95,7 +95,7 @@ function ciniki_businesses_settings() {
 		if( M.curBusiness.modules['ciniki.sms'] != null ) {
 			this.menu.sections['']['list']['sms'] = {'label':'SMS', 'fn':'M.startApp(\'ciniki.sms.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
-		if( M.curBusiness.modules['ciniki.artcatalog'] != null && (M.curBusiness.modules['ciniki.businesses'].flags&0x020000) > 0 ) {
+		if( M.curBusiness.modules['ciniki.artcatalog'] != null && M.modFlagSet('ciniki.businesses', 0x020000) == 'yes' ) {
 			this.menu.sections['']['list']['backups'] = {'label':'Backups', 'fn':'M.startApp(\'ciniki.businesses.backups\', null, \'M.ciniki_businesses_settings.menu.show();\');'};
 		}
 		if( M.curBusiness.modules['ciniki.donations'] != null ) {
