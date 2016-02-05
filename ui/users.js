@@ -56,13 +56,13 @@ function ciniki_businesses_users() {
 				}},
 //			'_web':{'label':'Web Options', 'visible':'no', 'type':'simpleform', 'fields':{
 //				}},
-			'_image':{'label':'Image', 'type':'imageform', 'fields':{
+			'_image':{'label':'Image', 'active':'no', 'type':'imageform', 'fields':{
 				'employee-bio-image':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
 				}},
-			'_image_caption':{'label':'', 'visible':'no', 'fields':{
+			'_image_caption':{'label':'', 'active':'no', 'fields':{
 				'employee-bio-image-caption':{'label':'Caption', 'type':'text'},
 				}},
-			'_content':{'label':'Biography', 'fields':{
+			'_content':{'label':'Biography', 'active':'no', 'fields':{
 				'employee-bio-content':{'label':'', 'hidelabel':'yes', 'hint':'', 'type':'textarea', 'size':'large'},
 				}},
 			'_buttons':{'label':'', 'buttons':{
@@ -201,10 +201,10 @@ function ciniki_businesses_users() {
 				}
 				var p = M.ciniki_businesses_users.edit;
 				if( M.curBusiness.modules['ciniki.web'] != null ) {
-					p.sections._image.visible = 'yes';
-					p.sections._content.visible = 'yes';
+					p.sections._image.active = 'yes';
+					p.sections._content.active = 'yes';
 					if( rsp.user['employee-bio-image-caption'] != null && rsp.user['employee-bio-image-caption'] != '' ) {
-						p.sections._image_caption.visible = 'yes';
+						p.sections._image_caption.active = 'yes';
 						p.sections._image_caption.fields['employee-bio-image-caption'].active = 'yes';
 					} else {
 						p.sections._image_caption.visible = 'no';
@@ -212,9 +212,9 @@ function ciniki_businesses_users() {
 					}
 				} else {
 		//			p.sections._web.visible = 'no';
-					p.sections._image.visible = 'no';
-					p.sections._image_caption.visible = 'no';
-					p.sections._content.visible = 'no';
+					p.sections._image.active = 'no';
+					p.sections._image_caption.active = 'no';
+					p.sections._content.active = 'no';
 				}
 				p.data = rsp.user;
 				p.refresh();
