@@ -738,6 +738,14 @@ function ciniki_businesses_main() {
                 // Owners can manage airlocks
 			    if( (perms.owners != null || (M.userPerms&0x01) == 1) ) {
                     if( join > -1 ) {
+                        this.menu.sections[c].list.airlocknotifications = {
+                            'label':'Approval Notifications', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'approve_notify_users\':\'yes\'});'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'approve_notify_users\':\'yes\'});'}}};
+                    }
+                    if( join > -1 ) {
                         this.menu.sections[c].list.airlocks = {
                             'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'};
                         join++;
