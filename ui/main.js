@@ -743,7 +743,7 @@ function ciniki_businesses_main() {
                         join++;
                     } else {
                         this.menu.sections[c++] = {'label':'', 'list':{
-                            '_':{'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'approve_notify_users\':\'yes\'});'}}};
+                            '_':{'label':'Approval Notifications', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'approve_notify_users\':\'yes\'});'}}};
                     }
                     if( join > -1 ) {
                         this.menu.sections[c].list.airlocks = {
