@@ -735,6 +735,16 @@ function ciniki_businesses_main() {
                             '_':{'label':'Create/Approve Alert', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'trade_id\':\'0\',\'airlock_id\':\'0\'});'}}};
                     }
                 }
+			    if( (perms.owners != null || (M.userPerms&0x01) == 1) ) {
+                    if( join > -1 ) {
+                        this.menu.sections[c].list.message = {
+                            'label':'Send Message', 'fn':'M.startApp(\'ciniki.tradealerts.messages\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'message_id\':\'0\'});'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Send Message', 'fn':'M.startApp(\'ciniki.tradealerts.messages\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'message_id\':\'0\'});'}}};
+                    }
+                }
                 // Owners can manage airlocks
 			    if( (perms.owners != null || (M.userPerms&0x01) == 1) ) {
                     if( join > -1 ) {
@@ -752,6 +762,14 @@ function ciniki_businesses_main() {
                     } else {
                         this.menu.sections[c++] = {'label':'', 'list':{
                             '_':{'label':'Airlocks', 'fn':'M.startApp(\'ciniki.tradealerts.airlocks\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                    }
+                    if( join > -1 ) {
+                        this.menu.sections[c].list.messages = {
+                            'label':'Messages', 'fn':'M.startApp(\'ciniki.tradealerts.messages\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                        join++;
+                    } else {
+                        this.menu.sections[c++] = {'label':'', 'list':{
+                            '_':{'label':'Messages', 'fn':'M.startApp(\'ciniki.tradealerts.messages\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
                     }
                 }
             }
