@@ -1677,14 +1677,12 @@ function ciniki_businesses_main() {
         //
         if( r.menu_items != null ) {
             for(var i in r.menu_items) {
-                console.log(r.menu_items[i]);
                 if( join > -1 ) {
                     this.menu.sections[c].list['item_' + i] = {'label':r.menu_items[i].label, 'fn':r.menu_items[i].fn};
                 } else {
                     this.menu.sections[c++] = {'label':'', 'list':{'_':{'label':r.menu_items[i].label, 'fn':r.menu_items[i].fn}}};
                 }
             }
-            console.log(this.menu.sections);
         }
 
 		//
