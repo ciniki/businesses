@@ -47,7 +47,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
 	//
 	// Setup the default return array
 	//
-	$rsp = array('stat'=>'ok', 'modules'=>array());
+	$rsp = array('stat'=>'ok', 'modules'=>array(), 'menu_items'=>array());
 
 	//
 	// Get the business name, and CSS
@@ -145,46 +145,17 @@ function ciniki_businesses_getUserSettings($ciniki) {
 				if( isset($rc['settings']) ) {
 					$rsp['settings'][$module['name']] = $rc['settings'];
 				}
+				if( isset($rc['menu_items']) ) {
+					$rsp['menu_items'] = array_merge($rsp['menu_items'], $rc['menu_items']);
+				}
 			}
 
 			//
 			// FIXME: Move these into settings files for each module
 			//
-//			if( $module['name'] == 'ciniki.artcatalog' ) {
-//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_artcatalog_settings', 'business_id', $args['business_id'], 'ciniki.artcatalog', 'settings', '');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.artcatalog'] = $rc['settings'];
-//				}
-//			}
-//			if( $module['name'] == 'ciniki.atdo' ) {
-//				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_atdo_settings', 'business_id', $args['business_id'], 'ciniki.atdo', 'settings', '');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.atdo'] = $rc['settings'];
-//				}
-//			}
-//			if( $module['name'] == 'ciniki.bugs' ) {
-//				$rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_bug_settings', 'business_id', $args['business_id'], 'ciniki.bugs', 'settings', '');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.bugs'] = $rc['settings'];
-//				} 
-//			}
-//			if( $module['name'] == 'ciniki.services' ) {
-//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_service_settings', 'business_id', $args['business_id'], 'ciniki.services', 'settings', '');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.services'] = $rc['settings'];
-//				} 
-//			}
-//			if( $module['name'] == 'ciniki.mail' ) {
-//				$rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_mail_settings', 'business_id', $args['business_id'], 'ciniki.mail', 'settings', 'mail');
-//				if( $rc['stat'] == 'ok' ) {
-//					$rsp['settings']['ciniki.mail'] = $rc['settings'];
-//				} 
-//			}
-//			if( $module['name'] == 'ciniki.exhibitions' ) {
-				if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
-					$rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
-				}
-//			}
+            if( isset($ciniki['config']['ciniki.web']['google.maps.api.key']) ) {
+                $rsp['settings']['googlemapsapikey'] = $ciniki['config']['ciniki.web']['google.maps.api.key'];
+            }
 			
 			//
 			// Check for any information required to display business menu

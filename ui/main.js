@@ -644,7 +644,6 @@ function ciniki_businesses_main() {
 				}
 //					'contacts':{'label':'Contacts', 
 //						'fn':'M.startApp(\'ciniki.exhibitions.participants\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'exhibition_id\':\'' + r.exhibitions[i].exhibition.id + '\',\'contacts\':\'yes\'});'},
-//				}};
 				c++;
 				join = 0;
 			}
@@ -1673,6 +1672,21 @@ function ciniki_businesses_main() {
 			this.menu.sections[c].as = 'yes';
 		}
 
+        //
+        // Check if their's other menu items to display
+        //
+        if( r.menu_items != null ) {
+            for(var i in r.menu_items) {
+                console.log(r.menu_items[i]);
+                if( join > -1 ) {
+                    this.menu.sections[c].list['item_' + i] = {'label':r.menu_items[i].label, 'fn':r.menu_items[i].fn};
+                } else {
+                    this.menu.sections[c++] = {'label':'', 'list':{'_':{'label':r.menu_items[i].label, 'fn':r.menu_items[i].fn}}};
+                }
+            }
+            console.log(this.menu.sections);
+        }
+
 		//
 		// Check if we should autoopen the submenu when there is only one menu item.
 		//
@@ -1714,7 +1728,8 @@ function ciniki_businesses_main() {
 		//
 //		if( M.device == 'ipad' && !window.navigator.standalone ) {
 //			this.menu.sections.addtohomescreen = {'label':'', 'list':{
-//				'add':{'label':'Download App', 'fn':'
+//				'add':{'label':'Download App', 'fn':''},
+//              }},
 //		}
 
 		// Set size of menu based on contents
