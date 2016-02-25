@@ -55,14 +55,14 @@ function ciniki_businesses_main() {
 				return true;
 			}
 			else if( this.sections[s].id == 'dealers' && value != '' ) {
-				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'dealer_status':'10'}, 
+				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'dealers':'yes'}, 
 					function(rsp) { 
 						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.customers); 
 					}); 
 				return true;
 			}
 			else if( this.sections[s].id == 'distributors' && value != '' ) {
-				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'distributor_status':'10'}, 
+				M.api.getJSONBgCb('ciniki.customers.searchQuick', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'distributors':'yes'}, 
 					function(rsp) { 
 						M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp.customers); 
 					}); 
