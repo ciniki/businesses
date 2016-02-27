@@ -691,6 +691,18 @@ function ciniki_businesses_main() {
 					'_':{'label':'Writing Catalog', 'fn':'M.startApp(\'ciniki.writingcatalog.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		// Patents Catalog
+		if( M.curBusiness.modules['ciniki.patents'] != null 
+			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
+            if( join > -1 ) {
+                this.menu.sections[c].list.patents = {
+                    'label':'Patents', 'fn':'M.startApp(\'ciniki.patents.main\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                join++;
+            } else {
+                this.menu.sections[c++] = {'label':'', 'list':{
+                    '_':{'label':'Patents', 'fn':'M.startApp(\'ciniki.patents.main\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+            }
+		}
 		// Wine production module, all owners, employees and wine production group
 		if( M.curBusiness.modules['ciniki.wineproduction'] != null 
 			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
