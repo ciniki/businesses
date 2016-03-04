@@ -961,7 +961,7 @@ function ciniki_businesses_main() {
 			}
 		}
 		// Dealers
-		if( M.curBusiness.modules['ciniki.customers'] != null 
+/*		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x10) > 0 
 			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
 			var label = 'Dealers';
@@ -981,10 +981,10 @@ function ciniki_businesses_main() {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':label, 'fn':'M.startApp(\'ciniki.customers.dealers\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
-		}
+		} */
 
 		// Distributors
-		if( M.curBusiness.modules['ciniki.customers'] != null 
+/*		if( M.curBusiness.modules['ciniki.customers'] != null 
 			&& (M.curBusiness.modules['ciniki.customers'].flags&0x100) > 0 
 			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
 			var label = 'Distributors';
@@ -1004,7 +1004,7 @@ function ciniki_businesses_main() {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':label, 'fn':'M.startApp(\'ciniki.customers.distributors\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
-		}
+		}*/
 
 		//
 		// The FATT certifications
