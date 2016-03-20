@@ -2,6 +2,9 @@
 //
 // Description
 // -----------
+//
+// DEPRECATED - This functionality should now be done via getUserSettings.
+//
 // This method will return the list of modules the user has access to and are turned on for the business.
 // The UI can use this to decide what menu items to display.
 //

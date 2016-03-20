@@ -584,20 +584,21 @@ function ciniki_businesses_main() {
 		//
 		this.showMenuFinish(rsp, 'yes');
 	};
-	
+
+    //
+    // This function is called upon return from opening a main menu item
+    //
 	this.showMenu = function() {
-		// FIXME: Remove, no longer needed (ACTUALLY still used on return)
-		//
-		// Get the modules enabled for the business, along with message counts, etc.
-		//
-		var r = M.api.getJSONCb('ciniki.businesses.getUserModules', 
-			{'business_id':M.curBusiness.id}, function(r) {
-				if( r.stat != 'ok' ) {
-					M.api.err(r);
-					return false;
-				}
-				M.ciniki_businesses_main.showMenuFinish(r, 'no');
-		});
+        //
+        // Get the list of modules (along with other information that's not required)
+        //
+		M.api.getJSONCb('ciniki.businesses.getUserSettings', {'business_id':M.curBusinessID}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            M.ciniki_businesses_main.openBusinessFinish(rsp, 'no');
+        });
 	}
 
 	this.showMenuFinish = function(r, autoopen) {
