@@ -14,7 +14,7 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_getActiveModules($ciniki, $business_id) {
+function ciniki_businesses_hooks_getActiveModules($ciniki, $business_id, $args) {
 	//
 	// Check if the module is enabled for this business, don't really care about the ruleset
 	//

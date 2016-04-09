@@ -58,6 +58,7 @@ function ciniki_businesses_intlSettings(&$ciniki, $business_id) {
 	} else {
 		if( !isset($ciniki['business']['settings']['intl-default-locale']) ) {
 			$ciniki['business']['settings']['intl-default-locale'] = $rc['settings']['intl-default-locale'];
+            $ciniki['business']['settings']['intl-default-currency-fmt'] = numfmt_create($rc['settings']['intl-default-locale'], NumberFormatter::CURRENCY);
 		}
 		if( !isset($ciniki['business']['settings']['intl-default-currency']) ) {
 			$ciniki['business']['settings']['intl-default-currency'] = $rc['settings']['intl-default-currency'];
