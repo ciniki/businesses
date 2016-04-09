@@ -1034,11 +1034,11 @@ function ciniki_businesses_main() {
 			if( (M.curBusiness.modules['ciniki.fatt'].flags&0x01) > 0 ) {
 				if( join > -1 ) {
 					this.menu.sections[c].list.fattofferings = {
-						'label':'Devices', 'fn':'M.startApp(\'ciniki.fatt.devices\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+						'label':'AEDs', 'fn':'M.startApp(\'ciniki.fatt.aeds\',null,\'M.ciniki_businesses_main.showMenu();\');'};
 					join++;
 				} else {
 					this.menu.sections[c++] = {'label':'', 'list':{
-						'_':{'label':'Devices', 'fn':'M.startApp(\'ciniki.fatt.devices\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+						'_':{'label':'AEDs', 'fn':'M.startApp(\'ciniki.fatt.aeds\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
 				}
 			}
 		}
