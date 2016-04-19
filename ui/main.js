@@ -797,6 +797,17 @@ function ciniki_businesses_main() {
                         '_':{'label':'Trade Alerts', 'fn':'M.startApp(\'ciniki.tradealerts.subscriptions\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
                 }
             }
+            // Referrers
+			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0400) > 0 ) {
+                if( join > -1 ) {
+                    this.menu.sections[c].list.tradealerts = {
+                        'label':'Referrers', 'fn':'M.startApp(\'ciniki.tradealerts.referrers\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                    join++;
+                } else {
+                    this.menu.sections[c++] = {'label':'', 'list':{
+                        '_':{'label':'Referrers', 'fn':'M.startApp(\'ciniki.tradealerts.referrers\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                }
+            }
         }
 
 		if( M.curBusiness.modules['ciniki.calendars'] != null 
