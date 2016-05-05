@@ -43,7 +43,7 @@ function ciniki_businesses_hooks_storageDir(&$ciniki, $business_id, $args) {
 			return $rc;
 		}
 		if( !isset($rc['business']) ) {
-			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1495', 'msg'=>'Unable to get business details'));
+			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'3373', 'msg'=>'Unable to get business details'));
 		}
 
 		$business_uuid = $rc['business']['uuid'];
@@ -64,7 +64,7 @@ function ciniki_businesses_hooks_storageDir(&$ciniki, $business_id, $args) {
 			$ciniki['business']['settings']['storage_dir'] = $storage_dir;
 		}
 	} else {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1596', 'msg'=>'Unable to get business storage directory'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'3374', 'msg'=>'Unable to get business storage directory'));
 	}
 
 	return array('stat'=>'ok', 'storage_dir'=>$storage_dir);
