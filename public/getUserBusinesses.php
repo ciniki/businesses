@@ -41,6 +41,13 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	if( ($ciniki['session']['user']['perms'] & 0x01) == 0x01 ) {
+        //
+        // Check if there is a debug file of action to do on login
+        //
+        if( file_exists($ciniki['config']['ciniki.core']['root_dir'] . '/loginactions.js') ) {
+            $login_actions = file_get_contents($ciniki['config']['ciniki.core']['root_dir'] . '/loginactions.js'); 
+        }
+
 		$strsql = "SELECT ciniki_businesses.category, "
 			. "ciniki_businesses.id, "
 			. "ciniki_businesses.name "
@@ -54,6 +61,11 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 			array('container'=>'businesses', 'fname'=>'id', 'name'=>'business',
 				'fields'=>array('id', 'name')),
 			));
+
+        if( isset($login_actions) && $login_actions != '' ) {
+            $rc['loginActions'] = $login_actions;
+        }
+
 		return $rc;
 	} else {
 		$strsql = "SELECT DISTINCT ciniki_businesses.id, name "
@@ -72,10 +84,14 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
 //			. "AND ciniki_business_users.business_id = ciniki_businesses.id "
 //			. "AND ciniki_businesses.status < 60 "	// Allow suspended businesses to be listed, so user can login and update billing/unsuspend
 //			. "ORDER BY ciniki_businesses.name ";
-	}
+    }
 
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
-	return ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'businesses', 'business', array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'66', 'msg'=>'No businesses found')));
+	$rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'businesses', 'business', array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'66', 'msg'=>'No businesses found')));
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
 
+    return $rc;
 }
 ?>
