@@ -1293,6 +1293,19 @@ function ciniki_businesses_main() {
 			}
 		}
 
+		// Herbalist
+		if( M.curBusiness.modules['ciniki.herbalist'] != null 
+			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.herbalist = {
+					'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		// ATDO - Messages/Notes/FAQ
 		if( M.curBusiness.modules['ciniki.atdo'] != null 
 			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
