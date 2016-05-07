@@ -1741,21 +1741,28 @@ function ciniki_businesses_main() {
 		if( M.curBusiness.modules['ciniki.atdo'] != null && M.curBusiness.atdo != null
 			&& M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != null 
 			&& M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != ''
-			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
-			var rsp = M.api.getJSON('ciniki.atdo.tasksList', {'business_id':M.curBusiness.id,
-				'category':M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID], 'assigned':'yes'});
-			if( rsp.stat != 'ok' ) {
-				M.api.err(rsp);
-				return false;
-			}
-			if( rsp.categories[0] != null && rsp.categories[0].category != null ) {
-				this.menu.data._tasks = rsp.categories[0].category.tasks;
-				this.menu.sections._tasks = {'label':'Tasks', 'type':'simplegrid', 'num_cols':3,
-					'headerValues':['', 'Task', 'Due'],
-					'cellClasses':['multiline aligncenter', 'multiline', 'multiline'],
-					'noData':'No tasks found',
-					};
-			}
+			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) 
+            ) {
+            this.menu.data._tasks = {};
+            this.menu.sections._tasks = {'label':'Tasks', 'visible':'hidden', 'type':'simplegrid', 'num_cols':3,
+                'headerValues':['', 'Task', 'Due'],
+                'cellClasses':['multiline aligncenter', 'multiline', 'multiline'],
+                'noData':'No tasks found',
+                };
+			M.api.getJSONCb('ciniki.atdo.tasksList', {'business_id':M.curBusiness.id,
+				'category':M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID], 'assigned':'yes', 'status':'open'},
+                function(rsp) {
+                    if( rsp.stat != 'ok' ) {
+                        M.api.err(rsp);
+                        return false;
+                    }
+                    var p = M.ciniki_businesses_main.menu;
+                    if( rsp.categories[0] != null && rsp.categories[0].category != null ) {
+                        p.data._tasks = rsp.categories[0].category.tasks;
+                        p.sections._tasks.visible = 'yes';
+                        p.refreshSection('_tasks');
+                    }
+                });
 		}
 
 		//
