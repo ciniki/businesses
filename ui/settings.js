@@ -174,6 +174,8 @@ function ciniki_businesses_settings() {
 				'fixhistory':{'label':'Fix History', 'fn':'M.ciniki_businesses_settings.fixallhistory();'},
 				'checkimages':{'label':'Check Image Storage', 'fn':'M.ciniki_businesses_settings.checkimagestorage("no");'},
 				'checkimagesclean':{'label':'Check Image Storage & Clean DB', 'fn':'M.ciniki_businesses_settings.checkimagestorage("yes");'},
+				'moveproductfiles':{'label':'Check Product Files', 'fn':'M.ciniki_businesses_settings.moveproductstorage("no");'},
+				'moveproductfilesclean':{'label':'Check Product Files & Clean DB', 'fn':'M.ciniki_businesses_settings.moveproductstorage("yes");'},
 //				'fixhistory':{'label':'Fix History', 'fn':'M.startApp(\'ciniki.businesses.fixhistory\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
 				}};
 			if( M.curBusiness.modules['ciniki.artclub'] != null ) {
@@ -301,6 +303,15 @@ function ciniki_businesses_settings() {
                 return false;
             }
             alert('All images in storage');        
+        });
+	};
+	this.moveproductstorage = function(clear) {
+		M.api.getJSONCb('ciniki.products.dbMoveFileStorage', {'business_id':M.curBusinessID, 'clear':clear}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            alert('All files in storage');        
         });
 	};
 }
