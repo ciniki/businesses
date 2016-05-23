@@ -120,6 +120,9 @@ function ciniki_businesses_settings() {
 			) {
 			this.menu.sections['']['list']['directory'] = {'label':'Directory', 'fn':'M.startApp(\'ciniki.directory.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
+		if( M.curBusiness.modules['ciniki.herbalist'] != null ) {
+			this.menu.sections['']['list']['herbalist'] = {'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
+		}
 		if( M.curBusiness.modules['ciniki.artistprofiles'] != null && (M.curBusiness.modules['ciniki.artistprofiles'].flags&0x01) > 0) {
 			this.menu.sections['']['list']['artistprofiles'] = {'label':'Artist Profiles', 'fn':'M.startApp(\'ciniki.artistprofiles.settings\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
 		}
