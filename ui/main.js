@@ -719,7 +719,7 @@ function ciniki_businesses_main() {
 		}
 
 		// conference manager
-		if( M.curBusiness.modules['ciniki.conferences'] != null ) {
+		if( M.modOn('ciniki.conferences') ) {
             if( join > -1 ) {
                 this.menu.sections[c].list.conferences = {
                     'label':'Conference Manager', 'fn':'M.startApp(\'ciniki.conferences.main\',null,\'M.ciniki_businesses_main.showMenu();\');'};
@@ -733,9 +733,9 @@ function ciniki_businesses_main() {
         //
         // Trade alerts
         //
-		if( M.curBusiness.modules['ciniki.tradealerts'] != null ) {
+        if( M.modOn('ciniki.tradealerts') ) {
             // Airlocks, 
-			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x01) > 0 ) {
+            if( M.modFlagOn('ciniki.tradealerts', 0x01) ) {
                 // Owners/employees can add trade
 			    if( (perms.owners != null || perms.employees != null || (M.userPerms&0x01) == 1) ) {
                     if( join > -1 ) {
@@ -787,7 +787,7 @@ function ciniki_businesses_main() {
             }
 
             // Trades
-			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0100) > 0 ) {
+            if( M.modFlagOn('ciniki.tradealerts', 0x0100) ) {
                 if( join > -1 ) {
                     this.menu.sections[c].list.tradealerts = {
                         'label':'Trade Alerts', 'fn':'M.startApp(\'ciniki.tradealerts.subscriptions\',null,\'M.ciniki_businesses_main.showMenu();\');'};
@@ -798,7 +798,7 @@ function ciniki_businesses_main() {
                 }
             }
             // Referrers
-			if( (M.curBusiness.modules['ciniki.tradealerts'].flags&0x0400) > 0 ) {
+            if( M.modFlagOn('ciniki.tradealerts', 0x0400) ) {
                 if( join > -1 ) {
                     this.menu.sections[c].list.tradealerts = {
                         'label':'Referrers', 'fn':'M.startApp(\'ciniki.tradealerts.referrers\',null,\'M.ciniki_businesses_main.showMenu();\');'};
@@ -806,6 +806,17 @@ function ciniki_businesses_main() {
                 } else {
                     this.menu.sections[c++] = {'label':'', 'list':{
                         '_':{'label':'Referrers', 'fn':'M.startApp(\'ciniki.tradealerts.referrers\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                }
+            }
+            // Coupons
+            if( M.modFlagOn('ciniki.tradealerts', 0x1000) ) {
+                if( join > -1 ) {
+                    this.menu.sections[c].list.tradealerts = {
+                        'label':'Coupons', 'fn':'M.startApp(\'ciniki.tradealerts.coupons\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                    join++;
+                } else {
+                    this.menu.sections[c++] = {'label':'', 'list':{
+                        '_':{'label':'Coupons', 'fn':'M.startApp(\'ciniki.tradealerts.coupons\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
                 }
             }
         }
