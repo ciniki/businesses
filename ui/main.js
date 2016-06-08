@@ -1661,7 +1661,7 @@ function ciniki_businesses_main() {
             if( M.curBusiness.modules['ciniki.tradealerts'] != null 
                 && (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) { 
                 if( join > -1 ) {
-                    this.menu.sections[c].list.landingpages = {'label':'Landing Page Forms', 'fn':'M.startApp(\'ciniki.tradealerts.forms\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+                    this.menu.sections[c].list.landingpagesforms = {'label':'Landing Page Forms', 'fn':'M.startApp(\'ciniki.tradealerts.forms\', null, \'M.ciniki_businesses_main.showMenu();\');'};
                     join++;
                 } else {
                     this.menu.sections[c++] = {'label':'', 'list':{
