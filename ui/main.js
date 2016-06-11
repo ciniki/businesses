@@ -652,6 +652,18 @@ function ciniki_businesses_main() {
 				this.menu.sections[c] = {'label':'Menu', 'list':{}};
 			}
 		}
+		// Herbalist
+		if( M.modOn('ciniki.herbalist') ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.herbalist = {
+					'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
+
 		// Art Catalog
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null 
 			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
@@ -1301,19 +1313,6 @@ function ciniki_businesses_main() {
 			} else {
 				this.menu.sections[c++] = {'label':'', 'list':{
 					'_':{'label':'Materia Medica', 'fn':'M.startApp(\'ciniki.materiamedica.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
-			}
-		}
-
-		// Herbalist
-		if( M.curBusiness.modules['ciniki.herbalist'] != null 
-			&& (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) {
-			if( join > -1 ) {
-				this.menu.sections[c].list.herbalist = {
-					'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
-				join++;
-			} else {
-				this.menu.sections[c++] = {'label':'', 'list':{
-					'_':{'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
 
