@@ -446,18 +446,22 @@ function ciniki_businesses_main() {
 		//
 		// If both callbacks are null, then this is the root of the menu system
 		//
+        M.menuHome = this.menu;
 		if( cb == null ) {
 			// 
 			// Add the buttons required on home menu
 			//
-			this.menu.addButton('account', 'Account', 'M.startApp(\'ciniki.users.main\',null,\'M.ciniki_businesses_main.menu.show();\');');
+			this.menu.addButton('account', 'Account', 'M.startApp(\'ciniki.users.main\',null,\'M.home();\');');
 			this.menu.addLeftButton('logout', 'Logout', 'M.logout();');
 			if( M.userID > 0 && (M.userPerms&0x01) == 0x01 ) {
-				this.menu.addLeftButton('sysadmin', 'Admin', 'M.startApp(\'ciniki.sysadmin.main\',null,\'M.menuHome.show();\');');
+				this.menu.addLeftButton('sysadmin', 'Admin', 'M.startApp(\'ciniki.sysadmin.main\',null,\'M.home();\');');
 			}
-			M.menuHome = this.menu;
+//			M.menuHome = this.menu;
 		} else {
 			this.menu.addClose('Back');
+            if( typeof(Storage) !== 'undefined' ) {
+                localStorage.setItem("lastBusinessID", M.curBusinessID);
+            }
 		}
 		this.menu.cb = cb;
 
