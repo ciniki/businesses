@@ -667,6 +667,17 @@ function ciniki_businesses_main() {
 					'_':{'label':'Herbalist', 'fn':'M.startApp(\'ciniki.herbalist.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
 			}
 		}
+		// QNI
+		if( M.modOn('ciniki.qni') ) {
+			if( join > -1 ) {
+				this.menu.sections[c].list.qni = {
+					'label':'QNI', 'fn':'M.startApp(\'ciniki.qni.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+				join++;
+			} else {
+				this.menu.sections[c++] = {'label':'', 'list':{
+					'_':{'label':'QNI', 'fn':'M.startApp(\'ciniki.qni.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+			}
+		}
 
 		// Art Catalog
 		if( M.curBusiness.modules['ciniki.artcatalog'] != null 
