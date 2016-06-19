@@ -6,7 +6,7 @@
 //
 // Arguments
 // ---------
-// user_id: 		The user making the request
+// user_id:         The user making the request
 // 
 // Returns
 // -------
@@ -36,46 +36,46 @@ function ciniki_businesses_directoryCategoryDelete($ciniki) {
         return $rc;
     }   
 
-	//  
-	// Turn off autocommit
-	//  
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionStart');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionRollback');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDelete');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
-	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
-	if( $rc['stat'] != 'ok' ) { 
-		return $rc;
-	}   
+    //  
+    // Turn off autocommit
+    //  
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionStart');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionRollback');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDelete');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    if( $rc['stat'] != 'ok' ) { 
+        return $rc;
+    }   
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectDelete');
-	$rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.business.directory_category', $args['category_id'], NULL, 0x04);
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	
-	//
-	// Get the entries for this category
-	//
-	$strsql = "SELECT id, uuid "
-		. "FROM ciniki_business_directory_category_entries "
-		. "WHERE category_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "";
-		
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectDelete');
+    $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.business.directory_category', $args['category_id'], NULL, 0x04);
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    
+    //
+    // Get the entries for this category
+    //
+    $strsql = "SELECT id, uuid "
+        . "FROM ciniki_business_directory_category_entries "
+        . "WHERE category_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "";
+        
 
 
 
-	//
-	// Commit the database changes
-	//
+    //
+    // Commit the database changes
+    //
     $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
 
-	return array('stat'=>'ok');
+    return array('stat'=>'ok');
 }
 ?>

@@ -9,63 +9,63 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:			The ID of the business to get the details for.
-// keys:				The comma delimited list of keys to lookup values for.
+// business_id:         The ID of the business to get the details for.
+// keys:                The comma delimited list of keys to lookup values for.
 //
 // Returns
 // -------
 // <details>
-//		<business name='' tagline='' />
+//      <business name='' tagline='' />
 // </details>
 //
 function ciniki_businesses_hooks_cacheDir(&$ciniki, $business_id, $args) {
-	$rsp = array('stat'=>'ok', 'details'=>array());
+    $rsp = array('stat'=>'ok', 'details'=>array());
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
 
-	//
-	// Determine the business_id
-	//
-	if( $business_id == 0 ) {
-		$cache_dir = $ciniki['config']['ciniki.core']['cache_dir'] 
-			. '/0/00000000-0000-0000-0000-000000000000' ;
-	}
-	elseif( isset($ciniki['business']['settings']['cache_dir']) ) {
-		return array('stat'=>'ok', 'cache_dir'=>$ciniki['business']['settings']['cache_dir']);
-	}
-	elseif( $business_id > 0 ) {
-		$strsql = "SELECT uuid FROM ciniki_businesses "
-			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
-		$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
-		if( $rc['stat'] != 'ok' ) {
-			return $rc;
-		}
-		if( !isset($rc['business']) ) {
-			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1495', 'msg'=>'Unable to get business details'));
-		}
+    //
+    // Determine the business_id
+    //
+    if( $business_id == 0 ) {
+        $cache_dir = $ciniki['config']['ciniki.core']['cache_dir'] 
+            . '/0/00000000-0000-0000-0000-000000000000' ;
+    }
+    elseif( isset($ciniki['business']['settings']['cache_dir']) ) {
+        return array('stat'=>'ok', 'cache_dir'=>$ciniki['business']['settings']['cache_dir']);
+    }
+    elseif( $business_id > 0 ) {
+        $strsql = "SELECT uuid FROM ciniki_businesses "
+            . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
+        $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+        if( $rc['stat'] != 'ok' ) {
+            return $rc;
+        }
+        if( !isset($rc['business']) ) {
+            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1495', 'msg'=>'Unable to get business details'));
+        }
 
-		$business_uuid = $rc['business']['uuid'];
+        $business_uuid = $rc['business']['uuid'];
 
-		$cache_dir = $ciniki['config']['ciniki.core']['cache_dir'] . '/' 
-			. $business_uuid[0] . '/' . $business_uuid;
+        $cache_dir = $ciniki['config']['ciniki.core']['cache_dir'] . '/' 
+            . $business_uuid[0] . '/' . $business_uuid;
 
-		//
-		// Save settings in $ciniki cache for faster access
-		//
-		if( !isset($ciniki['business']) ) {
-			$ciniki['business'] = array('settings'=>array('cache_dir'=>$cache_dir));
-		} 
-		elseif( !isset($ciniki['business']['settings']) ) {
-			$ciniki['business']['settings'] = array('cache_dir'=>$cache_dir);
-		} 
-		else {
-			$ciniki['business']['settings']['cache_dir'] = $cache_dir;
-		}
-	} else {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1596', 'msg'=>'Unable to get business cache directory'));
-	}
+        //
+        // Save settings in $ciniki cache for faster access
+        //
+        if( !isset($ciniki['business']) ) {
+            $ciniki['business'] = array('settings'=>array('cache_dir'=>$cache_dir));
+        } 
+        elseif( !isset($ciniki['business']['settings']) ) {
+            $ciniki['business']['settings'] = array('cache_dir'=>$cache_dir);
+        } 
+        else {
+            $ciniki['business']['settings']['cache_dir'] = $cache_dir;
+        }
+    } else {
+        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1596', 'msg'=>'Unable to get business cache directory'));
+    }
 
-	return array('stat'=>'ok', 'cache_dir'=>$cache_dir);
+    return array('stat'=>'ok', 'cache_dir'=>$cache_dir);
 }
 ?>

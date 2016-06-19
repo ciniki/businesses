@@ -9,83 +9,83 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id: 			The ID of the business to lock.
+// business_id:             The ID of the business to lock.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
 function ciniki_businesses_syncInfo($ciniki) {
-	//
-	// Find all the required and optional arguments
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
-	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-		));
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	$args = $rc['args'];
+    //
+    // Find all the required and optional arguments
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
+    $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
+        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        ));
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $args = $rc['args'];
 
-	//
-	// Check access 
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-	$rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncInfo');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
+    //
+    // Check access 
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
+    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncInfo');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'datetimeFormat');
-	$datetime_format = ciniki_users_datetimeFormat($ciniki);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'datetimeFormat');
+    $datetime_format = ciniki_users_datetimeFormat($ciniki);
 
-	//
-	// Get the local business information
-	//
-	$strsql = "SELECT uuid "
-		. "FROM ciniki_businesses "
-		. "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
-		. "";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	if( !isset($rc['business']) ) {	
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'523', 'msg'=>'Unable to get business information'));
-	}
-	$uuid = $rc['business']['uuid'];
+    //
+    // Get the local business information
+    //
+    $strsql = "SELECT uuid "
+        . "FROM ciniki_businesses "
+        . "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
+        . "";
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    if( !isset($rc['business']) ) { 
+        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'523', 'msg'=>'Unable to get business information'));
+    }
+    $uuid = $rc['business']['uuid'];
 
-	//
-	// Get the list of syncs setup for this business
-	//
-	$strsql = "SELECT id, business_id, flags, flags AS type, status, status AS status_text, "
-		. "remote_name, remote_url, remote_uuid, "
-		. "IFNULL(DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_sync, "
-		. "IFNULL(DATE_FORMAT(last_partial, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_partial, "
-		. "IFNULL(DATE_FORMAT(last_full, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_full "
-		. "FROM ciniki_business_syncs "
-		. "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
-		. "ORDER BY remote_name "
-		. "";
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
-		array('container'=>'syncs', 'fname'=>'id', 'name'=>'sync',
-			'fields'=>array('id', 'business_id', 'flags', 'type', 'status', 'status_text', 'remote_name', 'remote_url', 'remote_uuid',
-				'last_sync', 'last_partial', 'last_full'),
-			'maps'=>array('status_text'=>array('10'=>'Active', '60'=>'Suspended'),
-				'type'=>array('1'=>'Push', '2'=>'Pull', '3'=>'Bi'))),
-		));
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	if( !isset($rc['syncs']) ) {
-		$syncs = array();
-	} else {
-		$syncs = $rc['syncs'];
-	}
-	
-	return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$syncs);
+    //
+    // Get the list of syncs setup for this business
+    //
+    $strsql = "SELECT id, business_id, flags, flags AS type, status, status AS status_text, "
+        . "remote_name, remote_url, remote_uuid, "
+        . "IFNULL(DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_sync, "
+        . "IFNULL(DATE_FORMAT(last_partial, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_partial, "
+        . "IFNULL(DATE_FORMAT(last_full, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_full "
+        . "FROM ciniki_business_syncs "
+        . "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
+        . "ORDER BY remote_name "
+        . "";
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
+    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+        array('container'=>'syncs', 'fname'=>'id', 'name'=>'sync',
+            'fields'=>array('id', 'business_id', 'flags', 'type', 'status', 'status_text', 'remote_name', 'remote_url', 'remote_uuid',
+                'last_sync', 'last_partial', 'last_full'),
+            'maps'=>array('status_text'=>array('10'=>'Active', '60'=>'Suspended'),
+                'type'=>array('1'=>'Push', '2'=>'Pull', '3'=>'Bi'))),
+        ));
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    if( !isset($rc['syncs']) ) {
+        $syncs = array();
+    } else {
+        $syncs = $rc['syncs'];
+    }
+    
+    return array('stat'=>'ok', 'name'=>$ciniki['config']['core']['sync.name'], 'uuid'=>$uuid, 'local_url'=>$ciniki['config']['core']['sync.url'], 'syncs'=>$syncs);
 }
 ?>

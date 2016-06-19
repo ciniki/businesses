@@ -5,55 +5,55 @@
 # 
 # Fields
 # ------
-# id:					The unique ID given to each transaction log entered.
-# business_id: 			The id of the business the transaction was for.  This is 
-#						the business the customer is paying for in ciniki.
+# id:                   The unique ID given to each transaction log entered.
+# business_id:          The id of the business the transaction was for.  This is 
+#                       the business the customer is paying for in ciniki.
 #
-# status:				0 - unknown
-#						1 - Processed
-#						2 - Unrecognized transaction
+# status:               0 - unknown
+#                       1 - Processed
+#                       2 - Unrecognized transaction
 #
-# txn_type:				The transaction type from paypal.
-# subscr_id:			The paypal subscriber ID.
-# first_name:			The paypal first name.
-# last_name:			The paypal last name.
-# payer_id:				The paypal payer_id.
-# payer_email:			The paypal payer_email.
-# item_name:			The item_name, which should be master business name - users business - business UUID
-# item_number:			The UUID of the business being subscribed to.
-# mc_currency:			The currency of the transaction (USD, CAD, etc)
-# mc_fee:				The paypal processing fee.
-# mc_gross:				The gross amount collected from the user, includes paypal_fee (mc_fee).  Net amount
-#						collectedis mc_gross - mc_fee.
-# mc_amount3:			The amount of subscription as specified at paypal.
-#					
-# serialized_args:		The serialized version of $ciniki['request']['args'] that came from paypal.
+# txn_type:             The transaction type from paypal.
+# subscr_id:            The paypal subscriber ID.
+# first_name:           The paypal first name.
+# last_name:            The paypal last name.
+# payer_id:             The paypal payer_id.
+# payer_email:          The paypal payer_email.
+# item_name:            The item_name, which should be master business name - users business - business UUID
+# item_number:          The UUID of the business being subscribed to.
+# mc_currency:          The currency of the transaction (USD, CAD, etc)
+# mc_fee:               The paypal processing fee.
+# mc_gross:             The gross amount collected from the user, includes paypal_fee (mc_fee).  Net amount
+#                       collectedis mc_gross - mc_fee.
+# mc_amount3:           The amount of subscription as specified at paypal.
+#                   
+# serialized_args:      The serialized version of $ciniki['request']['args'] that came from paypal.
 #
-# notes:				Any notes entered by a sysadmin.  Used when manual intervention required.
+# notes:                Any notes entered by a sysadmin.  Used when manual intervention required.
 #
-# date_added:			The UTC date and time the record was created.
-# last_updated:			The UTC date and time the record was last updated.  This happens when status changes, or notes added.
+# date_added:           The UTC date and time the record was created.
+# last_updated:         The UTC date and time the record was last updated.  This happens when status changes, or notes added.
 # 
 create table ciniki_business_paypal_log (
-	id int not null auto_increment,
-	business_id int not null,
-	status tinyint unsigned not null,
-	txn_type varchar(100) not null,
-	subscr_id varchar(100) not null,
-	first_name varchar(100) not null,
-	last_name varchar(100) not null,
-	payer_id varchar(100) not null,
-	payer_email varchar(250) not null,
-	item_name varchar(250) not null,
-	item_number varchar(250) not null,
-	mc_currency varchar(20) not null,
-	mc_fee varchar(20) not null,
-	mc_gross varchar(20) not null,
-	mc_amount3 varchar(100) not null,
-	serialized_args varchar(2500) not null,
-	notes varchar(2000) not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	primary key (id),
-	index (business_id, date_added)
+    id int not null auto_increment,
+    business_id int not null,
+    status tinyint unsigned not null,
+    txn_type varchar(100) not null,
+    subscr_id varchar(100) not null,
+    first_name varchar(100) not null,
+    last_name varchar(100) not null,
+    payer_id varchar(100) not null,
+    payer_email varchar(250) not null,
+    item_name varchar(250) not null,
+    item_number varchar(250) not null,
+    mc_currency varchar(20) not null,
+    mc_fee varchar(20) not null,
+    mc_gross varchar(20) not null,
+    mc_amount3 varchar(100) not null,
+    serialized_args varchar(2500) not null,
+    notes varchar(2000) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    index (business_id, date_added)
 ) ENGINE=InnoDB, COMMENT='v1.01';

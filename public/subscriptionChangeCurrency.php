@@ -7,7 +7,7 @@
 //
 // Arguments
 // ---------
-// user_id: 		The user making the request
+// user_id:         The user making the request
 // 
 // Returns
 // -------
@@ -36,81 +36,81 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
         return $rc;
     }   
 
-	//
-	// Check which currency
-	//
-	if( $args['currency'] != 'USD' 
-		&& $args['currency'] != 'CAD'
-		) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'676', 'msg'=>'Currency must be USD or CAD.'));
-	}
+    //
+    // Check which currency
+    //
+    if( $args['currency'] != 'USD' 
+        && $args['currency'] != 'CAD'
+        ) {
+        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'676', 'msg'=>'Currency must be USD or CAD.'));
+    }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
-	//
-	// Get the billing information from the subscription table
-	//
-	$strsql = "SELECT id, status, currency, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount "
-		. "FROM ciniki_business_subscriptions "
-		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "";
+    //
+    // Get the billing information from the subscription table
+    //
+    $strsql = "SELECT id, status, currency, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount "
+        . "FROM ciniki_business_subscriptions "
+        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "";
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	if( !isset($rc['subscription']) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'677', 'msg'=>'Unable to change currency'));
-	} 
-	$subscription = $rc['subscription'];
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    if( !isset($rc['subscription']) ) {
+        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'677', 'msg'=>'Unable to change currency'));
+    } 
+    $subscription = $rc['subscription'];
 
-	if( $rc['subscription']['currency'] == $args['currency'] ) {
-		return array('stat'=>'ok');
-	}
+    if( $rc['subscription']['currency'] == $args['currency'] ) {
+        return array('stat'=>'ok');
+    }
 
-	//
-	// If active subscription, then update at paypal will be required
-	//
-	if( $rc['subscription']['status'] == 10 ) {
-		$strsql = "UPDATE ciniki_business_subscriptions "
-			. "SET currency = '" . ciniki_core_dbQuote($ciniki, $args['currency']) . "' "
-			. ", status = 1 "
-			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
-			. "";
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
-		if( $rc['stat'] != 'ok' ) {
-			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'678', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
-		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-			2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
-		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-			2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '1');
-		return $rc;
-	}
+    //
+    // If active subscription, then update at paypal will be required
+    //
+    if( $rc['subscription']['status'] == 10 ) {
+        $strsql = "UPDATE ciniki_business_subscriptions "
+            . "SET currency = '" . ciniki_core_dbQuote($ciniki, $args['currency']) . "' "
+            . ", status = 1 "
+            . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
+            . "";
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+        $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+        if( $rc['stat'] != 'ok' ) {
+            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'678', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
+        }
+        ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+            2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
+        ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+            2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '1');
+        return $rc;
+    }
 
-	//
-	// If already pending update required, don't change status
-	//
-	elseif( $rc['subscription']['status'] == 1 || $rc['subscription']['status'] == 2 || $rc['subscription']['status'] == 60 ) {
-		$strsql = "UPDATE ciniki_business_subscriptions "
-			. "SET currency = '" . ciniki_core_dbQuote($ciniki, $args['currency']) . "' "
-			. "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
-			. "";
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-		$rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
-		if( $rc['stat'] != 'ok' ) {
-			return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'679', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
-		}
-		ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-			2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
-		return $rc;
-	}
+    //
+    // If already pending update required, don't change status
+    //
+    elseif( $rc['subscription']['status'] == 1 || $rc['subscription']['status'] == 2 || $rc['subscription']['status'] == 60 ) {
+        $strsql = "UPDATE ciniki_business_subscriptions "
+            . "SET currency = '" . ciniki_core_dbQuote($ciniki, $args['currency']) . "' "
+            . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
+            . "";
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+        $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+        if( $rc['stat'] != 'ok' ) {
+            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'679', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
+        }
+        ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+            2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
+        return $rc;
+    }
 
-	//
-	// Get the history
-	//
+    //
+    // Get the history
+    //
 
-	return array('stat'=>'ok');
+    return array('stat'=>'ok');
 }
 ?>

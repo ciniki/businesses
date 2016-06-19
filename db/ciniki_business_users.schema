@@ -5,47 +5,47 @@
 # 
 # Fields
 # ------
-# id:			The unique ID for this business_user.
-# uuid:			The Univeral Unique ID.
-# business_id: 	The ID of the business.
+# id:           The unique ID for this business_user.
+# uuid:         The Univeral Unique ID.
+# business_id:  The ID of the business.
 #
-# user_id:		The ID of the user.
-# eid:			The external id of the user if linked to other business systems.
+# user_id:      The ID of the user.
+# eid:          The external id of the user if linked to other business systems.
 #
-# package:		The package the user is part of, default 'ciniki'.
+# package:      The package the user is part of, default 'ciniki'.
 #
-# permission_group:		The group the user is a part of. (owners, employees), future roles (sysadmin, accountant, assistant, etc)
+# permission_group:     The group the user is a part of. (owners, employees), future roles (sysadmin, accountant, assistant, etc)
 #
-#				owners - complete access to business database and all information
-#				employees - reduced set of permssions
-#				salesreps - sales rep
-#				warehouse - warehouse staff, shippers, receivers
-#				marketing - access to social media, blogging, etc
+#               owners - complete access to business database and all information
+#               employees - reduced set of permssions
+#               salesreps - sales rep
+#               warehouse - warehouse staff, shippers, receivers
+#               marketing - access to social media, blogging, etc
 #               reseller - The reseller who has control over some things.
 # 
-# status:		0 - unknown
-# 				10 - active
-#				20 - locked **future**
-#				60 - deleted
+# status:       0 - unknown
+#               10 - active
+#               20 - locked **future**
+#               60 - deleted
 #
-# date_added:	The date and time the record was created.
+# date_added:   The date and time the record was created.
 # 
-# last_updated:	The date and time the record was last updated.
+# last_updated: The date and time the record was last updated.
 #
-# last_login: 	The date and time the user last logged into the admin section.
+# last_login:   The date and time the user last logged into the admin section.
 #
 create table ciniki_business_users (
-	id int not null auto_increment,
-	uuid char(36) not null,
-	business_id int not null,
-	user_id int not null,
-	eid varchar(50) not null,
-	package varchar(50) not null,
-	permission_group varchar(50) not null,
-	status tinyint unsigned not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	last_login datetime not null,
-	primary key (id),
-	unique index (business_id, user_id, package, permission_group)
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    user_id int not null,
+    eid varchar(50) not null,
+    package varchar(50) not null,
+    permission_group varchar(50) not null,
+    status tinyint unsigned not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    last_login datetime not null,
+    primary key (id),
+    unique index (business_id, user_id, package, permission_group)
 ) ENGINE=InnoDB, COMMENT='v1.06';
