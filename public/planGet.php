@@ -6,7 +6,7 @@
 //
 // Arguments
 // ---------
-// user_id: 		The user making the request
+// user_id:         The user making the request
 // 
 // Returns
 // -------
@@ -35,23 +35,23 @@ function ciniki_businesses_planGet($ciniki) {
         return $rc;
     }   
 
-	$strsql = "SELECT ciniki_business_plans.id, uuid, name, flags, sequence, "
-		. "monthly, modules, trial_days, description, "
-		. "date_added, last_updated "
-		. "FROM ciniki_business_plans "
-		. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-		. "AND ciniki_business_plans.id = '" . ciniki_core_dbQuote($ciniki, $args['plan_id']) . "' "
-		. "";
-	
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'plan');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	if( !isset($rc['plan']) ) {
-		return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'667', 'msg'=>'Unable to find plan'));
-	}
+    $strsql = "SELECT ciniki_business_plans.id, uuid, name, flags, sequence, "
+        . "monthly, modules, trial_days, description, "
+        . "date_added, last_updated "
+        . "FROM ciniki_business_plans "
+        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND ciniki_business_plans.id = '" . ciniki_core_dbQuote($ciniki, $args['plan_id']) . "' "
+        . "";
+    
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'plan');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    if( !isset($rc['plan']) ) {
+        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'667', 'msg'=>'Unable to find plan'));
+    }
 
-	return array('stat'=>'ok', 'plan'=>$rc['plan']);
+    return array('stat'=>'ok', 'plan'=>$rc['plan']);
 }
 ?>

@@ -5,38 +5,38 @@
 #
 # Fields
 # ------
-# id:			The unique ID given to the plan.
-# uuid:			The universal unique ID for the plan.
-# business_id:	The business ID the plan is attached to, should be master business. In future will be 
-#				available for other businesses.
-# name:			The name for the plan, shown on signup page.
-# flags:		The options for the plan.  Some plans are private, and only available for sysadmins to enable.
-#						
-#				0x01 - Public, available on the signup page
+# id:           The unique ID given to the plan.
+# uuid:         The universal unique ID for the plan.
+# business_id:  The business ID the plan is attached to, should be master business. In future will be 
+#               available for other businesses.
+# name:         The name for the plan, shown on signup page.
+# flags:        The options for the plan.  Some plans are private, and only available for sysadmins to enable.
+#                       
+#               0x01 - Public, available on the signup page
 #
-# sequence:		The order the plans will show up in the website.
+# sequence:     The order the plans will show up in the website.
 #
-# description:	The public description of the plan, what's available with it, etc.
-# monthly:		The monthly cost of the plan.
-# modules:		The modules that will be enabled when the plan is activated, comma delimited.
-# trial_days:	The length in days the free trial should last.
-# date_added:	The UTC date and time the plan was added to the database.
-# last_updated:	The UTC date and time the plan was last updated.
+# description:  The public description of the plan, what's available with it, etc.
+# monthly:      The monthly cost of the plan.
+# modules:      The modules that will be enabled when the plan is activated, comma delimited.
+# trial_days:   The length in days the free trial should last.
+# date_added:   The UTC date and time the plan was added to the database.
+# last_updated: The UTC date and time the plan was last updated.
 # 
 create table ciniki_business_plans (
-	id int not null auto_increment,
-	uuid char(36) not null,
-	business_id int not null,
-	name varchar(150) not null,
-	flags tinyint unsigned not null,
-	sequence tinyint unsigned not null,
-	monthly decimal(10,2) not null,
-	modules varchar(250) not null,
-	trial_days int not null,
-	description varchar(6000) not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	primary key(id),
-	unique index (uuid),
-	index (business_id)
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    name varchar(150) not null,
+    flags tinyint unsigned not null,
+    sequence tinyint unsigned not null,
+    monthly decimal(10,2) not null,
+    modules varchar(250) not null,
+    trial_days int not null,
+    description varchar(6000) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key(id),
+    unique index (uuid),
+    index (business_id)
 ) ENGINE=InnoDB, COMMENT='v1.02';

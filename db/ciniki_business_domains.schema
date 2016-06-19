@@ -8,53 +8,53 @@
 #
 # Fields
 # ------
-# id:				The database id of the domain.
-# business_id:		The business the domain is part of.
-# domain:			The domain name OR the sitename.  The type determines how the
-#					domain is used when looking up websites. 
+# id:               The database id of the domain.
+# business_id:      The business the domain is part of.
+# domain:           The domain name OR the sitename.  The type determines how the
+#                   domain is used when looking up websites. 
 #
-#					This field is not unique in the database, as a domain could
-#					have a status deleted with one business and active with another.
+#                   This field is not unique in the database, as a domain could
+#                   have a status deleted with one business and active with another.
 #
-#					The domain must be unique within the database, because it is used to lookup a business.
+#                   The domain must be unique within the database, because it is used to lookup a business.
 #
-# flags: 			
-#					0x01 - The domain is a fully qualified domain.
-#					0x02 - Designate this site as primary *future*
-#					0x04 - The domain is registed here *future*
-#					0x08 - subdomain (this domain is a subdomain of another *future*)
+# flags:            
+#                   0x01 - The domain is a fully qualified domain.
+#                   0x02 - Designate this site as primary *future*
+#                   0x04 - The domain is registed here *future*
+#                   0x08 - subdomain (this domain is a subdomain of another *future*)
 #
-# status: 			The current status of the domain.
-#					0 - unknown
-#					1 - active
-#					10 - api only, no web hosting *future*
-#					20 - expired
-#					50 - suspended
-#					60 - deleted
+# status:           The current status of the domain.
+#                   0 - unknown
+#                   1 - active
+#                   10 - api only, no web hosting *future*
+#                   20 - expired
+#                   50 - suspended
+#                   60 - deleted
 #
-# root_id:			The parent root domain if not this one.  If this
-#					record is a sub domain, then this points to the
-#					root domain if hosted here. (not used currently)
+# root_id:          The parent root domain if not this one.  If this
+#                   record is a sub domain, then this points to the
+#                   root domain if hosted here. (not used currently)
 #
-# expiry_date:		The date the domain is set to expire, used for tracking renewals.
+# expiry_date:      The date the domain is set to expire, used for tracking renewals.
 #
-# managed_by:		Who is managing the registration and DNS.
+# managed_by:       Who is managing the registration and DNS.
 #
-# date_added:		The UTC date and time the domain was added to the table.
-# last_updated:		The UTC date and time the domain was last updated.
+# date_added:       The UTC date and time the domain was added to the table.
+# last_updated:     The UTC date and time the domain was last updated.
 #
 create table ciniki_business_domains (
-	id int not null auto_increment,
-	business_id int not null,
-	domain varchar(255) not null,
-	flags tinyint unsigned not null,
-	status tinyint unsigned not null,
-	root_id int not null,
-	expiry_date date not null,
-	managed_by varchar(100) not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	primary key (id),
-	index(business_id),
-	unique index (domain)
+    id int not null auto_increment,
+    business_id int not null,
+    domain varchar(255) not null,
+    flags tinyint unsigned not null,
+    status tinyint unsigned not null,
+    root_id int not null,
+    expiry_date date not null,
+    managed_by varchar(100) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    index(business_id),
+    unique index (domain)
 ) ENGINE=InnoDB, COMMENT='v1.03';

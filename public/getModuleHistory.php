@@ -14,45 +14,45 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:			The ID of the business to get the details for.
-// key:					The detail key to get the history for.
+// business_id:         The ID of the business to get the details for.
+// key:                 The detail key to get the history for.
 //
 // Returns
 // -------
-//	<history>
-//		<action date="2011/02/03 00:03:00" value="Value field set to" user_id="1" />
-//		...
-//	</history>
-//	<users>
-//		<user id="1" name="users.display_name" />
-//		...
-//	</users>
+//  <history>
+//      <action date="2011/02/03 00:03:00" value="Value field set to" user_id="1" />
+//      ...
+//  </history>
+//  <users>
+//      <user id="1" name="users.display_name" />
+//      ...
+//  </users>
 //
 function ciniki_businesses_getModuleHistory($ciniki) {
-	//
-	// Find all the required and optional arguments
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
-	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-		'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Field'), 
-		));
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	$args = $rc['args'];
-	
-	//
-	// Check access to business_id as owner, or sys admin
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-	$ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getModuleHistory');
-	if( $ac['stat'] != 'ok' ) {
-		return $ac;
-	}
+    //
+    // Find all the required and optional arguments
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
+    $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
+        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Field'), 
+        ));
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $args = $rc['args'];
+    
+    //
+    // Check access to business_id as owner, or sys admin
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
+    $ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getModuleHistory');
+    if( $ac['stat'] != 'ok' ) {
+        return $ac;
+    }
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
-	return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-		'ciniki_business_modules', $args['field'], 'status');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
+    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+        'ciniki_business_modules', $args['field'], 'status');
 }
 ?>

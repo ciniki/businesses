@@ -12,20 +12,20 @@
 # 
 # Fields
 # ------
-# sync_id:				The ID of the syncronization the uuidmap is for.
+# sync_id:              The ID of the syncronization the uuidmap is for.
 #
-# table_name:			The table name for the uuid map.
+# table_name:           The table name for the uuid map.
 #
-# remote_uuid:			The remote uuid which will be changed to the local_uuid when inserting.
+# remote_uuid:          The remote uuid which will be changed to the local_uuid when inserting.
 #
-# local_id:				The local_id which should be substituted for the remote_uuid when
-#						inserted into this server.
+# local_id:             The local_id which should be substituted for the remote_uuid when
+#                       inserted into this server.
 #
 create table ciniki_business_sync_uuidmaps (
-	sync_id int not null,
-	table_name varchar(150) not null,
-	remote_uuid char(36) not null,
-	local_id char(36) not null,
-	primary key (sync_id, table_name, remote_uuid),
-	unique index (sync_id, table_name, local_id)
+    sync_id int not null,
+    table_name varchar(150) not null,
+    remote_uuid char(36) not null,
+    local_id char(36) not null,
+    primary key (sync_id, table_name, remote_uuid),
+    unique index (sync_id, table_name, local_id)
 ) ENGINE=InnoDB, COMMENT='v1.01';
