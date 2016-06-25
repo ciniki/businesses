@@ -873,7 +873,7 @@ function ciniki_businesses_main() {
         //
         // Order management menu
         //
-        if( M.modOn('ciniki.sapos') && M.modFlagAny('ciniki.sapos', 0x60) // Order or Shipping enabled
+        if( M.modOn('ciniki.sapos') && M.modFlagAny('ciniki.sapos', 0x60) == 'yes' // Order or Shipping enabled
             && (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1)) {
             this.menu.sections[c] = {'label':'', 'id':'sapos_orders', 'searchlabel':'Orders', 'type':'livesearchgrid', 
                 'livesearchcols':5, 'hint':'',
