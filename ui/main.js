@@ -845,6 +845,17 @@ function ciniki_businesses_main() {
                         '_':{'label':'Coupons', 'fn':'M.startApp(\'ciniki.tradealerts.coupons\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
                 }
             }
+            // Reinvites
+            if( M.modFlagOn('ciniki.tradealerts', 0x2000) ) {
+                if( join > -1 ) {
+                    this.menu.sections[c].list.tradealerts = {
+                        'label':'Re-Invites', 'fn':'M.startApp(\'ciniki.tradealerts.reinvites\',null,\'M.ciniki_businesses_main.showMenu();\');'};
+                    join++;
+                } else {
+                    this.menu.sections[c++] = {'label':'', 'list':{
+                        '_':{'label':'Re-Invites', 'fn':'M.startApp(\'ciniki.tradealerts.reinvites\',null,\'M.ciniki_businesses_main.showMenu();\');'}}};
+                }
+            }
         }
 
         if( M.curBusiness.modules['ciniki.calendars'] != null 
