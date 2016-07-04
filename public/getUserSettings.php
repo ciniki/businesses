@@ -104,7 +104,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
     // FIXME: Add check to see which groups the user is part of, and only hand back the module list
     //        for what they have access to.
     //
-    $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags "
+    $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, (flags&0xFFFFFFFF) as flags, (flags&0xFFFFFFFF00000000)>>32 as flags2 "
         . "FROM ciniki_business_modules "
         . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
         . "AND (status = 1 OR status = 2) " // Added or mandatory
@@ -112,7 +112,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
     $mrc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.businesses', array(
         array('container'=>'modules', 'fname'=>'name',
-            'fields'=>array('name', 'package', 'module', 'flags')),
+            'fields'=>array('name', 'package', 'module', 'flags', 'flags2')),
         ));
     if( $mrc['stat'] != 'ok' ) {
         return $mrc;

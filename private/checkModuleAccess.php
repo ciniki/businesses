@@ -22,7 +22,7 @@ function ciniki_businesses_checkModuleAccess(&$ciniki, $business_id, $package, $
         . "ciniki_business_modules.status AS module_status, "
         . "ciniki_business_modules.package, ciniki_business_modules.module, "
         . "CONCAT_WS('.', ciniki_business_modules.package, ciniki_business_modules.module) AS module_id, "
-        . "flags, ruleset "
+        . "(flags&0xFFFFFFFF) as flags, (flags&0xFFFFFFFF00000000)>>32 as flags2, ruleset "
         . "FROM ciniki_businesses, ciniki_business_modules "
         . "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
         . "AND ciniki_businesses.id = ciniki_business_modules.business_id "

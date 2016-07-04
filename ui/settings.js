@@ -4,18 +4,12 @@
 //
 function ciniki_businesses_settings() {
 
-    this.init = function() {
-        this.menu = new M.panel('Business Settings',
-            'ciniki_businesses_settings', 'menu',
-            'mc', 'narrow', 'sectioned', 'ciniki.businesses.settings.menu');
-        this.menu.addClose('Back');
-    }
+    this.menu = new M.panel('Business Settings', 'ciniki_businesses_settings', 'menu', 'mc', 'narrow', 'sectioned', 'ciniki.businesses.settings.menu');
+    this.menu.addClose('Back');
 
     this.start = function(cb, ap, aG) {
         args = {};
-        if( aG != null ) {
-            args = eval(aG);
-        }
+        if( aG != null ) { args = eval(aG); }
 
         //
         // Create the app container if it doesn't exist, and clear it out
@@ -36,7 +30,7 @@ function ciniki_businesses_settings() {
         // Setup the Business Settings 
         //
         this.menu.sections = {
-            '':{'label':'', 'list':{
+            '':{'label':'', 'aside':'yes', 'list':{
                 'info':{'label':'Business Info', 'fn':'M.startApp(\'ciniki.businesses.info\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
 //              'logo':{'label':'Business Logo', 'fn':'M.startApp(\'ciniki.businesses.logo\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
                 'users':{'label':'Owners & Employees', 'fn':'M.startApp(\'ciniki.businesses.users\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
@@ -166,6 +160,7 @@ function ciniki_businesses_settings() {
                 ) {
                 this.menu.sections['advanced']['list']['apis'] = {'label':'Connected Services', 'fn':'M.startApp(\'ciniki.businesses.apis\',null,\'M.ciniki_businesses_settings.menu.show();\');'};
             }
+            this.menu.size = 'narrow narrowaside';
 
             this.menu.sections['admin'] = {'label':'Admin', 'list':{
                 'modules':{'label':'Modules', 'fn':'M.startApp(\'ciniki.businesses.modules\', null, \'M.ciniki_businesses_settings.menu.show();\');'},
