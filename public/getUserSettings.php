@@ -104,7 +104,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
     // FIXME: Add check to see which groups the user is part of, and only hand back the module list
     //        for what they have access to.
     //
-    $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, (flags&0xFFFFFFFF) as flags, (flags&0xFFFFFFFF00000000)>>32 as flags2 "
+    $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags, flags>>32 as flags2 "
         . "FROM ciniki_business_modules "
         . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
         . "AND (status = 1 OR status = 2) " // Added or mandatory
