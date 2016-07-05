@@ -1365,11 +1365,11 @@ function ciniki_businesses_main() {
         }
         if( M.modOn('ciniki.jiji') && (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) { 
             if( join > -1 ) {
-                this.menu.sections[c].list.jiji = {'label':'Jiji', 'fn':'M.startApp(\'ciniki.jiji.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+                this.menu.sections[c].list.jiji = {'label':'Buy/Sell', 'fn':'M.startApp(\'ciniki.jiji.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
                 join++;
             } else {
                 this.menu.sections[c++] = {'label':'', 'list':{
-                    '_':{'label':'Jiji', 'fn':'M.startApp(\'ciniki.jiji.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+                    '_':{'label':'Buy/Sell', 'fn':'M.startApp(\'ciniki.jiji.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
             }
         }
         // Check if the remaining sections should be joined together as one section
