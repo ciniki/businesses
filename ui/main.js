@@ -1363,6 +1363,15 @@ function ciniki_businesses_main() {
                     '_':{'label':'Workshops', 'fn':'M.startApp(\'ciniki.workshops.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
             }
         }
+        if( M.modOn('ciniki.jiji') && (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) { 
+            if( join > -1 ) {
+                this.menu.sections[c].list.jiji = {'label':'Jiji', 'fn':'M.startApp(\'ciniki.jiji.main\', null, \'M.ciniki_businesses_main.showMenu();\');'};
+                join++;
+            } else {
+                this.menu.sections[c++] = {'label':'', 'list':{
+                    '_':{'label':'Jiji', 'fn':'M.startApp(\'ciniki.jiji.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
+            }
+        }
         // Check if the remaining sections should be joined together as one section
         // to balance the menu
         if( c > 4 && join < 0 ) {
