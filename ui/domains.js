@@ -5,6 +5,7 @@ function ciniki_businesses_domains() {
     
     this.domainFlags = {
         '1':{'name':'Primary'},
+        '5':{'name':'Force SSL'},
         };
     this.domainStatus = {
         '1':'Active',
