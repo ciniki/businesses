@@ -472,14 +472,13 @@ function ciniki_businesses_main() {
         // 
         // Get the list of owners and employees for the business
         //
-        M.api.getJSONCb('ciniki.businesses.getUserSettings', 
-            {'business_id':M.curBusinessID}, function(rsp) {
-                if( rsp.stat != 'ok' ) {
-                    M.api.err(rsp);
-                    return false;
-                }
-                M.ciniki_businesses_main.openBusinessFinish(rsp);
-            });
+        M.api.getJSONCb('ciniki.businesses.getUserSettings', {'business_id':M.curBusinessID}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            M.ciniki_businesses_main.openBusinessFinish(rsp);
+        });
     }
 
     this.openBusinessFinish = function(rsp) {
@@ -1149,6 +1148,13 @@ function ciniki_businesses_main() {
             }
         }
 
+        // Check if the remaining sections should be joined together as one section
+        // to balance the menu
+        if( c > 4 && join < 0 ) {
+            join = 0;
+            this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+        }
+
         // Artist Profiles
         if( M.modOn('ciniki.artistprofiles') && (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) ) { 
             if( join > -1 ) {
@@ -1159,6 +1165,13 @@ function ciniki_businesses_main() {
                 this.menu.sections[c++] = {'label':'', 'list':{
                     '_':{'label':'Artist Profiles', 'fn':'M.startApp(\'ciniki.artistprofiles.main\', null, \'M.ciniki_businesses_main.showMenu();\');'}}};
             }
+        }
+
+        // Check if the remaining sections should be joined together as one section
+        // to balance the menu
+        if( c > 4 && join < 0 ) {
+            join = 0;
+            this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
         }
 
         // Blog
@@ -1183,6 +1196,13 @@ function ciniki_businesses_main() {
             }
         }
 
+        // Check if the remaining sections should be joined together as one section
+        // to balance the menu
+        if( c > 4 && join < 0 ) {
+            join = 0;
+            this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+        }
+
         //
         // Members
         //
@@ -1194,6 +1214,13 @@ function ciniki_businesses_main() {
                 this.menu.sections[c++] = {'label':'', 'list':{
                     '_':{'label':'Members Only', 'fn':'M.startApp(\'ciniki.membersonly.pages\', null, \'M.ciniki_businesses_main.showMenu();\',\'mc\',{});'}}};
             }
+        }
+
+        // Check if the remaining sections should be joined together as one section
+        // to balance the menu
+        if( c > 4 && join < 0 ) {
+            join = 0;
+            this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
         }
 
         // Exhibitions
