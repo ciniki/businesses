@@ -40,6 +40,7 @@ function ciniki_businesses_getUserPermissions(&$ciniki, $business_id) {
     if( in_array('owners', $groups) ) { $perms |= 0x01; }
     if( in_array('employees', $groups) ) { $perms |= 0x02; }
     if( in_array('salesreps', $groups) ) { $perms |= 0x04; }
+    if( in_array('resellers', $groups) ) { $perms |= 0x100; }
     $ciniki['business']['user']['perms'] = $perms;
 
     //
