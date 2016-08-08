@@ -20,87 +20,90 @@ function ciniki_businesses_billing() {
         '10':'Monthly',
         '20':'Yearly',
     };
-    this.init = function() {
-        this.menu = new M.panel('Billing',
-            'ciniki_businesses_billing', 'menu',
-            'mc', 'medium', 'sectioned', 'ciniki.businesses.billing.menu');
-        this.menu.data = {};
-        this.menu.sections = {
-            'subscription':{'label':'Subscription', 'type':'simplelist', 'list':{
-                'status_text':{'label':'Status'},
-                'currency':{'label':'Currency'},
-                'monthly':{'label':'Monthly Amount'},
-                'yearly':{'label':'Yearly Amount'},
-                'trial':{'label':'Trial remaining'},
-                'last_payment_date':{'label':'Last Payment'},
-                }},
-            '_edit':{'label':'', 'visible':'no', 'buttons':{
-                'edit':{'label':'Edit Plan', 'fn':'M.ciniki_businesses_billing.showEdit(\'M.ciniki_businesses_billing.showMenu();\');'},
-                }},
-            '_paypal_button':{'label':'', 'visible':'no', 'buttons':{
-                'subscribe':{'label':'Subscribe', 'fn':'paypal_form.submit();'},
-                }},
-            '_paypal':{'label':'', 'type':'html', 'visible':'no'},
-            '_paypal_cancel':{'label':'', 'type':'html', 'visible':'no'},
-            '_cancel_button':{'label':'', 'visible':'no', 'buttons':{
-                'cancel':{'label':'Cancel Subscription', 'fn':'M.ciniki_businesses_billing.cancelSubscription();'},
-                }},
-        };
-        this.menu.noData = function(s) { return 'No subscriptions added'; }
-        // this.menu.sectionData = function(s) { return this.data[s]; }
-        this.menu.listLabel = function(s, i, d) { return d.label; }
-        this.menu.listValue = function(s, i, d) {
-            if( s == 'subscription' ) {
-                // You can only change the currency during the trial, before entering subcription information.
-                if( i == 'currency' && (this.data.subscription.status == 2 || this.data.subscription.status == 60) ) {
-                    if( this.data.subscription.currency == 'USD' ) {
-                        return 'USD (Switch to <a href="javascript:M.ciniki_businesses_billing.changeCurrency(\'CAD\');">CAD</a>)';
-                    } else if( this.data.subscription.currency == 'CAD' ) {
-                        return 'CAD (Switch to <a href="javascript:M.ciniki_businesses_billing.changeCurrency(\'USD\');">USD</a>)';
-                    }
-                }
-                switch (i) {
-                    case 'monthly': return '$' + this.data.subscription.monthly + '/month';
-                    case 'trial': return this.data.subscription.trial_remaining + ' days';
-                }
-                return this.data.subscription[i];
-            }
-        };
-        this.menu.addClose('Back');
 
-        //
-        // Edit form for sysadmins to change the billing
-        //
-        this.edit = new M.panel('Edit Billing',
-            'ciniki_businesses_billing', 'edit',
-            'mc', 'medium', 'sectioned', 'ciniki.businesses.billing.edit');
-        this.edit.data = null;
-        this.edit.sections = {
-            'subscription':{'label':'Subscription', 'fields':{
-                'status':{'label':'Status', 'type':'select', 'options':this.statusOptions},
-                'currency':{'label':'Currency', 'type':'text', 'size':'small'},
-                'monthly':{'label':'Monthly', 'type':'text', 'size':'small'},
-                'yearly':{'label':'Yearly', 'type':'text', 'size':'small'},
-                'payment_type':{'label':'Type', 'type':'toggle', 'toggles':this.paymentTypes},
-                'payment_frequency':{'label':'Frequency', 'type':'toggle', 'toggles':this.paymentFrequencies},
-                'last_payment_date':{'label':'Last Payment', 'type':'text', 'size':'medium'},
-                'paid_until':{'label':'Paid Until', 'type':'date', 'size':'small'},
-                }},
-            '_trial':{'label':'Trial', 'fields':{
-                'trial_start_date':{'label':'Start', 'type':'date', 'size':'small'},
-                'trial_days':{'label':'Days', 'type':'text', 'size':'small'},
-                }},
-            '_notes':{'label':'Notes', 'fields':{
-                'notes':{'label':'', 'hidelabel':'yes', 'type':'textarea', 'size':'medium'},
-                }},
-            '_save':{'label':'', 'buttons':{
-                'save':{'label':'Save', 'fn':'M.ciniki_businesses_billing.saveSubscription();'},
-                }},
-            };
-        this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
-        this.edit.addButton('save', 'Save', 'M.ciniki_businesses_billing.saveSubscription();');
-        this.edit.addClose('Cancel');
+    this.menu = new M.panel('Billing',
+        'ciniki_businesses_billing', 'menu',
+        'mc', 'medium', 'sectioned', 'ciniki.businesses.billing.menu');
+    this.menu.data = {};
+    this.menu.sections = {
+        'subscription':{'label':'Subscription', 'type':'simplelist', 'list':{
+            'status_text':{'label':'Status'},
+            'currency':{'label':'Currency'},
+            'monthly':{'label':'Monthly Amount'},
+            'yearly':{'label':'Yearly Amount'},
+            'trial':{'label':'Trial remaining'},
+            'last_payment_date':{'label':'Last Payment'},
+            }},
+        '_edit':{'label':'', 'visible':'no', 'buttons':{
+            'edit':{'label':'Edit Plan', 'fn':'M.ciniki_businesses_billing.showEdit(\'M.ciniki_businesses_billing.showMenu();\');'},
+            }},
+        '_paypal_button':{'label':'', 'visible':'no', 'buttons':{
+            'subscribe':{'label':'Subscribe', 'fn':'paypal_form.submit();'},
+            }},
+        '_paypal':{'label':'', 'type':'html', 'visible':function() { return 'no';}, 'html':''},
+        '_paypal_cancel':{'label':'', 'type':'html', 'visible':'no'},
+        '_cancel_button':{'label':'', 'visible':'no', 'buttons':{
+            'cancel':{'label':'Cancel Subscription', 'fn':'M.ciniki_businesses_billing.cancelSubscription();'},
+            }},
+    };
+    this.menu.noData = function(s) { return 'No subscriptions added'; }
+    this.menu.sectionData = function(s) { 
+        if( s == 'subscription' ) { return this.sections[s].list; }
+        if( s == '_paypal' ) { return this.sections[s].html; }
+        return this.data[s]; 
     }
+    this.menu.listLabel = function(s, i, d) { return d.label; }
+    this.menu.listValue = function(s, i, d) {
+        if( s == 'subscription' ) {
+            // You can only change the currency during the trial, before entering subcription information.
+            if( i == 'currency' && (this.data.subscription.status == 2 || this.data.subscription.status == 60) ) {
+                if( this.data.subscription.currency == 'USD' ) {
+                    return 'USD (Switch to <a href="javascript:M.ciniki_businesses_billing.changeCurrency(\'CAD\');">CAD</a>)';
+                } else if( this.data.subscription.currency == 'CAD' ) {
+                    return 'CAD (Switch to <a href="javascript:M.ciniki_businesses_billing.changeCurrency(\'USD\');">USD</a>)';
+                }
+            }
+            switch (i) {
+                case 'monthly': return '$' + this.data.subscription.monthly + '/month';
+                case 'trial': return this.data.subscription.trial_remaining + ' days';
+            }
+            return this.data.subscription[i];
+        }
+    };
+    this.menu.addClose('Back');
+
+    //
+    // Edit form for sysadmins to change the billing
+    //
+    this.edit = new M.panel('Edit Billing',
+        'ciniki_businesses_billing', 'edit',
+        'mc', 'medium', 'sectioned', 'ciniki.businesses.billing.edit');
+    this.edit.data = null;
+    this.edit.sections = {
+        'subscription':{'label':'Subscription', 'fields':{
+            'status':{'label':'Status', 'type':'select', 'options':this.statusOptions},
+            'currency':{'label':'Currency', 'type':'text', 'size':'small'},
+            'monthly':{'label':'Monthly', 'type':'text', 'size':'small'},
+            'yearly':{'label':'Yearly', 'type':'text', 'size':'small'},
+            'payment_type':{'label':'Type', 'type':'toggle', 'toggles':this.paymentTypes},
+            'payment_frequency':{'label':'Frequency', 'type':'toggle', 'toggles':this.paymentFrequencies},
+            'last_payment_date':{'label':'Last Payment', 'type':'text', 'size':'medium'},
+            'paid_until':{'label':'Paid Until', 'type':'date', 'size':'small'},
+            }},
+        '_trial':{'label':'Trial', 'fields':{
+            'trial_start_date':{'label':'Start', 'type':'date', 'size':'small'},
+            'trial_days':{'label':'Days', 'type':'text', 'size':'small'},
+            }},
+        '_notes':{'label':'Notes', 'fields':{
+            'notes':{'label':'', 'hidelabel':'yes', 'type':'textarea', 'size':'medium'},
+            }},
+        '_save':{'label':'', 'buttons':{
+            'save':{'label':'Save', 'fn':'M.ciniki_businesses_billing.saveSubscription();'},
+            }},
+        };
+    this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
+    this.edit.addButton('save', 'Save', 'M.ciniki_businesses_billing.saveSubscription();');
+    this.edit.addClose('Cancel');
 
     this.start = function(cb, ap, aG) {
         args = {};
@@ -138,14 +141,13 @@ function ciniki_businesses_billing() {
         //
         // Load domain list
         //
-        var rsp = M.api.getJSONCb('ciniki.businesses.subscriptionInfo', 
-            {'business_id':M.curBusinessID}, function(rsp) {
-                if( rsp.stat != 'ok' ) {
-                    M.api.err(rsp);
-                    return false;
-                }
-                M.ciniki_businesses_billing.showMenuFinish(cb, rsp);
-            });
+        M.api.getJSONCb('ciniki.businesses.subscriptionInfo', {'business_id':M.curBusinessID}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            M.ciniki_businesses_billing.showMenuFinish(cb, rsp);
+        });
     }
 
     this.showMenuFinish = function(cb, rsp) {

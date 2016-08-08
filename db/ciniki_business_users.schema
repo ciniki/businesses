@@ -23,16 +23,16 @@
 #               marketing - access to social media, blogging, etc
 #               reseller - The reseller who has control over some things.
 # 
-# status:       0 - unknown
-#               10 - active
-#               20 - locked **future**
-#               60 - deleted
+# status:       The current status of the user.
 #
-# date_added:   The date and time the record was created.
-# 
-# last_updated: The date and time the record was last updated.
+#                   0 - unknown
+#                   10 - active
+#                   20 - locked **future**
+#                   60 - deleted
 #
-# last_login:   The date and time the user last logged into the admin section.
+# date_added:   The UTC date and time the record was created.
+# last_updated: The UTC date and time the record was last updated.
+# last_login:   The UTC date and time the user last logged into the admin section.
 #
 create table ciniki_business_users (
     id int not null auto_increment,
