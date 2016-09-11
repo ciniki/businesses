@@ -80,12 +80,13 @@ function ciniki_businesses_main() {
             }
         };
         this.menu.liveSearchResultCellFn = function(s, f, i, j, d) {
-            if( this.sections[s].search != null ) {
-                if( this.sections[s].search.cellFns != null && this.sections[s].search.cellFns[j] != null ) {
-                    return eval(this.sections[s].search.cellFns[j]);
-                }
-                return '';
-            }
+//            if( this.sections[s].search != null ) {
+//                if( this.sections[s].search.cellFns != null && this.sections[s].search.cellFns[j] != null ) {
+//                    return eval(this.sections[s].search.cellFns[j]);
+//                }
+//                return '';
+//            }
+            // FIXME: This needs to move into hooks/uiSettings
             if( this.sections[s].id == 'calendars' ) {
                 if( j == 0 && d.appointment.start_ts > 0 ) {
                     return 'M.startApp(\'ciniki.calendars.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'date\':\'' + d.appointment.date + '\'});';
@@ -410,6 +411,9 @@ function ciniki_businesses_main() {
 
                 if( r.menu_items[i].search != null && menu_search > 0 ) {
                     item.search = r.menu_items[i].search;
+                    if( r.menu_items[i].id != null ) {
+                        item.id = r.menu_items[i].id;
+                    }
                     item.type = 'livesearchgrid';
                     item.searchlabel = item.label;
                     item.label = '';
