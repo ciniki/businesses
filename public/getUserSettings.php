@@ -2,8 +2,7 @@
 //
 // Description
 // -----------
-// This method will return all the information about a business required when the user
-// logs into the UI. 
+// This method will return all the information about a business required when the user logs into the UI. 
 //
 // Arguments
 // ---------
@@ -88,13 +87,14 @@ function ciniki_businesses_getUserSettings($ciniki) {
     //
     // Get the permission_groups for the user requesting the business information
     //
-    $strsql = "SELECT permission_group AS name "
+    $strsql = "SELECT permission_group AS name, 'yes' AS status "
         . "FROM ciniki_business_users "
         . "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
         . "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
         . "AND ciniki_business_users.status = 10 "
         . "";
-    $rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'permissions', 'group', array('stat'=>'ok', 'permissions'=>array()));
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList2');
+    $rc = ciniki_core_dbQueryList2($ciniki, $strsql, 'ciniki.businesses', 'permissions');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -138,7 +138,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
             $rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'hooks', 'uiSettings');
             if( $rc['stat'] == 'ok' ) {
                 $fn = $rc['function_call'];
-                $rc = $fn($ciniki, $args['business_id'], array('modules'=>$mrc['modules']));
+                $rc = $fn($ciniki, $args['business_id'], array('modules'=>$mrc['modules'], 'permissions'=>$rsp['permissions']));
                 if( $rc['stat'] != 'ok' ) {
                     return $rc;
                 }
@@ -165,10 +165,14 @@ function ciniki_businesses_getUserSettings($ciniki) {
             // NOTE: Also make sure to update in getUserModules
 
             //
+            // FIXME: Move into hooks/uiSettings for each module
+            //
+
+            //
             // Get the current exhibition to display the menu at the top
             // of the main menu for quick access
             //
-            if( $module['name'] == 'ciniki.exhibitions' ) {
+/*            if( $module['name'] == 'ciniki.exhibitions' ) {
                 //
                 // Load the two most current exhibitions
                 //
@@ -203,6 +207,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
                     }
                 }
             }
+            
             //
             // Get the numbers for the main menu
             //
@@ -262,6 +267,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
                     $rsp['modules'][$count]['module']['notes_count'] = 0;
                 }
             }
+
             if( $module['name'] == 'ciniki.newsaggregator' ) {
                 $strsql = "SELECT 'unread_count' AS type, COUNT(*) AS num_items "
                     . "FROM ciniki_newsaggregator_subscriptions "
@@ -287,7 +293,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
                     $rsp['modules'][$count]['module']['unread_count'] = 0;
                 }
             }
-
+*/
             $count++;
         }
 
@@ -300,6 +306,16 @@ function ciniki_businesses_getUserSettings($ciniki) {
             $rsp['intl'] = $rc['settings'];
         }
     }
+
+    //
+    // Sort the menu items based on priority
+    //
+    usort($rsp['menu_items'], function($a, $b) {
+        if( $a['priority'] == $b['priority'] ) {
+            return 0;
+        }
+        return $a['priority'] > $b['priority'] ? -1 : 1;
+    });
 
     return $rsp;
 }
