@@ -416,6 +416,7 @@ function ciniki_businesses_main() {
                     }
                     item.type = 'livesearchgrid';
                     item.searchlabel = item.label;
+                    item.aside = 'yes';
                     item.label = '';
                     item.livesearchcols = item.search.cols;
                     item.noData = item.search.noData;
@@ -429,6 +430,7 @@ function ciniki_businesses_main() {
                     menu_search = 1;
                 }
                 else if( r.menu_items[i].subitems != null ) {
+                    item.aside = 'yes';
                     item.list = {};
                     for(var j in r.menu_items[i].subitems) {
                         var args = '';
@@ -440,19 +442,19 @@ function ciniki_businesses_main() {
                     this.menu.sections[c] = item;
                     join = 0;
                     c++;
-                    this.menu.sections[c] = {'label':'Menu', 'list':{}};
+                    this.menu.sections[c] = {'label':'Menu', 'aside':'yes', 'list':{}};
                 }
                 else if( join > -1 ) {
                     this.menu.sections[c].list['item_' + i] = item;
                     join++;
 //                    this.menu.sections[c].list['item_' + i] = {'label':r.menu_items[i].label, 'fn':fn};
                 } else {
-                    this.menu.sections[c++] = {'label':'', 'list':{'_':item}};
+                    this.menu.sections[c++] = {'label':'', 'aside':'yes', 'list':{'_':item}};
 //                    this.menu.sections[c++] = {'label':'', 'list':{'_':{'label':r.menu_items[i].label, 'fn':fn}}};
                 }
                 if( c > 4 && join < 0 ) {
                     join = 0;
-                    this.menu.sections[c] = {'label':' &nbsp; ', 'list':{}};
+                    this.menu.sections[c] = {'label':' &nbsp; ', 'aside':'yes', 'list':{}};
                 }
             }
         }
@@ -481,6 +483,12 @@ function ciniki_businesses_main() {
         // Check if there should be a task list displayed
         // FIXME: Change to background load
         //
+        // Set size of menu based on contents
+        if( menu_search == 1 ) {
+            this.menu.size = 'medium';
+        } else {
+            this.menu.size = 'narrow';
+        }
         if( M.curBusiness.modules['ciniki.atdo'] != null && M.curBusiness.atdo != null
             && M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != null 
             && M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != ''
@@ -504,6 +512,8 @@ function ciniki_businesses_main() {
                         p.data._tasks = rsp.categories[0].category.tasks;
                         p.sections._tasks.visible = 'yes';
                         p.refreshSection('_tasks');
+                        p.size = 'medium mediumaside';
+                        M.gE(p.panelUID).children[0].className = 'medium mediumaside';
                     }
                 });
         }
@@ -517,12 +527,6 @@ function ciniki_businesses_main() {
 //              }},
 //      }
 
-        // Set size of menu based on contents
-        if( menu_search == 1 ) {
-            this.menu.size = 'medium';
-        } else {
-            this.menu.size = 'narrow';
-        }
         this.menu.refresh();
         this.menu.show();
     }
