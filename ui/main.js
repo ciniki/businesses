@@ -350,10 +350,9 @@ function ciniki_businesses_main() {
         //
         // If sysadmin, or business owner
         //
-        if( M.userID > 0 && 
-            ( (M.userPerms&0x01) == 0x01 || M.curBusiness.permissions.owners != null || M.curBusiness.permissions.resellers != null )
-            ) {
+        if( M.userID > 0 && ( (M.userPerms&0x01) == 0x01 || M.curBusiness.permissions.owners != null || M.curBusiness.permissions.resellers != null )) {
             this.menu.addButton('settings', 'Settings', 'M.startApp(\'ciniki.businesses.settings\',null,\'M.ciniki_businesses_main.openBusinessSettings();\');');
+            M.curBusiness.settings_menu_items = r.settings_menu_items;
         }
 
         var c = 0;

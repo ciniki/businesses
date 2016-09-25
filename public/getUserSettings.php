@@ -46,7 +46,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
     //
     // Setup the default return array
     //
-    $rsp = array('stat'=>'ok', 'modules'=>array(), 'menu_items'=>array());
+    $rsp = array('stat'=>'ok', 'modules'=>array(), 'menu_items'=>array(), 'settings_menu_items'=>array());
 
     //
     // Get the business name, and CSS
@@ -147,6 +147,9 @@ function ciniki_businesses_getUserSettings($ciniki) {
                 }
                 if( isset($rc['menu_items']) ) {
                     $rsp['menu_items'] = array_merge($rsp['menu_items'], $rc['menu_items']);
+                }
+                if( isset($rc['settings_menu_items']) ) {
+                    $rsp['settings_menu_items'] = array_merge($rsp['settings_menu_items'], $rc['settings_menu_items']);
                 }
             }
 
@@ -311,6 +314,16 @@ function ciniki_businesses_getUserSettings($ciniki) {
     // Sort the menu items based on priority
     //
     usort($rsp['menu_items'], function($a, $b) {
+        if( $a['priority'] == $b['priority'] ) {
+            return 0;
+        }
+        return $a['priority'] > $b['priority'] ? -1 : 1;
+    });
+
+    //
+    // Sort the setttings menu items based on priority
+    //
+    usort($rsp['settings_menu_items'], function($a, $b) {
         if( $a['priority'] == $b['priority'] ) {
             return 0;
         }
