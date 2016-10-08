@@ -29,7 +29,7 @@ function ciniki_businesses_hooks_storageDir(&$ciniki, $business_id, $args) {
     //
     if( $business_id == 0 ) {
         $storage_dir = $ciniki['config']['ciniki.core']['storage_dir'] 
-            . '/0/00000000-0000-0000-0000-000000000000' ;
+            . '/0/0' ;
     }
     elseif( isset($ciniki['business']['settings']['storage_dir']) ) {
         return array('stat'=>'ok', 'storage_dir'=>$ciniki['business']['settings']['storage_dir']);

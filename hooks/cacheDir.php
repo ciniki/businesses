@@ -29,7 +29,7 @@ function ciniki_businesses_hooks_cacheDir(&$ciniki, $business_id, $args) {
     //
     if( $business_id == 0 ) {
         $cache_dir = $ciniki['config']['ciniki.core']['cache_dir'] 
-            . '/0/00000000-0000-0000-0000-000000000000' ;
+            . '/0/0' ;
     }
     elseif( isset($ciniki['business']['settings']['cache_dir']) ) {
         return array('stat'=>'ok', 'cache_dir'=>$ciniki['business']['settings']['cache_dir']);
