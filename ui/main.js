@@ -439,6 +439,7 @@ function ciniki_businesses_main() {
                         item.list[j] = {'label':r.menu_items[i].subitems[j].label, 'fn':'M.startApp(\'' + r.menu_items[i].subitems[j].edit.app + '\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{' + args + '});'};
                     }
                     this.menu.sections[c] = item;
+                    menu_search = 0;
                     join = 0;
                     c++;
                     this.menu.sections[c] = {'label':'Menu', 'aside':'yes', 'list':{}};

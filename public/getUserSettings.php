@@ -330,6 +330,17 @@ function ciniki_businesses_getUserSettings($ciniki) {
         return $a['priority'] > $b['priority'] ? -1 : 1;
     });
 
+    //
+    // Check the menu_items duplicates
+    //
+    $prev_label = '';
+    foreach($rsp['menu_items'] as $iid => $item) {
+        if( $item['label'] == $prev_label ) {
+            unset($rsp['menu_items'][$iid]);
+        }
+        $prev_label = $item['label'];
+    }
+
     return $rsp;
 }
 ?>
