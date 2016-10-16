@@ -21,6 +21,7 @@ function ciniki_businesses_subscriptionStripeProcess($ciniki) {
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
         'currency'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Currency'),
         'payment_frequency'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Payment Frequency'),
+        'billing_email'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Billing Email'),
         'action'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Action'),
         'token'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Stripe Token'),
         )); 
