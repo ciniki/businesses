@@ -29,9 +29,12 @@
 # yearly:               The yearly amount to be payed.
 # discount_percent:     The discount to be applied in a percentage.
 # discount_amount:      The discount to be applied in a dollar value.
+#
+#
 # payment_type:         Must be 'paypal', but others might be allowed in the future.
 #
 #                       paypal - payment is processed through paypal
+#                       stripe - payment is processed through stripe
 #                       cheque - Payments are made by cheque
 #
 # payment_frequency:    The frequency of payments/subscription
@@ -65,12 +68,15 @@ create table ciniki_business_subscriptions (
     yearly decimal(10,2) not null,
     discount_percent int not null,
     discount_amount int not null,
+    billing_email varchar(250) not null,
     payment_type varchar(20) not null,
     payment_frequency tinyint unsigned not null,
     paypal_subscr_id varchar(100) not null,
     paypal_payer_email varchar(250) not null,
     paypal_payer_id varchar(100) not null,
     paypal_amount decimal(10,2) not null,
+    stripe_customer_id varchar(100) not null,
+    stripe_subscription_id varchar(100) not null,
     last_payment_date datetime not null,
     paid_until date not null,
     notes varchar(6000) not null,
@@ -78,4 +84,4 @@ create table ciniki_business_subscriptions (
     last_updated datetime not null,
     primary key (id),
     unique index (business_id)
-) ENGINE=InnoDB, COMMENT='v1.04';
+) ENGINE=InnoDB, COMMENT='v1.05';

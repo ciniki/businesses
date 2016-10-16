@@ -38,7 +38,8 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
     //
     // Get the billing information from the subscription table
     //
-    $strsql = "SELECT id, status, currency, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount "
+    $strsql = "SELECT id, status, currency, paypal_subscr_id, paypal_payer_email, paypal_payer_id, paypal_amount, "
+        . "stripe_customer_id, stripe_subscription_id "
         . "FROM ciniki_business_subscriptions "
         . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
         . "";
@@ -53,7 +54,46 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
     } 
     $subscription = $rc['subscription'];
 
-    if( $subscription['paypal_subscr_id'] != '' ) {
+    //
+    // Cancel a stripe subscription
+    //
+    if( $subscription['stripe_customer_id'] != '' && $subscription['stripe_subscription_id'] != '' ) {
+        require_once($ciniki['config']['ciniki.core']['lib_dir'] . '/Stripe/init.php');
+        \Stripe\Stripe::setApiKey($ciniki['config']['ciniki.businesses']['stripe.secret']);
+
+        //
+        // Issue the stripe customer create
+        //
+        try {
+            $sub = \Stripe\Subscription::retrieve($subscription['stripe_subscription_id']);
+            $sub->cancel();
+        } catch( Exception $e) {
+            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2624', 'msg'=>'Unable to cancel subscription. Please contact us for help.'));
+        }
+
+        //
+        // If active subscription, then update at paypal will be required
+        //
+        if( $subscription['status'] < 60 ) {
+            $strsql = "UPDATE ciniki_business_subscriptions "
+                . "SET status = 60 "
+                . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
+                . "";
+            ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+            $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+            if( $rc['stat'] != 'ok' ) {
+                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
+            }
+            ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+                2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');
+            return $rc;
+        }
+    }
+
+    //
+    // Cancel a paypal subscription
+    //
+    elseif( $subscription['paypal_subscr_id'] != '' ) {
         // 
         // Send cancel to paypal
         //
@@ -63,25 +103,26 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
         if( $rc['stat'] !='ok' ) {
             return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'674', 'msg'=>'Unable to process cancellation, please try again or contact support', 'err'=>$rc['err']));
         }
+
+        //
+        // If active subscription, then update at paypal will be required
+        //
+        if( $subscription['status'] < 60 ) {
+            $strsql = "UPDATE ciniki_business_subscriptions "
+                . "SET status = 61 "
+                . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
+                . "";
+            ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
+            $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+            if( $rc['stat'] != 'ok' ) {
+                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
+            }
+            ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
+                2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');
+            return $rc;
+        }
     } 
 
-    //
-    // If active subscription, then update at paypal will be required
-    //
-    if( $subscription['status'] < 60 ) {
-        $strsql = "UPDATE ciniki_business_subscriptions "
-            . "SET status = 61 "
-            . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $subscription['id']) . "' "
-            . "";
-        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-        $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
-        if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
-        }
-        ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-            2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');
-        return $rc;
-    }
 
     return array('stat'=>'ok');
 }

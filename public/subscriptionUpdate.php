@@ -27,6 +27,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
         'trial_start_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Trial Start'),
         'payment_type'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Payment Type'),
         'payment_frequency'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Payment Frequency'),
+        'billing_email'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Billing Email'),
         'last_payment_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'datetime', 'name'=>'Notes'),
         'paid_until'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Notes'),
         'notes'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Notes'),
@@ -78,6 +79,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
     if( !isset($rc['subscription']) ) {
         $strsql = "INSERT INTO ciniki_business_subscriptions (business_id, signup_date, trial_start_date, status, "
             . "trial_days, currency, monthly, yearly, payment_type, payment_frequency, paid_until, last_payment_date, notes, "
+            . "billing_email, "
             . "date_added, last_updated) VALUES ("
             . "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
             . "UTC_TIMESTAMP(), ";
@@ -134,6 +136,11 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
         }
         if( isset($args['notes']) && $args['notes'] != '' ) {
             $strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['notes']) . "', ";
+        } else {
+            $strsql .= "'', ";
+        }
+        if( isset($args['billing_email']) && $args['billing_email'] != '' ) {
+            $strsql .= "'" . ciniki_core_dbQuote($ciniki, $args['billing_email']) . "', ";
         } else {
             $strsql .= "'', ";
         }
@@ -201,6 +208,7 @@ function ciniki_businesses_subscriptionUpdate($ciniki) {
             'payment_frequency',
             'paid_until',
             'notes',
+            'billing_email',
             );
         foreach($changelog_fields as $field) {
             if( isset($args[$field]) ) {
