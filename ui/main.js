@@ -479,16 +479,16 @@ function ciniki_businesses_main() {
             this.menu.autoopen = 'no';
         }
 
-        //
-        // Check if there should be a task list displayed
-        // FIXME: Change to background load
-        //
         // Set size of menu based on contents
         if( menu_search == 1 ) {
             this.menu.size = 'medium';
         } else {
             this.menu.size = 'narrow';
         }
+        //
+        // Check if there should be a task list displayed
+        // FIXME: Change to background load
+        //
         if( M.curBusiness.modules['ciniki.atdo'] != null && M.curBusiness.atdo != null
             && M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != null 
             && M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != ''
