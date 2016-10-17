@@ -292,8 +292,8 @@ function ciniki_businesses_billing() {
     }
 
     this.startAfterStripe = function() {
-        if( args.business_id != null && args.business_id > 0 ) {
-            this.menu.open(this.cb, business_id);
+        if( this.args.business_id != null && this.args.business_id > 0 ) {
+            this.menu.open(this.cb, this.args.business_id);
         } else {
             this.menu.open(this.cb, M.curBusinessID);
         }
