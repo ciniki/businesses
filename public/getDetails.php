@@ -58,7 +58,7 @@ function ciniki_businesses_getDetails($ciniki) {
 //  if( isset($ciniki['request']['args']['keys']) && $ciniki['request']['args']['keys'] != '' ) {
         $detail_keys = preg_split('/,/', $args['keys']);
     } else {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'118', 'msg'=>'No keys specified'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.46', 'msg'=>'No keys specified'));
     }
 
     $rsp = array('stat'=>'ok', 'details'=>array());

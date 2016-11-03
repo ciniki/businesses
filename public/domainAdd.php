@@ -71,7 +71,7 @@ function ciniki_businesses_domainAdd($ciniki) {
     }
     if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'619', 'msg'=>'Unable to add domain'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.40', 'msg'=>'Unable to add domain'));
     }
     $domain_id = $rc['insert_id'];
 

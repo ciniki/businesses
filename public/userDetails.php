@@ -62,7 +62,7 @@ function ciniki_businesses_userDetails($ciniki) {
         return $rc;
     }
     if( !isset($rc['users'][0]['user']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'744', 'msg'=>'Unable to find user'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.99', 'msg'=>'Unable to find user'));
     }
 
     $user = $rc['users'][0]['user'];

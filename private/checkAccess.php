@@ -28,7 +28,7 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
     $rc = ciniki_businesses_checkModuleAccess($ciniki, $business_id, 'ciniki', 'businesses');
     // Ignore if businesses module is not in the list, it's on by default
-    if( $rc['stat'] != 'ok' && $rc['err']['code'] != '696' ) {
+    if( $rc['stat'] != 'ok' && $rc['err']['code'] != 'ciniki.businesses.16' ) {
         return $rc;
     }
     // Normally there is a check here to see if permissions denied, but not used in this case
@@ -51,7 +51,7 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
         return $rc;
     }
     if( !isset($rc['groups']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2021', 'msg'=>'Access denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.12', 'msg'=>'Access denied'));
     }
     $groups = $rc['groups'];
 
@@ -75,7 +75,7 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     // If no business is specified, all functions are for sysadmin only
     //
     if( $business_id == 0 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2020', 'msg'=>'Access denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.13', 'msg'=>'Access denied'));
     }
 
     //
@@ -168,6 +168,6 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     //
     // By default fail
     //
-    return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'45', 'msg'=>'Access denied'));
+    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.14', 'msg'=>'Access denied'));
 }
 ?>

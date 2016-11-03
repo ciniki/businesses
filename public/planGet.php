@@ -49,7 +49,7 @@ function ciniki_businesses_planGet($ciniki) {
         return $rc;
     }
     if( !isset($rc['plan']) ) {
-        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'667', 'msg'=>'Unable to find plan'));
+        return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.businesses.57', 'msg'=>'Unable to find plan'));
     }
 
     return array('stat'=>'ok', 'plan'=>$rc['plan']);

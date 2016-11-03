@@ -76,7 +76,7 @@ function ciniki_businesses_planAdd($ciniki) {
     }
     if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'668', 'msg'=>'Unable to add plan'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.55', 'msg'=>'Unable to add plan'));
     }
     $plan_id = $rc['insert_id'];
 

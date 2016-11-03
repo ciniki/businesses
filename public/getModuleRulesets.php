@@ -50,7 +50,7 @@ function ciniki_businesses_getModuleRulesets($ciniki) {
         return $rc;
     }
     if( $rc['num_rows'] != 1 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'211', 'msg'=>'No business found'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.48', 'msg'=>'No business found'));
     }
     $business_modules = $rc['rows'][0]['modules'];
 */

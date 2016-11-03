@@ -60,7 +60,7 @@ function ciniki_businesses_userRemove(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['user']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'155', 'msg'=>'Unable to remove user.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.100', 'msg'=>'Unable to remove user.'));
     }
     $business_user_id = $rc['user']['id'];
 
@@ -105,7 +105,7 @@ function ciniki_businesses_userRemove(&$ciniki) {
     }
     if( $rc['num_affected_rows'] < 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'156', 'msg'=>'Unable to remove user'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.101', 'msg'=>'Unable to remove user'));
     }
 
     //

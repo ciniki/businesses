@@ -87,7 +87,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbRspQuery');
-    $rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'businesses', 'business', array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'66', 'msg'=>'No businesses found')));
+    $rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'businesses', 'business', array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.50', 'msg'=>'No businesses found')));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

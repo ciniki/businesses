@@ -65,7 +65,7 @@ function ciniki_businesses_domainDelete($ciniki) {
     }
     if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'618', 'msg'=>'Unable to update art'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.41', 'msg'=>'Unable to update art'));
     }
 
     //

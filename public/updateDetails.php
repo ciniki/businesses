@@ -64,7 +64,7 @@ function ciniki_businesses_updateDetails(&$ciniki) {
     // Check the sitename is proper format
     //
     if( isset($args['business.sitename']) && preg_match('/[^a-z0-9\-_]/', $args['business.sitename']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'163', 'msg'=>'Illegal characters in sitename.  It can only contain lowercase letters, numbers, underscores (_) or dash (-)'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.93', 'msg'=>'Illegal characters in sitename.  It can only contain lowercase letters, numbers, underscores (_) or dash (-)'));
     }
     
 

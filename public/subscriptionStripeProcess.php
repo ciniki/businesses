@@ -69,7 +69,7 @@ function ciniki_businesses_subscriptionStripeProcess($ciniki) {
         return $rc;
     }
     if( !isset($rc['subscription']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1551', 'msg'=>'The subscription does not exist'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.73', 'msg'=>'The subscription does not exist'));
     }
     $subscription = $rc['subscription'];
 
@@ -123,7 +123,7 @@ function ciniki_businesses_subscriptionStripeProcess($ciniki) {
     }
 
     if( $subscription['stripe_plan'] == '' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1552', 'msg'=>'No plan for the subscription.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.74', 'msg'=>'No plan for the subscription.'));
     }
 
     //  
@@ -162,7 +162,7 @@ function ciniki_businesses_subscriptionStripeProcess($ciniki) {
             $subscription['stripe_customer_id'] = $customer['id'];
             $update_args['stripe_customer_id'] = $customer['id'];
         } catch( Exception $e) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1553', 'msg'=>$e->getMessage()));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.75', 'msg'=>$e->getMessage()));
         }
 
         //
@@ -181,7 +181,7 @@ function ciniki_businesses_subscriptionStripeProcess($ciniki) {
             $sub = \Stripe\Subscription::create($stripe_subscription);
             $update_args['stripe_subscription_id'] = $sub['id'];
         } catch( Exception $e) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2583', 'msg'=>$e->getMessage()));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.76', 'msg'=>$e->getMessage()));
         }
 
         //
@@ -203,7 +203,7 @@ function ciniki_businesses_subscriptionStripeProcess($ciniki) {
             . "";
         $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
         if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2590', 'msg'=>'Unable to update subscription', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.77', 'msg'=>'Unable to update subscription', 'err'=>$rc['err']));
         }
         foreach($update_args as $fname => $fvalue) {
             ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 

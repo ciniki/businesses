@@ -55,7 +55,7 @@ function ciniki_businesses_getModules($ciniki) {
         return $rc;
     }
     if( !isset($rc['modules']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'195', 'msg'=>'No business found'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.49', 'msg'=>'No business found'));
     }
     $business_modules = $rc['modules'];
 

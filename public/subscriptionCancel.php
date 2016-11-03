@@ -50,7 +50,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
         return $rc;
     }
     if( !isset($rc['subscription']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'671', 'msg'=>'No active subscriptions'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.64', 'msg'=>'No active subscriptions'));
     } 
     $subscription = $rc['subscription'];
 
@@ -68,7 +68,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
             $sub = \Stripe\Subscription::retrieve($subscription['stripe_subscription_id']);
             $sub->cancel();
         } catch( Exception $e) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2624', 'msg'=>'Unable to cancel subscription. Please contact us for help.'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.65', 'msg'=>'Unable to cancel subscription. Please contact us for help.'));
         }
 
         //
@@ -82,7 +82,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
             $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
             if( $rc['stat'] != 'ok' ) {
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.66', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
             }
             ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
                 2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');
@@ -101,7 +101,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'paypalPost');
         $rc = ciniki_core_paypalPost($ciniki, 'ManageRecurringPaymentsProfileStatus', $paypal_args);
         if( $rc['stat'] !='ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'674', 'msg'=>'Unable to process cancellation, please try again or contact support', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.67', 'msg'=>'Unable to process cancellation, please try again or contact support', 'err'=>$rc['err']));
         }
 
         //
@@ -115,7 +115,7 @@ function ciniki_businesses_subscriptionCancel($ciniki) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
             $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
             if( $rc['stat'] != 'ok' ) {
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'673', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.68', 'msg'=>'Unable to cancel subscription', 'err'=>$rc['err']));
             }
             ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
                 2, 'ciniki_business_subscriptions', $subscription['id'], 'status', '61');

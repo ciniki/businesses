@@ -47,7 +47,7 @@ function ciniki_businesses_logoDelete(&$ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
     $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) { 
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'745', 'msg'=>'Internal Error', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.51', 'msg'=>'Internal Error', 'err'=>$rc['err']));
     }   
 
     //
@@ -66,7 +66,7 @@ function ciniki_businesses_logoDelete(&$ciniki) {
     //
     $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'746', 'msg'=>'Unable to delete logo', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.52', 'msg'=>'Unable to delete logo', 'err'=>$rc['err']));
     }
 
     return array('stat'=>'ok');

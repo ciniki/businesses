@@ -50,7 +50,7 @@ function ciniki_businesses_logoSave(&$ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
     $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) { 
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'747', 'msg'=>'Internal Error', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.53', 'msg'=>'Internal Error', 'err'=>$rc['err']));
     }   
 
     //
@@ -74,7 +74,7 @@ function ciniki_businesses_logoSave(&$ciniki) {
     //
     $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'748', 'msg'=>'Unable to save logo', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.54', 'msg'=>'Unable to save logo', 'err'=>$rc['err']));
     }
 
     return array('stat'=>'ok', 'logo_id'=>$args['image_id']);

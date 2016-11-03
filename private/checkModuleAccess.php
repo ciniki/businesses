@@ -38,14 +38,14 @@ function ciniki_businesses_checkModuleAccess(&$ciniki, $business_id, $package, $
     }
 
     if( !isset($rc['modules']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'650', 'msg'=>'No modules enabled'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.15', 'msg'=>'No modules enabled'));
     }
 
     $modules = $rc['modules'];
     $ciniki['business']['modules'] = $modules;
 
     if( !isset($rc['modules'][$package . '.' . $module]) ) {
-        return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('pkg'=>'ciniki', 'code'=>'696', 'msg'=>"Module '$package.$module' disabled"));
+        return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('code'=>'ciniki.businesses.16', 'msg'=>"Module '$package.$module' disabled"));
     }
 
     //
@@ -53,11 +53,11 @@ function ciniki_businesses_checkModuleAccess(&$ciniki, $business_id, $package, $
     //
     if( isset($rc['modules'][$package . '.' . $module]['business_status']) && $rc['modules'][$package . '.' . $module]['business_status'] != 1 ) {
         if( $rc['modules'][$package . '.' . $module]['business_status'] == 50 ) {
-            return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('pkg'=>'ciniki', 'code'=>'691', 'msg'=>'Business suspended'));
+            return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('code'=>'ciniki.businesses.17', 'msg'=>'Business suspended'));
         } elseif( $rc['modules'][$package . '.' . $module]['business_status'] == 60 ) {
-            return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('pkg'=>'ciniki', 'code'=>'692', 'msg'=>'Business deleted'));
+            return array('stat'=>'fail', 'modules'=>$modules, 'err'=>array('code'=>'ciniki.businesses.18', 'msg'=>'Business deleted'));
         }
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'693', 'msg'=>'Business inactive'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.19', 'msg'=>'Business inactive'));
     }
 
     //
@@ -67,7 +67,7 @@ function ciniki_businesses_checkModuleAccess(&$ciniki, $business_id, $package, $
         && $rc['modules'][$package . '.' . $module]['module_status'] != 1 
         && $rc['modules'][$package . '.' . $module]['module_status'] != 2 
         ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'694', 'msg'=>'Module disabled'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.20', 'msg'=>'Module disabled'));
     }
 
     //

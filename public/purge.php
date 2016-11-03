@@ -32,7 +32,7 @@ function ciniki_businesses_purge($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
     $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.purge');
-    if( $rc['stat'] != 'ok' && $rc['err']['code'] != '691' && $rc['err']['code'] != '692' ) {
+    if( $rc['stat'] != 'ok' && $rc['err']['code'] != 'ciniki.businesses.17' && $rc['err']['code'] != 'ciniki.businesses.18' ) {
         return $rc;
     }
 
@@ -42,7 +42,7 @@ function ciniki_businesses_purge($ciniki) {
     // to this method.
     //
     if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1916', 'msg'=>'Permission denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.59', 'msg'=>'Permission denied'));
     }
 
     //
@@ -50,7 +50,7 @@ function ciniki_businesses_purge($ciniki) {
     // the checkAccess function, but good idea to double check.
     //
     if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1919', 'msg'=>'You must be a sysadmin to purge a business'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.60', 'msg'=>'You must be a sysadmin to purge a business'));
     }
 
     //
@@ -66,7 +66,7 @@ function ciniki_businesses_purge($ciniki) {
         return $rc;
     }
     if( !isset($rc['business']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1920', 'msg'=>'Business not found'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.61', 'msg'=>'Business not found'));
     }
     $business = $rc['business'];
 
@@ -74,7 +74,7 @@ function ciniki_businesses_purge($ciniki) {
     // Check the business has been marked for deletion
     //
     if( $business['status'] != '60' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1917', 'msg'=>'Business has not been marked for deletion.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.62', 'msg'=>'Business has not been marked for deletion.'));
     }
     
     //
@@ -82,7 +82,7 @@ function ciniki_businesses_purge($ciniki) {
     // for deletion for 1 week before they can be purged
     //
     if( $business['last_change'] < (86400*7) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1918', 'msg'=>'Business has not been deleted for 1 week.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.63', 'msg'=>'Business has not been deleted for 1 week.'));
     }
 
     error_log("INFO[" . $business['id'] . "]: purging business - " . $business['name']);

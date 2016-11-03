@@ -53,7 +53,7 @@ function ciniki_businesses_syncInfo($ciniki) {
         return $rc;
     }
     if( !isset($rc['business']) ) { 
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'523', 'msg'=>'Unable to get business information'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.83', 'msg'=>'Unable to get business information'));
     }
     $uuid = $rc['business']['uuid'];
 

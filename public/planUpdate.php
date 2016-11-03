@@ -90,7 +90,7 @@ function ciniki_businesses_planUpdate($ciniki) {
     }
     if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'670', 'msg'=>'Unable to update plan'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.58', 'msg'=>'Unable to update plan'));
     }
 
     //

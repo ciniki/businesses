@@ -54,7 +54,7 @@ function ciniki_businesses_backupList($ciniki) {
         return $rc;
     }
     if( !isset($rc['business']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1728', 'msg'=>'Unable to find business'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.38', 'msg'=>'Unable to find business'));
     }
     $uuid = $rc['business']['uuid'];
 
@@ -63,7 +63,7 @@ function ciniki_businesses_backupList($ciniki) {
 
     $backups = array();
     if( ($dh = opendir($backup_dir)) === false ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1735', 'msg'=>'Unable to find backups'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.39', 'msg'=>'Unable to find backups'));
         
     }
     while( ($file = readdir($dh)) !== false ) {

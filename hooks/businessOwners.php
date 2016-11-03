@@ -36,7 +36,7 @@ function ciniki_businesses_hooks_businessOwners(&$ciniki, $business_id, $args) {
             'fields'=>array('user_id', 'firstname', 'lastname', 'display_name', 'email')),
         ));
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2607', 'msg'=>'Unable to get list of owners', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.2', 'msg'=>'Unable to get list of owners', 'err'=>$rc['err']));
     }
     if( !isset($rc['users']) ) {
         return array('stat'=>'ok', 'users'=>array());

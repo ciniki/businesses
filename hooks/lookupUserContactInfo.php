@@ -20,7 +20,7 @@
 function ciniki_businesses_hooks_lookupUserContactInfo(&$ciniki, $business_id, $args) {
 
     if( !isset($args['user_id']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'3075', 'msg'=>'No user specified.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.5', 'msg'=>'No user specified.'));
     }
 
     //
@@ -40,7 +40,7 @@ function ciniki_businesses_hooks_lookupUserContactInfo(&$ciniki, $business_id, $
         return $rc;
     }
     if( !isset($rc['user']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'3076', 'msg'=>'Unable to find user'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.6', 'msg'=>'Unable to find user'));
     }
     $user = $rc['user'];
 

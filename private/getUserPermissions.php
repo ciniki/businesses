@@ -32,7 +32,7 @@ function ciniki_businesses_getUserPermissions(&$ciniki, $business_id) {
         return $rc;
     }
     if( !isset($rc['groups']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2022', 'msg'=>'Access denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.21', 'msg'=>'Access denied'));
     }
     $groups = $rc['groups'];
 

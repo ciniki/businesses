@@ -65,7 +65,7 @@ function ciniki_businesses_planDelete($ciniki) {
     }
     if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'669', 'msg'=>'Unable to delete plan'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.56', 'msg'=>'Unable to delete plan'));
     }
 
     //

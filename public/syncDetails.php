@@ -61,7 +61,7 @@ function ciniki_businesses_syncDetails($ciniki) {
         return $rc;
     }
     if( !isset($rc['sync']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'506', 'msg'=>'Unable to find syncronization'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.82', 'msg'=>'Unable to find syncronization'));
     }
 
     if( ($rc['sync']['flags']&0x03) == 0x03 ) {

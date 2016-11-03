@@ -38,7 +38,7 @@ function ciniki_businesses_get($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
     $rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.get');
     // Ignore if business is suspended or deleted, should still return info to sysadmin
-    if( $rc['stat'] != 'ok' && $rc['err']['code'] != '691' && $rc['err']['code'] != '692' ) {
+    if( $rc['stat'] != 'ok' && $rc['err']['code'] != 'ciniki.businesses.17' && $rc['err']['code'] != 'ciniki.businesses.18' ) {
         return $rc;
     }
 
@@ -48,7 +48,7 @@ function ciniki_businesses_get($ciniki) {
     // to this method.
     //
     if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1922', 'msg'=>'Permission denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.44', 'msg'=>'Permission denied'));
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
@@ -80,7 +80,7 @@ function ciniki_businesses_get($ciniki) {
         return $rc;
     }
     if( !isset($rc['business']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'513', 'msg'=>'Unable to find business'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.45', 'msg'=>'Unable to find business'));
     }
     $business = $rc['business'];
 

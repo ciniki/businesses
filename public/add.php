@@ -81,7 +81,7 @@ function ciniki_businesses_add(&$ciniki) {
     // Check the sitename is proper format
     //
     if( preg_match('/[^a-z0-9\-_]/', $args['business.sitename']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'162', 'msg'=>'Illegal characters in sitename.  It can only contain lowercase letters, numbers, underscores (_) or dash (-)'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.23', 'msg'=>'Illegal characters in sitename.  It can only contain lowercase letters, numbers, underscores (_) or dash (-)'));
     }
     
     //
@@ -122,7 +122,7 @@ function ciniki_businesses_add(&$ciniki) {
     }
     if( !isset($rc['insert_id']) || $rc['insert_id'] < 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'159', 'msg'=>'Unable to add business'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.24', 'msg'=>'Unable to add business'));
     }
     $business_id = $rc['insert_id'];
     ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $business_id, 
@@ -136,7 +136,7 @@ function ciniki_businesses_add(&$ciniki) {
 
     if( $business_id < 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'161', 'msg'=>'Unable to add business'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.25', 'msg'=>'Unable to add business'));
     }
 
     //
@@ -191,7 +191,7 @@ function ciniki_businesses_add(&$ciniki) {
         $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'user');
         if( $rc['stat'] != 'ok' ) {
             ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'158', 'msg'=>'Unable to lookup user'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.26', 'msg'=>'Unable to lookup user'));
         }
         $user_id = 0;
         if( isset($rc['user']) ) {
@@ -199,7 +199,7 @@ function ciniki_businesses_add(&$ciniki) {
             if( $rc['user']['email'] != $args['owner.email.address'] ) {
                 // Username matches, but email doesn't, they are trying to create a new account
                 ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'75', 'msg'=>'Username already taken'));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.27', 'msg'=>'Username already taken'));
             }
             else {
                 $user_id = $rc['user']['id'];
@@ -211,7 +211,7 @@ function ciniki_businesses_add(&$ciniki) {
             if( !isset($args['owner.name.first']) || $args['owner.name.first'] == '' 
                 || !isset($args['owner.name.last']) || $args['owner.name.last'] == '' 
                 || !isset($args['owner.name.display']) || $args['owner.name.display'] == '' ) {
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'154', 'msg'=>'You must specify a first, last and display name'));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.28', 'msg'=>'You must specify a first, last and display name'));
             }
             $strsql = "INSERT INTO ciniki_users (uuid, date_added, email, username, firstname, lastname, display_name, "
                 . "perms, status, timeout, password, temp_password, temp_password_date, last_updated) VALUES ("
@@ -230,7 +230,7 @@ function ciniki_businesses_add(&$ciniki) {
             $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.users');
             if( $rc['stat'] != 'ok' ) { 
                 ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'76', 'msg'=>'Unable to add owner'));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.29', 'msg'=>'Unable to add owner'));
             } else {
                 $user_id = $rc['insert_id'];
             }
@@ -244,7 +244,7 @@ function ciniki_businesses_add(&$ciniki) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUUID');
         $rc = ciniki_core_dbUUID($ciniki, 'ciniki.businesses');
         if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2369', 'msg'=>'Unable to get a new UUID', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.30', 'msg'=>'Unable to get a new UUID', 'err'=>$rc['err']));
         }
         $business_user_uuid = $rc['uuid'];
         
@@ -257,7 +257,7 @@ function ciniki_businesses_add(&$ciniki) {
         $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
         if( $rc['stat'] != 'ok' ) {
             ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'157', 'msg'=>'Unable to add ciniki owner'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.31', 'msg'=>'Unable to add ciniki owner'));
         } 
     }
 
@@ -325,7 +325,7 @@ function ciniki_businesses_add(&$ciniki) {
         }
         if( !isset($rc['plan']) ) {
             ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2384', 'msg'=>'Unable to find plan'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.32', 'msg'=>'Unable to find plan'));
         }
         $plan = $rc['plan'];
 
@@ -355,7 +355,7 @@ function ciniki_businesses_add(&$ciniki) {
                 $rc = $fn($ciniki, $business_id);
                 if( $rc['stat'] != 'ok' ) {
                     ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-                    return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2385', 'msg'=>'Unable to initialize module ' . $mod[0] . '.' . $mod[1], 'err'=>$rc['err']));
+                    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.33', 'msg'=>'Unable to initialize module ' . $mod[0] . '.' . $mod[1], 'err'=>$rc['err']));
                 }
             }
         }
@@ -419,7 +419,7 @@ function ciniki_businesses_add(&$ciniki) {
                 return $rc;
             } 
             if( !isset($rc['id']) ) {
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2387', 'msg'=>'Unable to create invoice'));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.34', 'msg'=>'Unable to create invoice'));
             }
         }
     }

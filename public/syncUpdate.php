@@ -62,7 +62,7 @@ function ciniki_businesses_syncUpdate($ciniki) {
             $remote_type = 'bi';
             $args['flags'] = 0x03;
         } else {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'112', 'msg'=>'The type must be push, pull or bi.'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.91', 'msg'=>'The type must be push, pull or bi.'));
         }
     }
 
@@ -91,7 +91,7 @@ function ciniki_businesses_syncUpdate($ciniki) {
     }
     if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'109', 'msg'=>'Unable to update domain'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.92', 'msg'=>'Unable to update domain'));
     }
 
     //

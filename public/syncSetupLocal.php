@@ -66,7 +66,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
         return $rc;
     }   
     if( !isset($rc['business']) || !isset($rc['business']['uuid']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'521', 'msg'=>'Internal error'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.84', 'msg'=>'Internal error'));
     }
     $business_uuid  = $rc['business']['uuid'];
 
@@ -108,7 +108,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
         $remote_type = 'bi';
         $flags = 0x03;
     } else {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'520', 'msg'=>'The type must be push, pull or bi.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.85', 'msg'=>'The type must be push, pull or bi.'));
     }
     $remote_args = array(
         'business_uuid'=>$args['remote_uuid'],
@@ -120,7 +120,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
     );
     $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.businesses.syncSetupRemote', null, $remote_args);
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'526', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.86', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
     $sync_url = $rc['sync_url'];
     $public_key = $rc['public_key'];
@@ -143,7 +143,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
         . ")"; 
     $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) { 
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'527', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.87', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
     $sync_id = $rc['insert_id'];
     ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
@@ -167,7 +167,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
     );
     $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.businesses.syncActivateRemote', null, $remote_args);
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'518', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.88', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
 
     $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.users.logout', null, null);

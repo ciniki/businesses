@@ -70,7 +70,7 @@ function ciniki_businesses_userAdd(&$ciniki) {
             $found = 'yes';
         }
         if( $found == 'no' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1841', 'msg'=>'Invalid permissions'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.96', 'msg'=>'Invalid permissions'));
         }
     }
 
@@ -149,7 +149,7 @@ function ciniki_businesses_userAdd(&$ciniki) {
             return $rc;
         }
         if( $rc['num_affected_rows'] < 1 ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'512', 'msg'=>'Unable to add user to the business'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.97', 'msg'=>'Unable to add user to the business'));
         }
         $business_user_id = $rc['insert_id'];
 

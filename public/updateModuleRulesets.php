@@ -103,7 +103,7 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
                         2, 'ciniki_business_modules', "$name", 'ruleset', $new_ruleset);
                 } else {
                     ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-                    return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'212', 'msg'=>'Error occured during update'));
+                    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.94', 'msg'=>'Error occured during update'));
                 }
             }
             if( !isset($db_modules[$name]) && $new_ruleset != '') {
@@ -126,7 +126,7 @@ function ciniki_businesses_updateModuleRulesets($ciniki) {
                         2, 'ciniki_business_modules', "$name", 'ruleset', $new_ruleset);
                 } else {
                     ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-                    return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'213', 'msg'=>'Error occured during update'));
+                    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.95', 'msg'=>'Error occured during update'));
                 }
             }
         }

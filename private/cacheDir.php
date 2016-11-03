@@ -42,7 +42,7 @@ function ciniki_businesses_cacheDir(&$ciniki, $business_id) {
             return $rc;
         }
         if( !isset($rc['business']) ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1426', 'msg'=>'Unable to get business details'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.10', 'msg'=>'Unable to get business details'));
         }
 
         $business_uuid = $rc['business']['uuid'];
@@ -63,7 +63,7 @@ function ciniki_businesses_cacheDir(&$ciniki, $business_id) {
             $ciniki['business']['settings']['cache_dir'] = $cache_dir;
         }
     } else {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1427', 'msg'=>'Unable to get business cache directory'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.11', 'msg'=>'Unable to get business cache directory'));
     }
 
     return array('stat'=>'ok', 'cache_dir'=>$cache_dir);

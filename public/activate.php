@@ -32,7 +32,7 @@ function ciniki_businesses_activate($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
     $rc = ciniki_businesses_checkAccess($ciniki, $args['id'], 'ciniki.businesses.activate');
-    if( $rc['stat'] != 'ok' && $rc['err']['code'] != '691' && $rc['err']['code'] != '692' ) {
+    if( $rc['stat'] != 'ok' && $rc['err']['code'] != 'ciniki.businesses.17' && $rc['err']['code'] != 'ciniki.businesses.18' ) {
         return $rc;
     }
 
@@ -42,12 +42,13 @@ function ciniki_businesses_activate($ciniki) {
     // to this method.
     //
     if( ($ciniki['session']['user']['perms'] & 0x01) != 0x01 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1921', 'msg'=>'Permission denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.22', 'msg'=>'Permission denied'));
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuoteRequestArg');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-    $strsql = "UPDATE ciniki_businesses SET status = 1 "
+    $strsql = "UPDATE ciniki_businesses "
+        . "SET status = 1 "
         . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['id']) . "'";
     $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) {

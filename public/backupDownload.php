@@ -41,7 +41,7 @@ function ciniki_businesses_backupDownload($ciniki) {
 
     if( !preg_match("/^backup-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9].zip$/", $args['backup_id']) ) {
         error_log('-' . $args['backup_id'] . '-');
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1748', 'msg'=>'Invalid backup file'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.35', 'msg'=>'Invalid backup file'));
     }
 
     //
@@ -56,7 +56,7 @@ function ciniki_businesses_backupDownload($ciniki) {
         return $rc;
     }
     if( !isset($rc['business']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1734', 'msg'=>'Unable to find business'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.36', 'msg'=>'Unable to find business'));
     }
     $uuid = $rc['business']['uuid'];
 
@@ -67,7 +67,7 @@ function ciniki_businesses_backupDownload($ciniki) {
     // Check the file exists
     //
     if( !is_file($backup_file) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1749', 'msg'=>'Backup does not exist'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.37', 'msg'=>'Backup does not exist'));
     }
 
     header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 

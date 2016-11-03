@@ -42,7 +42,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
     if( $args['currency'] != 'USD' 
         && $args['currency'] != 'CAD'
         ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'676', 'msg'=>'Currency must be USD or CAD.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.69', 'msg'=>'Currency must be USD or CAD.'));
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
@@ -60,7 +60,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
         return $rc;
     }
     if( !isset($rc['subscription']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'677', 'msg'=>'Unable to change currency'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.70', 'msg'=>'Unable to change currency'));
     } 
     $subscription = $rc['subscription'];
 
@@ -80,7 +80,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
         $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
         if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'678', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.71', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
         }
         ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
             2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);
@@ -100,7 +100,7 @@ function ciniki_businesses_subscriptionChangeCurrency($ciniki) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
         $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
         if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'679', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.72', 'msg'=>'Unable to change currency', 'err'=>$rc['err']));
         }
         ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
             2, 'ciniki_business_subscriptions', $subscription['id'], 'currency', $args['currency']);

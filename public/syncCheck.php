@@ -47,7 +47,7 @@ function ciniki_businesses_syncCheck($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncCheckVersions');
     $rc = ciniki_core_syncCheckVersions($ciniki, $sync, $args['business_id']);
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'568', 'msg'=>'Incompatible versions', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.81', 'msg'=>'Incompatible versions', 'err'=>$rc['err']));
     }
 
     // hard coded return value, so the sync information does not also get passed back.

@@ -53,7 +53,7 @@ function ciniki_businesses_domainGet($ciniki) {
         return $rc;
     }
     if( !isset($rc['domain']) ) {
-        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'621', 'msg'=>'Unable to find domain'));
+        return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.businesses.42', 'msg'=>'Unable to find domain'));
     }
 
     return array('stat'=>'ok', 'domain'=>$rc['domain']);

@@ -53,7 +53,7 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
         return $rc;
     }
     if( !isset($rc['business']) || !isset($rc['business']['id']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'524', 'msg'=>'Access denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.89', 'msg'=>'Access denied'));
     }
     $args['business_id']  = $rc['business']['id'];
 
@@ -108,7 +108,7 @@ function ciniki_businesses_syncSetupRemote($ciniki) {
         . ")"; 
     $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'525', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.90', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
     $sync_id = $rc['insert_id'];
 
