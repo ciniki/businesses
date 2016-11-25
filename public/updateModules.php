@@ -64,9 +64,9 @@ function ciniki_businesses_updateModules($ciniki) {
     //  
     // Start transaction
     //  
-    require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionStart.php');
-    require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionRollback.php');
-    require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionStart');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionRollback');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
     $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;

@@ -5,10 +5,6 @@
 // This function will return the list of modules available in the system,
 // and which modules the requested business has access to.
 //
-// Info
-// ----
-// Status: beta
-//
 // Arguments
 // ---------
 // api_key:
@@ -73,11 +69,10 @@ function ciniki_businesses_getModules($ciniki) {
     $count = 0;
     foreach($mod_list as $module) {
         if( $module['label'] != '' && $module['installed'] == 'Yes' && (!isset($module['optional']) || $module['optional'] == 'yes') ) {
-            $modules[$count] = array('module'=>array('label'=>$module['label'], 'package'=>$module['package'], 
-                'name'=>$module['name'], 'status'=>'0'));
+            $modules[$count] = array('label'=>$module['label'], 'package'=>$module['package'], 'name'=>$module['name'], 'status'=>'0');
             if( isset($business_modules[$module['package'] . '.' . $module['name']]) 
                 && $business_modules[$module['package'] . '.' . $module['name']]['status'] == 1 ) {
-                $modules[$count]['module']['status'] = '1';
+                $modules[$count]['status'] = '1';
             }
             $count++;
         }

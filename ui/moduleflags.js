@@ -3,13 +3,42 @@
 function ciniki_businesses_moduleflags() {
     this.modules = null;
 
-    this.modules = new M.panel('Modules',
-        'ciniki_businesses_moduleflags', 'modules',
-        'mc', 'medium', 'sectioned', 'ciniki.businesses.moduleflags.modules');
+    this.modules = new M.panel('Modules', 'ciniki_businesses_moduleflags', 'modules', 'mc', 'medium', 'sectioned', 'ciniki.businesses.moduleflags.modules');
     this.modules.data = {};
     this.modules.fieldValue = function(s, i, d) { return this.data[i].flags; }
     this.modules.fieldHistoryArgs = function(s, i) {
         return {'method':'ciniki.businesses.getModuleFlagsHistory', 'args':{'business_id':M.curBusinessID, 'field':i}};
+    }
+    this.modules.open = function(cb) {
+        M.api.getJSONCb('ciniki.businesses.getModuleFlags', {'business_id':M.curBusinessID}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            var p = M.ciniki_businesses_moduleflags.modules;
+            p.sections = {};
+            //
+            // Setup the list of modules into the form fields
+            // 
+            p.data = rsp.modules;   
+            for(i in rsp.modules) {
+                if( rsp.modules[i].available_flags != null ) {
+                    var flags = {};
+                    for(j in rsp.modules[i].available_flags) {
+                        flags[rsp.modules[i].available_flags[j].flag.bit] =
+                            {'name':rsp.modules[i].available_flags[j].flag.name};
+                    }
+                    p.sections[i] = {
+                        'label':rsp.modules[i].proper_name,
+                        'fields':{}};
+                    p.sections[i].fields[i] = {'label':'',
+                        'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':flags
+                    };
+                }
+            }
+            p.refresh();
+            p.show(cb);
+        });
     }
     this.modules.save = function() {
         var c = this.serializeForm('no');
@@ -39,39 +68,6 @@ function ciniki_businesses_moduleflags() {
             return false;
         } 
 
-        //
-        // Get the detail for the user.  Do this for each request, to make sure
-        // we have the current data.  If the user switches businesses, then we
-        // want this data reloaded.
-        //
-        M.api.getJSONCb('ciniki.businesses.getModuleFlags', {'business_id':M.curBusinessID}, function(rsp) {
-            if( rsp.stat != 'ok' ) {
-                M.api.err(rsp);
-                return false;
-            }
-            var p = M.ciniki_businesses_moduleflags.modules;
-            p.sections = {};
-            //
-            // Setup the list of modules into the form fields
-            // 
-            p.data = rsp.modules;   
-            for(i in rsp.modules) {
-                if( rsp.modules[i].available_flags != null ) {
-                    var flags = {};
-                    for(j in rsp.modules[i].available_flags) {
-                        flags[rsp.modules[i].available_flags[j].flag.bit] =
-                            {'name':rsp.modules[i].available_flags[j].flag.name};
-                    }
-                    p.sections[i] = {
-                        'label':rsp.modules[i].proper_name,
-                        'fields':{}};
-                    p.sections[i].fields[i] = {'label':'',
-                            'hidelabel':'yes', 'type':'flags', 'join':'no', 'flags':flags
-                            };
-                }
-            }
-            p.refresh();
-            p.show(cb);
-        });
+        this.modules.open(cb);
     }
 }

@@ -47,6 +47,7 @@ function ciniki_businesses_getModuleFlags($ciniki) {
     $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags "
         . "FROM ciniki_business_modules "
         . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND status > 0 "
         . "ORDER BY name "
         . "";   
     $rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'name');

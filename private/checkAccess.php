@@ -39,7 +39,8 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     // Get the list of permission_groups the user is a part of
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
-    $strsql = "SELECT permission_group FROM ciniki_business_users "
+    $strsql = "SELECT permission_group "
+        . "FROM ciniki_business_users "
         . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
         . "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
         . "AND package = 'ciniki' "

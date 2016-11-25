@@ -3,9 +3,11 @@
 // change the details of their business
 //
 function ciniki_businesses_info() {
-    this.info = new M.panel('Business Information',
-        'ciniki_businesses_info', 'info',
-        'mc', 'medium', 'sectioned', 'ciniki.businesses.info');
+
+    //
+    // Edit the business information
+    //
+    this.info = new M.panel('Business Information', 'ciniki_businesses_info', 'info', 'mc', 'medium', 'sectioned', 'ciniki.businesses.info');
     this.info.sections = {
         'general':{'label':'General', 'fields':{
             'business.name':{'label':'Name', 'type':'text'},
@@ -54,7 +56,33 @@ function ciniki_businesses_info() {
         M.gE(this.panelUID + '_' + fid).value = unescape(result);
         this.removeLiveSearch(s, fid);
     };
-    this.info.addButton('save', 'Save', 'M.ciniki_businesses_info.save();');
+    this.info.open = function(cb) {
+        M.api.getJSONCb('ciniki.businesses.getDetails', {'business_id':M.curBusinessID, 'keys':'business,contact'}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            var p = M.ciniki_businesses_info.info;
+            p.data = rsp.details;
+            p.show(cb);
+        });
+    }
+    this.info.save = function() {
+        // Serialize the form data into a string for posting
+        var c = this.serializeForm('no');
+        if( c != '' ) {
+            M.api.postJSONCb('ciniki.businesses.updateDetails', {'business_id':M.curBusinessID}, c, function(rsp) {
+                if( rsp.stat != 'ok' ) {
+                    M.api.err(rsp);
+                    return false;
+                }
+                M.ciniki_businesses_info.info.close();
+            });
+        } else {
+            this.close();
+        }
+    }
+    this.info.addButton('save', 'Save', 'M.ciniki_businesses_info.info.save();');
     this.info.addClose('Cancel');
 
     this.start = function(cb, appPrefix) {
@@ -68,37 +96,6 @@ function ciniki_businesses_info() {
             return false;
         } 
     
-        //
-        // Get the detail for the business.  
-        //
-        M.api.getJSONCb('ciniki.businesses.getDetails', {'business_id':M.curBusinessID, 'keys':'business,contact'}, function(rsp) {
-            if( rsp.stat != 'ok' ) {
-                M.api.err(rsp);
-                return false;
-            }
-            var p = M.ciniki_businesses_info.info;
-            p.data = rsp.details;
-            p.show(cb);
-        });
-    }
-
-    // 
-    // Submit the form
-    //
-    this.save = function() {
-        // Serialize the form data into a string for posting
-        var c = this.info.serializeForm('no');
-        if( c != '' ) {
-            M.api.postJSONCb('ciniki.businesses.updateDetails', {'business_id':M.curBusinessID}, c, function(rsp) {
-                if( rsp.stat != 'ok' ) {
-                    M.api.err(rsp);
-                    return false;
-                }
-                M.ciniki_businesses_info.info.close();
-            });
-        } else {
-            this.info.close();
-        }
+        this.info.open(cb);
     }
 }
-
