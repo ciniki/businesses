@@ -27,7 +27,7 @@ function ciniki_businesses_main() {
             if( this.sections[s].search != null && value != '' ) {
                 var sargs = (this.sections[s].search.args != null ? this.sections[s].search.args : []);
                 sargs['business_id'] = M.curBusinessID;
-                sargs['start_needle'] = value;
+                sargs['start_needle'] = encodeURIComponent(value);
                 sargs['limit'] = 10;
                 var container = this.sections[s].search.container;
                 M.api.getJSONBgCb(this.sections[s].search.method, sargs, function(rsp) {
