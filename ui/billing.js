@@ -55,7 +55,7 @@ function ciniki_businesses_billing() {
         '_buttons':{'label':'', 'buttons':{
             'stripe':{'label':'Subscribe with Credit Card', 
                 'visible':function() { return (M.ciniki_businesses_billing.menu.data != null && M.ciniki_businesses_billing.menu.data.status == 2) ? 'yes' : 'no'; }, 
-                'fn':'M.ciniki_businesses_billing.menu.paynow();'},
+                'fn':'M.ciniki_businesses_billing.menu.save(\'M.ciniki_businesses_billing.menu.paynow();\');'},
             'edit':{'label':'Edit', 
                 'visible':function() { return (M.userPerms&0x01) == 0x01 ? 'yes': 'no'; }, 
                 'fn':'M.ciniki_businesses_billing.edit.open(\'M.ciniki_businesses_billing.menu.open();\',M.ciniki_businesses_billing.menu.business_id);'},
@@ -132,7 +132,8 @@ function ciniki_businesses_billing() {
         if( cb == null ) { cb = 'M.ciniki_businesses_billing.menu.close();'; }
         var c = this.serializeForm('no');
         if( c != '' ) {
-            M.api.postJSONCb('ciniki.businesses.subscriptionUpdate', {'business_id':this.business_id}, c, function(rsp) {
+            console.log(c);
+            M.api.postJSONCb('ciniki.businesses.subscriptionCustomerUpdate', {'business_id':this.business_id}, c, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;

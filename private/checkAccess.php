@@ -103,6 +103,7 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
         'ciniki.businesses.updateModuleRulesets',
         'ciniki.businesses.subscriptionInfo',
         'ciniki.businesses.subscriptionChangeCurrency',
+        'ciniki.businesses.subscriptionCustomerUpdate',
         'ciniki.businesses.subscriptionCancel',
         'ciniki.businesses.settingsIntlGet',
         'ciniki.businesses.settingsIntlUpdate',
