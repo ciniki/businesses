@@ -303,8 +303,16 @@ function ciniki_businesses_main() {
         if( rsp.settings != null && rsp.settings['ciniki.products'] != null ) {
             M.curBusiness.products = {'settings':rsp.settings['ciniki.products']};
         }
-        if( rsp.settings != null && rsp.settings['googlemapsapikey'] != null && rsp.settings['googlemapsapikey'] != '' ) {
-            M.curBusiness.settings = {'googlemapsapikey':rsp.settings['googlemapsapikey']};
+        if( rsp.settings != null ) {
+            if( M.curBusiness.settings == null ) {
+                M.curBusiness.settings = {};
+            }
+            if( rsp.settings['googlemapsapikey'] != null && rsp.settings['googlemapsapikey'] != '' ) {
+                M.curBusiness.settings.googlemapsapikey = rsp.settings['googlemapsapikey'];
+            }
+            if( rsp.settings['uiAppOverrides'] != null && rsp.settings['uiAppOverrides'] != '' ) {
+                M.curBusiness.settings.uiAppOverrides = rsp.settings['uiAppOverrides'];
+            }
         }
         if( rsp.intl != null ) {
             M.curBusiness.intl = rsp.intl;
