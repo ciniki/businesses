@@ -207,6 +207,16 @@ function ciniki_businesses_getUserSettings($ciniki) {
         $prev_label = $item['label'];
     }
 
+    //
+    // Check for menu items with no edit specified
+    //
+    foreach($rsp['menu_items'] as $iid => $item) {
+        if( !isset($item['edit']) ) {
+            unset($rsp['menu_items'][$iid]);
+        }
+    }
+
+
     return $rsp;
 }
 ?>
