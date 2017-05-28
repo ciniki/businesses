@@ -74,7 +74,7 @@ function ciniki_businesses_getUserBusinesses($ciniki) {
             . "AND ciniki_business_users.status = 10 "
             . "AND ciniki_business_users.business_id = ciniki_businesses.id "
             . "AND ciniki_businesses.status < 60 "  // Allow suspended businesses to be listed, so user can login and update billing/unsuspend
-            . "ORDER BY ciniki_businesses.name ";
+            . "ORDER BY ciniki_business_users.permission_group, ciniki_businesses.name ";
 //      $strsql = "SELECT DISTINCT id, name, ciniki_business_users.permission_group, "
 //          . "d1.detail_value AS css "
 //          . "FROM ciniki_business_users, ciniki_businesses "
