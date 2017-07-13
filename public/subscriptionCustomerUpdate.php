@@ -104,7 +104,7 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
         }
         if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
             ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.78', 'msg'=>'Unable to update subscription'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.103', 'msg'=>'Unable to update subscription'));
         }
     }
 
