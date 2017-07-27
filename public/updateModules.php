@@ -79,10 +79,11 @@ function ciniki_businesses_updateModules($ciniki) {
         $name = $module['package'] . '.' . $module['name'];
         if( isset($ciniki['request']['args'][$name]) ) {
             $strsql = "INSERT INTO ciniki_business_modules "
-                . "(business_id, package, module, status, ruleset, date_added, last_updated) "
+                . "(business_id, package, module, flags, status, ruleset, date_added, last_updated) "
                 . "VALUES ('" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "', "
                 . "'" . ciniki_core_dbQuote($ciniki, $module['package']) . "', "
                 . "'" . ciniki_core_dbQuote($ciniki, $module['name']) . "', "
+                . "0, " 
                 . "'" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$name]) . "', "
                 . "'', UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
                 . "ON DUPLICATE KEY UPDATE "
