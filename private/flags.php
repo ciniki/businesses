@@ -34,7 +34,7 @@ function ciniki_businesses_flags($ciniki, $modules) {
         // 0x010000
         array('flag'=>array('bit'=>'17', 'name'=>'External ID')),
         array('flag'=>array('bit'=>'18', 'name'=>'Backups')),           // Backups with core/scripts/backup-cron.php
-//      array('flag'=>array('bit'=>'19', 'name'=>'')),
+        array('flag'=>array('bit'=>'19', 'name'=>'Reports')),
 //      array('flag'=>array('bit'=>'20', 'name'=>'')),
         );
 

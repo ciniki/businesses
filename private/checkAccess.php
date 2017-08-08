@@ -110,6 +110,11 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
         'ciniki.businesses.settingsAPIsGet',
         'ciniki.businesses.settingsAPIsUpdate',
         'ciniki.businesses.subscriptionStripeProcess',
+        'ciniki.businesses.reportAdd',
+        'ciniki.businesses.reportDelete',
+        'ciniki.businesses.reportGet',
+        'ciniki.businesses.reportList',
+        'ciniki.businesses.reportUpdate',
         );
     if( in_array($method, $owner_methods) && in_array('owners', $groups) ) {
         return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);

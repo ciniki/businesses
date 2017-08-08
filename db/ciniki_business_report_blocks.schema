@@ -1,0 +1,45 @@
+#
+# Description
+# -----------
+# This table stores the sections for a report.
+# 
+# Fields
+# ------
+# id:               The unique ID for this business_user.
+# uuid:             The Univeral Unique ID.
+# business_id:      The ID of the business.
+#
+# report_id:        The ID of the report the user is attached to.
+#
+# btype:            The type of block.
+#
+#                       10 - Reference to a block from another module, pulled via hooks.
+#                       50 - HTML **future**
+#
+# title:            The title for the section.
+#
+# sequence:         The order of the section.
+#
+# block_ref:        The reference to the block. This is a dot delimited package.module.block.
+#
+# options:          The php serialized array of option values.
+#
+# date_added:       The UTC date and time the record was created.
+# last_updated:     The UTC date and time the record was last updated.
+#
+create table ciniki_business_report_blocks (
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    report_id int not null,
+    btype tinyint unsigned not null,
+    title varchar(250) not null,
+    sequence int unsigned not null,
+    block_ref varchar(250) not null,
+    options varchar(10000) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    unique index (uuid),
+    index sync (business_id, uuid, last_updated)
+) ENGINE=InnoDB, COMMENT='v1.01';

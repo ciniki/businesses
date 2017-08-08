@@ -3,6 +3,7 @@
 // Description
 // -----------
 // This function will return the list of businesses and which modules they have turned on.
+// This function is not part of the business reports.
 //
 // Arguments
 // ---------

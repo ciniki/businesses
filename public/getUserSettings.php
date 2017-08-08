@@ -177,6 +177,19 @@ function ciniki_businesses_getUserSettings($ciniki) {
     }
 
     //
+    // Check for business reports flag, and a business owners
+    //
+    if( ciniki_core_checkModuleFlags($ciniki, 'ciniki.businesses', 0x040000) 
+        && (in_array('owners', $groups) || ($ciniki['session']['user']['perms']&0x01) == 0x01) 
+        ) {
+        $rsp['settings_menu_items'][] = array(
+            'priority'=>1050, 
+            'label'=>'Reports', 
+            'edit'=>array('app'=>'ciniki.businesses.reports'),
+            );
+    } 
+
+    //
     // Sort the menu items based on priority
     //
     usort($rsp['menu_items'], function($a, $b) {
