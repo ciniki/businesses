@@ -154,6 +154,27 @@ function ciniki_businesses_purge($ciniki) {
     }
 
     //
+    // Remove the storage director
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'hooks', 'storageDir');
+    $rc = ciniki_businesses_hooks_storageDir($ciniki, $business['id'], array());
+    if( $rc['stat'] != 'ok' ) {
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.115', 'msg'=>'Unable to get storage directory', 'err'=>$rc['err']));
+    }
+    if( isset($rc['storage_dir']) ) {
+        $storage_dir = $rc['storage_dir'];
+        error_log("PURGE[" . $business['id'] . "]: Storage dir " . $storage_dir);
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
+        $rc = ciniki_core_recursiveRmdir($ciniki, $storage_dir);
+        if( $rc['stat'] != 'ok' ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.116', 'msg'=>'Unable to remove storage directory contents', 'err'=>$rc['err']));
+        }
+        if( !rmdir($storage_dir) ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.117', 'msg'=>'Unable to remove storage directory'));
+        }
+    }
+
+    //
     // Remove core error logs
     //
     $strsql = "DELETE FROM ciniki_core_api_logs "
