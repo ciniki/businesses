@@ -53,7 +53,7 @@ function ciniki_businesses_searchBusinesses($ciniki) {
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
     $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
-        array('container'=>'businesses', 'fname'=>'name', 'name'=>'business', 
+        array('container'=>'businesses', 'fname'=>'id', 'name'=>'business', 
             'fields'=>array('id', 'name')),
         ));
     if( $rc['stat'] != 'ok' ) {
