@@ -224,7 +224,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
     // Check for menu items with no edit specified
     //
     foreach($rsp['menu_items'] as $iid => $item) {
-        if( !isset($item['edit']) ) {
+        if( !isset($item['edit']) && !isset($item['subitems']) ) {
             unset($rsp['menu_items'][$iid]);
         }
     }
