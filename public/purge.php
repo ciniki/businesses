@@ -154,7 +154,7 @@ function ciniki_businesses_purge($ciniki) {
     }
 
     //
-    // Remove the storage director
+    // Remove the storage directory
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'hooks', 'storageDir');
     $rc = ciniki_businesses_hooks_storageDir($ciniki, $business['id'], array());
@@ -171,6 +171,40 @@ function ciniki_businesses_purge($ciniki) {
         }
         if( !rmdir($storage_dir) ) {
             return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.117', 'msg'=>'Unable to remove storage directory'));
+        }
+    }
+
+    //
+    // Remove the cache directory
+    //
+    $cache_dir = $ciniki['config']['ciniki.core']['cache_dir'] . '/' . $business['uuid'][0] . '/' . $business['uuid'];
+    if( is_dir($cache_dir) ) {
+        $rc = ciniki_core_recursiveRmdir($ciniki, $cache_dir);
+        error_log("PURGE[" . $business['id'] . "]: Cache dir " . $cache_dir);
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
+        $rc = ciniki_core_recursiveRmdir($ciniki, $cache_dir);
+        if( $rc['stat'] != 'ok' ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.116', 'msg'=>'Unable to remove cache directory contents', 'err'=>$rc['err']));
+        }
+        if( !rmdir($cache_dir) ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.117', 'msg'=>'Unable to remove cache directory'));
+        }
+    }
+
+    //
+    // Remove the web cache directory
+    //
+    $cache_dir = $ciniki['config']['ciniki.core']['modules_dir'] . '/web/cache/' . $business['uuid'][0] . '/' . $business['uuid'];
+    if( is_dir($cache_dir) ) {
+        $rc = ciniki_core_recursiveRmdir($ciniki, $cache_dir);
+        error_log("PURGE[" . $business['id'] . "]: web cache dir " . $cache_dir);
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
+        $rc = ciniki_core_recursiveRmdir($ciniki, $cache_dir);
+        if( $rc['stat'] != 'ok' ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.116', 'msg'=>'Unable to remove web cache directory contents', 'err'=>$rc['err']));
+        }
+        if( !rmdir($cache_dir) ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.117', 'msg'=>'Unable to remove web cache directory'));
         }
     }
 
