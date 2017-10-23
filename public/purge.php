@@ -163,14 +163,16 @@ function ciniki_businesses_purge($ciniki) {
     }
     if( isset($rc['storage_dir']) ) {
         $storage_dir = $rc['storage_dir'];
-        error_log("PURGE[" . $business['id'] . "]: Storage dir " . $storage_dir);
-        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
-        $rc = ciniki_core_recursiveRmdir($ciniki, $storage_dir);
-        if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.116', 'msg'=>'Unable to remove storage directory contents', 'err'=>$rc['err']));
-        }
-        if( !rmdir($storage_dir) ) {
-            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.117', 'msg'=>'Unable to remove storage directory'));
+        if( is_dir($storage_dir) ) {
+            error_log("PURGE[" . $business['id'] . "]: Storage dir " . $storage_dir);
+            ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
+            $rc = ciniki_core_recursiveRmdir($ciniki, $storage_dir);
+            if( $rc['stat'] != 'ok' ) {
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.116', 'msg'=>'Unable to remove storage directory contents', 'err'=>$rc['err']));
+            }
+            if( !rmdir($storage_dir) ) {
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.117', 'msg'=>'Unable to remove storage directory'));
+            }
         }
     }
 
