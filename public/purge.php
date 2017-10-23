@@ -93,6 +93,7 @@ function ciniki_businesses_purge($ciniki) {
     //
     // Go through the modules and delete all
     //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDelete');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'getModuleList');
     $rc = ciniki_core_getModuleList($ciniki);
@@ -200,7 +201,6 @@ function ciniki_businesses_purge($ciniki) {
     if( is_dir($cache_dir) ) {
         $rc = ciniki_core_recursiveRmdir($ciniki, $cache_dir);
         error_log("PURGE[" . $business['id'] . "]: web cache dir " . $cache_dir);
-        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'recursiveRmdir');
         $rc = ciniki_core_recursiveRmdir($ciniki, $cache_dir);
         if( $rc['stat'] != 'ok' ) {
             return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.116', 'msg'=>'Unable to remove web cache directory contents', 'err'=>$rc['err']));
