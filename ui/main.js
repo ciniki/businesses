@@ -445,6 +445,9 @@ function ciniki_businesses_main() {
                             args += (args != '' ? ', ':'') + '\'' + k + '\':' + eval(r.menu_items[i].subitems[j].edit.args[k]);
                         }
                         item.list[j] = {'label':r.menu_items[i].subitems[j].label, 'fn':'M.startApp(\'' + r.menu_items[i].subitems[j].edit.app + '\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{' + args + '});'};
+                        if( r.menu_items[i].subitems[j].count != null ) {
+                            item.list[j].count = r.menu_items[i].subitems[j].count;
+                        }
                     }
                     this.menu.sections[c] = item;
                     menu_search = 0;
