@@ -118,6 +118,7 @@ function ciniki_businesses_reports() {
                 '_buttons':{'label':'', 'aside':'yes', 'buttons':{
                     'save':{'label':'Save', 'fn':'M.ciniki_businesses_reports.report.save();'},
                     'pdf':{'label':'Download PDF', 'fn':'M.ciniki_businesses_reports.report.downloadPDF();'},
+                    'testemail':{'label':'Send Test Email', 'fn':'M.ciniki_businesses_reports.report.save("M.ciniki_businesses_reports.report.emailTestPDF();");'},
                     'delete':{'label':'Delete', 'visible':function() {return M.ciniki_businesses_reports.report.report_id>0?'yes':'no';}, 'fn':'M.ciniki_businesses_reports.report.remove();'},
                     }},
                 };
@@ -168,6 +169,15 @@ function ciniki_businesses_reports() {
     }
     this.report.downloadPDF = function() {
         this.save("M.api.openPDF('ciniki.businesses.reportPDF', {'business_id':" + M.curBusinessID + ", 'report_id':" + this.report_id + "});");
+    }
+    this.report.emailTestPDF = function() {
+        M.api.getJSONCb('ciniki.businesses.reportPDF', {'business_id':M.curBusinessID, 'report_id':this.report_id, 'email':'test'}, function(rsp) {
+            if( rsp.stat != 'ok' ) {
+                M.api.err(rsp);
+                return false;
+            }
+            alert('Email sent');
+        });
     }
     this.report.save = function(cb) {
         if( cb == null ) { cb = 'M.ciniki_businesses_reports.report.close();'; }

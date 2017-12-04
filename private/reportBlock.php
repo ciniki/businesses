@@ -49,6 +49,7 @@ function ciniki_businesses_reportBlock($ciniki, $business_id, &$report, $block) 
             }
         }
         $report['text'] .= "\n\n";
+        $report['html'] .= "<br/>";
     }
 
     return array('stat'=>'ok', 'report'=>$report);

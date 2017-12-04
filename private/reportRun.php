@@ -37,6 +37,7 @@ function ciniki_businesses_reportRun($ciniki, $business_id, $report_id) {
     // Create the email 
     //
     if( isset($report['text']) ) {
+        
         print_r($report['text']);
         print_r($report['html']);
     }

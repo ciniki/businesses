@@ -19,7 +19,7 @@ function ciniki_businesses_reportChunkTable($ciniki, $business_id, &$report, $ch
         $report['text'] .= $chunk['textlist'];
     }
 
-    $html = "<table>";
+    $html = '<table cellpadding="5">';
     $html .= "<thead><tr>";
     $pdfhtml = '<table border="0" cellpadding="5" cellspacing="0" style="border: 0.1px solid #aaa;">';
     $pdfhtml .= "<thead><tr>";
@@ -35,9 +35,9 @@ function ciniki_businesses_reportChunkTable($ciniki, $business_id, &$report, $ch
 
     foreach($chunk['data'] as $row) {
         $html .= "<tr>";
-        $pdfhtml .= "<tr>";
+        $pdfhtml .= '<tr nobr="true">';
         foreach($chunk['columns'] as $col) {
-            $html .= "<td>";
+            $html .= '<td style="border: 1px solid #aaa; padding: 5px;">';
             $pdfhtml .= '<td style="border: 0.1px solid #aaa;' . (isset($col['pdfwidth']) ? 'width:' . $col['pdfwidth'] : '') . '">' ;
             if( isset($row[$col['field']]) ) {
                 $html .= preg_replace("/\n/", "<br/>", $row[$col['field']]);

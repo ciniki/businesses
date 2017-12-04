@@ -51,6 +51,7 @@ function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
             public $toc = 'no';
             public $header_height = 10;
             public $footer_height = 12;
+            public $bottom_margin = 25;
             public $footer_text = '';
             public $usable_width = 186;
             public $section_numbering = 'no';
@@ -97,6 +98,10 @@ function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
                     $this->sss = 0;
                     if( $this->getY() > ($this->getPageHeight() - $this->top_margin - $this->bottom_margin - 40) ) {
                         $this->AddPage();
+                    } else {
+                        if( $this->s > 1 ) {
+                            $this->Ln(8);
+                        }
                     }
                     $this->SetFont('helvetica', 'B', '16');
                     if( $this->section_numbering == 'yes' ) {
@@ -168,11 +173,14 @@ function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
     $report['pdf']->top_margin = 25;
     $report['pdf']->left_margin = 15;
     $report['pdf']->right_margin = 15;
+    $report['pdf']->bottom_margin = 20;
     $report['pdf']->SetMargins($report['pdf']->left_margin, $report['pdf']->top_margin, $report['pdf']->right_margin);
     $report['pdf']->SetHeaderMargin($report['pdf']->header_height);
     $report['pdf']->setPageOrientation('P', false);
-    $report['pdf']->SetFooterMargin(0);
+    $report['pdf']->SetFooterMargin($report['pdf']->bottom_margin);
     $report['pdf']->title = $report['title'];
+
+    $report['pdf']->SetAutoPageBreak(TRUE, $report['pdf']->bottom_margin);
 
     //
     // Set PDF basics
