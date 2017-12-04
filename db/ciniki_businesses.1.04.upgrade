@@ -1,5 +1,5 @@
 #
-# This file will upgrade the database table businesses to version 1.04.
+# This file will upgrade the database table tenants to version 1.04.
 #
-CREATE UNIQUE INDEX idx_uuid ON ciniki_businesses (uuid);
-ALTER TABLE ciniki_businesses COMMENT='v1.04';
+CREATE UNIQUE INDEX idx_uuid ON ciniki_tenants (uuid);
+ALTER TABLE ciniki_tenants COMMENT='v1.04';

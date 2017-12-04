@@ -1,9 +1,9 @@
 #
-# Add the uuid column to ciniki_business_users for replication.
+# Add the uuid column to ciniki_tenant_users for replication.
 #
-ALTER TABLE ciniki_business_user_details DROP PRIMARY KEY;
-ALTER TABLE ciniki_business_user_details ADD COLUMN id int not null auto_increment PRIMARY KEY FIRST;
-ALTER TABLE ciniki_business_user_details ADD COLUMN uuid char(36) not null after id;
-UPDATE ciniki_business_user_details SET uuid = uuid();
-CREATE UNIQUE INDEX business_id ON ciniki_business_user_details (business_id, user_id, detail_key);
-ALTER TABLE ciniki_business_user_details COMMENT='v1.02';
+ALTER TABLE ciniki_tenant_user_details DROP PRIMARY KEY;
+ALTER TABLE ciniki_tenant_user_details ADD COLUMN id int not null auto_increment PRIMARY KEY FIRST;
+ALTER TABLE ciniki_tenant_user_details ADD COLUMN uuid char(36) not null after id;
+UPDATE ciniki_tenant_user_details SET uuid = uuid();
+CREATE UNIQUE INDEX tnid ON ciniki_tenant_user_details (tnid, user_id, detail_key);
+ALTER TABLE ciniki_tenant_user_details COMMENT='v1.02';

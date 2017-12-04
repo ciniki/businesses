@@ -3,7 +3,7 @@
 // Description
 // -----------
 // This method will check the number of records in each sync object table 
-// for a business.  If no sync_id is provided, it will return the table
+// for a tenant.  If no sync_id is provided, it will return the table
 // row counts for all syncs.
 //
 // Returns
@@ -19,13 +19,13 @@
 //      </module>
 // </modules>
 //
-function ciniki_businesses_syncCheckRowCounts($ciniki) {
+function ciniki_tenants_syncCheckRowCounts($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'sync_id'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Sync'), 
         ));
     if( $rc['stat'] != 'ok' ) {
@@ -36,8 +36,8 @@ function ciniki_businesses_syncCheckRowCounts($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncCheckRowCounts');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.syncCheckRowCounts');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -50,7 +50,7 @@ function ciniki_businesses_syncCheckRowCounts($ciniki) {
     //
     // Get the local object table counts
     //
-    $rc = ciniki_core_dbGetRowCounts($ciniki, $args['business_id']);
+    $rc = ciniki_core_dbGetRowCounts($ciniki, $args['tnid']);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -59,17 +59,17 @@ function ciniki_businesses_syncCheckRowCounts($ciniki) {
     //
     // Get the list of syncs, or just one if specified
     //
-    $strsql = "SELECT ciniki_business_syncs.id, "
-        . "ciniki_business_syncs.remote_name, ciniki_business_syncs.remote_uuid "
-        . "FROM ciniki_business_syncs "
-        . "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+    $strsql = "SELECT ciniki_tenant_syncs.id, "
+        . "ciniki_tenant_syncs.remote_name, ciniki_tenant_syncs.remote_uuid "
+        . "FROM ciniki_tenant_syncs "
+        . "WHERE ciniki_tenant_syncs.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND status = 10 ";
     if( isset($args['sync_id']) && $args['sync_id'] != '' ) {
         $strsql .= "AND id = '" . ciniki_core_dbQuote($ciniki, $args['sync_id']) . "' ";
     }
     $strsql .= "ORDER BY remote_name ";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.tenants', array(
         array('container'=>'syncs', 'fname'=>'id', 'name'=>'sync',
             'fields'=>array('id', 'name'=>'remote_name', 'remote_uuid')),
         ));
@@ -86,7 +86,7 @@ function ciniki_businesses_syncCheckRowCounts($ciniki) {
     // loop through all remote syncs and get the table counts
     //
     foreach($syncs as $sid => $s) {
-        $rc = ciniki_core_syncLoad($ciniki, $args['business_id'], $s['sync']['id']);
+        $rc = ciniki_core_syncLoad($ciniki, $args['tnid'], $s['sync']['id']);
         if( $rc['stat'] != 'ok' ) {
             return $rc;
         }

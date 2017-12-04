@@ -17,21 +17,21 @@
 //      <user id='1' display_name='' />
 // </users>
 //
-function ciniki_businesses_hooks_lookupUserContactInfo(&$ciniki, $business_id, $args) {
+function ciniki_tenants_hooks_lookupUserContactInfo(&$ciniki, $tnid, $args) {
 
     if( !isset($args['user_id']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.5', 'msg'=>'No user specified.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.5', 'msg'=>'No user specified.'));
     }
 
     //
     // Get the default information for the user
     //
-    $strsql = "SELECT ciniki_business_users.id, "
+    $strsql = "SELECT ciniki_tenant_users.id, "
         . "ciniki_users.id, ciniki_users.display_name, ciniki_users.firstname, ciniki_users.lastname, ciniki_users.email "
-        . "FROM ciniki_business_users, ciniki_users "
-        . "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
-        . "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
-        . "AND ciniki_business_users.user_id = ciniki_users.id "
+        . "FROM ciniki_tenant_users, ciniki_users "
+        . "WHERE ciniki_tenant_users.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
+        . "AND ciniki_tenant_users.user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
+        . "AND ciniki_tenant_users.user_id = ciniki_users.id "
         . "LIMIT 1"
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
@@ -40,7 +40,7 @@ function ciniki_businesses_hooks_lookupUserContactInfo(&$ciniki, $business_id, $
         return $rc;
     }
     if( !isset($rc['user']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.6', 'msg'=>'Unable to find user'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.6', 'msg'=>'Unable to find user'));
     }
     $user = $rc['user'];
 
@@ -48,13 +48,13 @@ function ciniki_businesses_hooks_lookupUserContactInfo(&$ciniki, $business_id, $
     // Lookup contact details
     //
     $strsql = "SELECT detail_key, detail_value "
-        . "FROM ciniki_business_user_details "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "FROM ciniki_tenant_user_details "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND user_id = '" . ciniki_core_dbQuote($ciniki, $args['user_id']) . "' "
         . "AND detail_key like 'contact%' "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList2');
-    $rc = ciniki_core_dbQueryList2($ciniki, $strsql, 'ciniki.businesses', 'details');
+    $rc = ciniki_core_dbQueryList2($ciniki, $strsql, 'ciniki.tenants', 'details');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

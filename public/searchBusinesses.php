@@ -16,7 +16,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_searchBusinesses($ciniki) {
+function ciniki_tenants_searchTenants($ciniki) {
     //  
     // Find all the required and optional arguments
     //  
@@ -32,10 +32,10 @@ function ciniki_businesses_searchBusinesses($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.searchBusinesses'); 
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, 0, 'ciniki.tenants.searchTenants'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -44,7 +44,7 @@ function ciniki_businesses_searchBusinesses($ciniki) {
     // Search for categories
     //
     $strsql = "SELECT id, name "
-        . "FROM ciniki_businesses "
+        . "FROM ciniki_tenants "
         . "WHERE (name like '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
             . "OR name like '% " . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
             . ") "
@@ -52,16 +52,16 @@ function ciniki_businesses_searchBusinesses($ciniki) {
         . "ORDER BY name COLLATE latin1_general_cs "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
-        array('container'=>'businesses', 'fname'=>'id', 'name'=>'business', 
+    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.tenants', array(
+        array('container'=>'tenants', 'fname'=>'id', 'name'=>'tenant', 
             'fields'=>array('id', 'name')),
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    if( !isset($rc['businesses']) || !is_array($rc['businesses']) ) {
-        return array('stat'=>'ok', 'businesses'=>array());
+    if( !isset($rc['tenants']) || !is_array($rc['tenants']) ) {
+        return array('stat'=>'ok', 'tenants'=>array());
     }
-    return array('stat'=>'ok', 'businesses'=>$rc['businesses']);
+    return array('stat'=>'ok', 'tenants'=>$rc['tenants']);
 }
 ?>

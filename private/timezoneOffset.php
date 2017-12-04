@@ -2,7 +2,7 @@
 //
 // Description
 // -----------
-// This function will return the utc offset for the business timezone.
+// This function will return the utc offset for the tenant timezone.
 // Currently this is fixed to America/Toronto, but will be updated in the future.
 //
 // Info
@@ -15,7 +15,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_timezoneOffset($ciniki, $format='mysql') {
+function ciniki_tenants_timezoneOffset($ciniki, $format='mysql') {
 
     //
     // Check if the user is logged in, otherwise return 

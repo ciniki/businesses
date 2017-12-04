@@ -9,19 +9,19 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:             The ID of the business to lock.
+// tnid:             The ID of the tenant to lock.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_syncSetupLocal($ciniki) {
+function ciniki_tenants_syncSetupLocal($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'remote_name'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote Name'), 
         'remote_uuid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Remote UUID'), 
         'type'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Type'), 
@@ -38,8 +38,8 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncSetupLocal');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.syncSetupLocal');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -55,25 +55,25 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'cinikiAPIGet');
 
     //
-    // Get the business uuid
+    // Get the tenant uuid
     //
     $strsql = "SELECT uuid "
-        . "FROM ciniki_businesses "
-        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "FROM ciniki_tenants "
+        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
-    if( !isset($rc['business']) || !isset($rc['business']['uuid']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.84', 'msg'=>'Internal error'));
+    if( !isset($rc['tenant']) || !isset($rc['tenant']['uuid']) ) {
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.84', 'msg'=>'Internal error'));
     }
-    $business_uuid  = $rc['business']['uuid'];
+    $tenant_uuid  = $rc['tenant']['uuid'];
 
     //
     // Create transaction
     //
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -108,19 +108,19 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
         $remote_type = 'bi';
         $flags = 0x03;
     } else {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.85', 'msg'=>'The type must be push, pull or bi.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.85', 'msg'=>'The type must be push, pull or bi.'));
     }
     $remote_args = array(
-        'business_uuid'=>$args['remote_uuid'],
+        'tenant_uuid'=>$args['remote_uuid'],
         'type'=>$remote_type,
         'name'=>$ciniki['config']['core']['sync.name'],
         'url'=>$ciniki['config']['core']['sync.url'],
-        'uuid'=>$business_uuid,
+        'uuid'=>$tenant_uuid,
         'public_key'=>$public_str,
     );
-    $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.businesses.syncSetupRemote', null, $remote_args);
+    $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.tenants.syncSetupRemote', null, $remote_args);
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.86', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.86', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
     $sync_url = $rc['sync_url'];
     $public_key = $rc['public_key'];
@@ -128,10 +128,10 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
     //
     // Add sync to local
     //
-    $strsql = "INSERT INTO ciniki_business_syncs (business_id, flags, status, "
+    $strsql = "INSERT INTO ciniki_tenant_syncs (tnid, flags, status, "
         . "local_private_key, remote_name, remote_uuid, remote_url, remote_public_key, "
         . "date_added, last_updated) VALUES ("
-        . "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "'" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . ", '" . ciniki_core_dbQuote($ciniki, $flags) . "' "
         . ", 10 " 
         . ", '" . ciniki_core_dbQuote($ciniki, $private_str) . "' "
@@ -141,33 +141,33 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
         . ", '" . ciniki_core_dbQuote($ciniki, $public_key) . "' "
         . ", UTC_TIMESTAMP(), UTC_TIMESTAMP() "
         . ")"; 
-    $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
+    $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.87', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.87', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
     $sync_id = $rc['insert_id'];
-    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        1, 'ciniki_business_syncs', $sync_id, 'flags', $flags);
-    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        1, 'ciniki_business_syncs', $sync_id, 'status', '10');
-    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        1, 'ciniki_business_syncs', $sync_id, 'remote_name', $args['remote_name']);
-    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        1, 'ciniki_business_syncs', $sync_id, 'remote_uuid', $args['remote_uuid']);
-    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        1, 'ciniki_business_syncs', $sync_id, 'remote_url', $sync_url);
+    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        1, 'ciniki_tenant_syncs', $sync_id, 'flags', $flags);
+    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        1, 'ciniki_tenant_syncs', $sync_id, 'status', '10');
+    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        1, 'ciniki_tenant_syncs', $sync_id, 'remote_name', $args['remote_name']);
+    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        1, 'ciniki_tenant_syncs', $sync_id, 'remote_uuid', $args['remote_uuid']);
+    ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        1, 'ciniki_tenant_syncs', $sync_id, 'remote_url', $sync_url);
 
     //
     // call syncActivateRemote
     //
     $remote_args = array(
-        'business_uuid'=>$args['remote_uuid'],
+        'tenant_uuid'=>$args['remote_uuid'],
         'url'=>$ciniki['config']['core']['sync.url'],
-        'uuid'=>$business_uuid,
+        'uuid'=>$tenant_uuid,
     );
-    $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.businesses.syncActivateRemote', null, $remote_args);
+    $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.tenants.syncActivateRemote', null, $remote_args);
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.88', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.88', 'msg'=>'Unable to add remote sync', 'err'=>$rc['err']));
     }
 
     $rc = ciniki_core_cinikiAPIPost($ciniki, $api, 'ciniki.users.logout', null, null);
@@ -176,7 +176,7 @@ function ciniki_businesses_syncSetupLocal($ciniki) {
     //
     // Commit transaction
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   

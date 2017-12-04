@@ -1,6 +1,6 @@
 #
-# This file will upgrade the database table businesses to version 1.06.
+# This file will upgrade the database table tenants to version 1.06.
 #
-ALTER TABLE ciniki_businesses DROP COLUMN modules;
-ALTER TABLE ciniki_businesses ADD COLUMN logo_id int not null AFTER db_prefix;
-ALTER TABLE ciniki_businesses COMMENT='v1.06';
+ALTER TABLE ciniki_tenants DROP COLUMN modules;
+ALTER TABLE ciniki_tenants ADD COLUMN logo_id int not null AFTER db_prefix;
+ALTER TABLE ciniki_tenants COMMENT='v1.06';

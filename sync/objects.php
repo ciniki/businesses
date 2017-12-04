@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_sync_objects($ciniki, &$sync, $business_id, $args) {
+function ciniki_tenants_sync_objects($ciniki, &$sync, $tnid, $args) {
     //
     // Note: Pass the standard set of arguments in, they may be required in the future
     //
@@ -27,14 +27,14 @@ function ciniki_businesses_sync_objects($ciniki, &$sync, $business_id, $args) {
 //          'avatar_id'=>array('ref'=>'ciniki.images.image'),
 //          ),
 //      'history_table'=>'ciniki_user_history',
-//      'lookup'=>'ciniki.businesses.user.lookup',
-//      'get'=>'ciniki.businesses.user.get',
-//      'update'=>'ciniki.businesses.user.update',
-//      'list'=>'ciniki.businesses.user.list',
+//      'lookup'=>'ciniki.tenants.user.lookup',
+//      'get'=>'ciniki.tenants.user.get',
+//      'update'=>'ciniki.tenants.user.update',
+//      'list'=>'ciniki.tenants.user.list',
 //      );
     $objects['user'] = array(
-        'name'=>'Business User',
-        'table'=>'ciniki_business_users',
+        'name'=>'Tenant User',
+        'table'=>'ciniki_tenant_users',
         'fields'=>array(
             'user_id'=>array('ref'=>'ciniki.users.user'),
             'eid'=>array(),
@@ -42,22 +42,22 @@ function ciniki_businesses_sync_objects($ciniki, &$sync, $business_id, $args) {
             'permission_group'=>array(),
             'status'=>array(),
             ),
-        'history_table'=>'ciniki_business_history',
+        'history_table'=>'ciniki_tenant_history',
         );
     $objects['user_detail'] = array(
-        'name'=>'Business User Detail',
-        'table'=>'ciniki_business_user_details',
+        'name'=>'Tenant User Detail',
+        'table'=>'ciniki_tenant_user_details',
         'fields'=>array(
             'user_id'=>array('ref'=>'ciniki.users.user'),
             'detail_key'=>array(),
             'detail_value'=>array(),
             ),
-        'history_table'=>'ciniki_business_history',
+        'history_table'=>'ciniki_tenant_history',
         );
-//  $objects['business'] = array(
-//      'name'=>'Business', 
-//      'table'=>'ciniki_businesses',
-//      'history_table'=>'ciniki_business_history',
+//  $objects['tenant'] = array(
+//      'name'=>'Tenant', 
+//      'table'=>'ciniki_tenants',
+//      'history_table'=>'ciniki_tenant_history',
 //      'fields'=>array(
 //          'tagline'=>array(),
 //          'description'=>array(),
@@ -67,9 +67,9 @@ function ciniki_businesses_sync_objects($ciniki, &$sync, $business_id, $args) {
 //      );
     $objects['details'] = array(
         'type'=>'settings',
-        'name'=>'Business Details',
-        'table'=>'ciniki_business_details',
-        'history_table'=>'ciniki_business_history',
+        'name'=>'Tenant Details',
+        'table'=>'ciniki_tenant_details',
+        'history_table'=>'ciniki_tenant_history',
         );
 
     return array('stat'=>'ok', 'objects'=>$objects);

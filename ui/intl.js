@@ -1,11 +1,11 @@
 //
-// This file contains the UI to setup the intl settings for the business.
+// This file contains the UI to setup the intl settings for the tenant.
 //
-function ciniki_businesses_intl() {
+function ciniki_tenants_intl() {
     this.init = function() {
         this.main = new M.panel('Localization',
-            'ciniki_businesses_intl', 'main',
-            'mc', 'medium', 'sectioned', 'ciniki.businesses.intl.main');
+            'ciniki_tenants_intl', 'main',
+            'mc', 'medium', 'sectioned', 'ciniki.tenants.intl.main');
         this.main.data = {};
         this.main.sections = {
 //          'info':{'label':'', 'type':'htmlcontent'},
@@ -22,14 +22,14 @@ function ciniki_businesses_intl() {
                 'intl-default-distance-units':{'label':'Distance Units', 'type':'select', 'options':{}},
                 }},
             '_save':{'label':'', 'buttons':{
-                'save':{'label':'Save', 'fn':'M.ciniki_businesses_intl.saveIntl();'},
+                'save':{'label':'Save', 'fn':'M.ciniki_tenants_intl.saveIntl();'},
                 }},
         };
         this.main.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.businesses.getDetailHistory', 'args':{'business_id':M.curBusinessID, 'field':i}};
+            return {'method':'ciniki.tenants.getDetailHistory', 'args':{'tnid':M.curTenantID, 'field':i}};
         }
         this.main.fieldValue = function(s, i, d) { return this.data[i]; }
-        this.main.addButton('save', 'Save', 'M.ciniki_businesses_intl.saveIntl();');
+        this.main.addButton('save', 'Save', 'M.ciniki_tenants_intl.saveIntl();');
         this.main.addClose('Cancel');
     }
 
@@ -38,7 +38,7 @@ function ciniki_businesses_intl() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_intl', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_intl', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
@@ -47,13 +47,13 @@ function ciniki_businesses_intl() {
         //
         // Load details
         //
-        var rsp = M.api.getJSONCb('ciniki.businesses.settingsIntlGet', {'business_id':M.curBusinessID}, 
+        var rsp = M.api.getJSONCb('ciniki.tenants.settingsIntlGet', {'tnid':M.curTenantID}, 
             function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 } 
-                var p = M.ciniki_businesses_intl.main;
+                var p = M.ciniki_tenants_intl.main;
                 p.data = rsp.settings;
                 p.sections.locale.fields['intl-default-locale'].options = {};
                 for(i in rsp.locales) {
@@ -83,13 +83,13 @@ function ciniki_businesses_intl() {
         // Serialize the form data into a string for posting
         var c = this.main.serializeForm('no');
         if( c != '' ) {
-            var rsp = M.api.postJSONCb('ciniki.businesses.settingsIntlUpdate', 
-                {'business_id':M.curBusinessID}, c, function(rsp) {
+            var rsp = M.api.postJSONCb('ciniki.tenants.settingsIntlUpdate', 
+                {'tnid':M.curTenantID}, c, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
-                    M.ciniki_businesses_intl.main.close();
+                    M.ciniki_tenants_intl.main.close();
                 });
         } else {
             this.main.close();

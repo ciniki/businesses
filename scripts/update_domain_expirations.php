@@ -51,14 +51,14 @@ $dt->add(new DateInterval('P' . $days . 'D'));
 //
 // Load the list of domains set to expire in the next $days
 //
-$strsql = "SELECT id, business_id, domain, status, expiry_date "
-    . "FROM ciniki_business_domains "
+$strsql = "SELECT id, tnid, domain, status, expiry_date "
+    . "FROM ciniki_tenant_domains "
     . "WHERE expiry_date < '" . ciniki_core_dbQuote($ciniki, $dt->format('Y-m-d')) . "' "
     . "AND status = 1 "
     . "";
-$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'item');
+$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'item');
 if( $rc['stat'] != 'ok' ) {
-    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.119', 'msg'=>'Unable to load item', 'err'=>$rc['err']));
+    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.119', 'msg'=>'Unable to load item', 'err'=>$rc['err']));
 }
 $domains = array();
 foreach($rc['rows'] as $row) {
@@ -73,7 +73,7 @@ foreach($rc['rows'] as $row) {
     }
 
     if( !isset($domains[$domain]) ) {
-        $domains[$domain] = array('name' => $domain, 'business_id' => $row['business_id'], 'tld' => $tld, 'expiry_date' => $row['expiry_date'], 'ids' => array());
+        $domains[$domain] = array('name' => $domain, 'tnid' => $row['tnid'], 'tld' => $tld, 'expiry_date' => $row['expiry_date'], 'ids' => array());
     }
     $domains[$domain]['ids'][] = $row['id'];
 }
@@ -103,7 +103,7 @@ foreach($domains as $domain) {
             $dt = new DateTime($m[1], new DateTimezone('UTC'));
             if( $dt->format('Y-m-d') != $domain['expiry_date'] ) {
                 foreach($domain['ids'] as $domain_id) {
-                    $rc = ciniki_core_objectUpdate($ciniki, $domain['business_id'], 'ciniki.businesses.domain', $domain_id, array(
+                    $rc = ciniki_core_objectUpdate($ciniki, $domain['tnid'], 'ciniki.tenants.domain', $domain_id, array(
                         'expiry_date'=>$dt->format('Y-m-d'), 0x07));
                     if( $rc['stat'] != 'ok' ) {
                         print " ERROR: " . $rc['err']['code'] . ' ' . $rc['err']['msg'];

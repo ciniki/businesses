@@ -1,5 +1,5 @@
 #
-# This file will upgrade the database table ciniki_business_modules to version 1.04.
+# This file will upgrade the database table ciniki_tenant_modules to version 1.04.
 #
-ALTER TABLE ciniki_business_modules MODIFY COLUMN flags bigint unsigned not null;
-ALTER TABLE ciniki_business_modules COMMENT='v1.04';
+ALTER TABLE ciniki_tenant_modules MODIFY COLUMN flags bigint unsigned not null;
+ALTER TABLE ciniki_tenant_modules COMMENT='v1.04';

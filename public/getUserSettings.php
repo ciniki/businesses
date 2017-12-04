@@ -2,7 +2,7 @@
 //
 // Description
 // -----------
-// This method will return all the information about a business required when the user logs into the UI. 
+// This method will return all the information about a tenant required when the user logs into the UI. 
 //
 // Arguments
 // ---------
@@ -11,21 +11,21 @@
 //
 // Returns
 // -------
-// <business name="">
+// <tenant name="">
 //  <css>
 //  </css>
 //  <modules>
 //      <modules name='questions' />
 //  </modules>
-// </business>
+// </tenant>
 //
-function ciniki_businesses_getUserSettings($ciniki) {
+function ciniki_tenants_getUserSettings($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -33,10 +33,10 @@ function ciniki_businesses_getUserSettings($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getUserSettings');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.getUserSettings');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -49,52 +49,52 @@ function ciniki_businesses_getUserSettings($ciniki) {
     $rsp = array('stat'=>'ok', 'modules'=>array(), 'menu_items'=>array(), 'settings_menu_items'=>array(), 'settings'=>array('uiAppOverrides'=>array()));
 
     //
-    // Get the business name, and CSS
+    // Get the tenant name, and CSS
     // FIXME: convert ciniki.manage.css to ciniki-manage-css
     //
     $strsql = "SELECT name, d1.detail_value AS css "
-        . "FROM ciniki_businesses "
-        . "LEFT JOIN ciniki_business_details AS d1 ON (ciniki_businesses.id = d1.business_id AND d1.detail_key = 'ciniki.manage.css') "
-        . "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "FROM ciniki_tenants "
+        . "LEFT JOIN ciniki_tenant_details AS d1 ON (ciniki_tenants.id = d1.tnid AND d1.detail_key = 'ciniki.manage.css') "
+        . "WHERE ciniki_tenants.id = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    if( isset($rc['business']) ) {
-        $rsp['name'] = $rc['business']['name'];
-        if( isset($rc['business']['css']) ) {
-            $rsp['css'] = $rc['business']['css'];
+    if( isset($rc['tenant']) ) {
+        $rsp['name'] = $rc['tenant']['name'];
+        if( isset($rc['tenant']['css']) ) {
+            $rsp['css'] = $rc['tenant']['css'];
         }
     }
 
     //
-    // Get list of employees for the business
+    // Get list of employees for the tenant
     //
-    $strsql = "SELECT DISTINCT ciniki_business_users.user_id AS id, ciniki_users.display_name "
-        . "FROM ciniki_business_users, ciniki_users "
-        . "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
-        . "AND ciniki_business_users.user_id = ciniki_users.id "
+    $strsql = "SELECT DISTINCT ciniki_tenant_users.user_id AS id, ciniki_users.display_name "
+        . "FROM ciniki_tenant_users, ciniki_users "
+        . "WHERE ciniki_tenant_users.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' " 
+        . "AND ciniki_tenant_users.user_id = ciniki_users.id "
         . "ORDER BY display_name "
         . "";
-    $rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
+    $rc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.tenants', 'users', 'user', array('stat'=>'ok', 'users'=>array()));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     $rsp['users'] = $rc['users'];
 
     //
-    // Get the permission_groups for the user requesting the business information
+    // Get the permission_groups for the user requesting the tenant information
     //
     $strsql = "SELECT permission_group AS name, 'yes' AS status "
-        . "FROM ciniki_business_users "
-        . "WHERE ciniki_business_users.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
-        . "AND ciniki_business_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
-        . "AND ciniki_business_users.status = 10 "
+        . "FROM ciniki_tenant_users "
+        . "WHERE ciniki_tenant_users.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' " 
+        . "AND ciniki_tenant_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
+        . "AND ciniki_tenant_users.status = 10 "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList2');
-    $rc = ciniki_core_dbQueryList2($ciniki, $strsql, 'ciniki.businesses', 'permissions');
+    $rc = ciniki_core_dbQueryList2($ciniki, $strsql, 'ciniki.tenants', 'permissions');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -105,19 +105,19 @@ function ciniki_businesses_getUserSettings($ciniki) {
     //        for what they have access to.
     //
     $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags, flags>>32 as flags2 "
-        . "FROM ciniki_business_modules "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "FROM ciniki_tenant_modules "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND (status = 1 OR status = 2) " // Added or mandatory
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
-    $mrc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.businesses', array(
+    $mrc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.tenants', array(
         array('container'=>'modules', 'fname'=>'name',
             'fields'=>array('name', 'package', 'module', 'flags', 'flags2')),
         ));
     if( $mrc['stat'] != 'ok' ) {
         return $mrc;
     }
-//  $mrc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
+//  $mrc = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.tenants', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
     //
     // Check for any modules which should have some settings loaded as well
@@ -138,7 +138,7 @@ function ciniki_businesses_getUserSettings($ciniki) {
             $rc = ciniki_core_loadMethod($ciniki, $module['package'], $module['module'], 'hooks', 'uiSettings');
             if( $rc['stat'] == 'ok' ) {
                 $fn = $rc['function_call'];
-                $rc = $fn($ciniki, $args['business_id'], array('modules'=>$mrc['modules'], 'permissions'=>$rsp['permissions']));
+                $rc = $fn($ciniki, $args['tnid'], array('modules'=>$mrc['modules'], 'permissions'=>$rsp['permissions']));
                 if( $rc['stat'] != 'ok' ) {
                     return $rc;
                 }
@@ -167,25 +167,25 @@ function ciniki_businesses_getUserSettings($ciniki) {
         }
 
         //
-        // Load the business settings
+        // Load the tenant settings
         //
-        $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_business_details', 'business_id', 
-            $args['business_id'], 'ciniki.businesses', 'settings', 'intl');
+        $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_tenant_details', 'tnid', 
+            $args['tnid'], 'ciniki.tenants', 'settings', 'intl');
         if( $rc['stat'] == 'ok' ) {
             $rsp['intl'] = $rc['settings'];
         }
     }
 
     //
-    // Check for business reports flag, and a business owners
+    // Check for tenant reports flag, and a tenant owners
     //
-    if( ciniki_core_checkModuleFlags($ciniki, 'ciniki.businesses', 0x040000) 
+    if( ciniki_core_checkModuleFlags($ciniki, 'ciniki.tenants', 0x040000) 
         && (in_array('owners', $groups) || ($ciniki['session']['user']['perms']&0x01) == 0x01) 
         ) {
         $rsp['settings_menu_items'][] = array(
             'priority'=>1050, 
             'label'=>'Reports', 
-            'edit'=>array('app'=>'ciniki.businesses.reports'),
+            'edit'=>array('app'=>'ciniki.tenants.reports'),
             );
     } 
 

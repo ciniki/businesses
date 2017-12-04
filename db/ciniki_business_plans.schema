@@ -1,14 +1,14 @@
 #
 # Description
 # -----------
-# This table stores the business plans offered to customers.
+# This table stores the tenant plans offered to customers.
 #
 # Fields
 # ------
 # id:           The unique ID given to the plan.
 # uuid:         The universal unique ID for the plan.
-# business_id:  The business ID the plan is attached to, should be master business. In future will be 
-#               available for other businesses.
+# tnid:         The tenant ID the plan is attached to, should be master tenant. In future will be 
+#               available for other tenants.
 # name:         The name for the plan, shown on signup page.
 # flags:        The options for the plan.  Some plans are private, and only available for sysadmins to enable.
 #                       
@@ -23,10 +23,10 @@
 # date_added:   The UTC date and time the plan was added to the database.
 # last_updated: The UTC date and time the plan was last updated.
 # 
-create table ciniki_business_plans (
+create table ciniki_tenant_plans (
     id int not null auto_increment,
     uuid char(36) not null,
-    business_id int not null,
+    tnid int not null,
     name varchar(150) not null,
     flags tinyint unsigned not null,
     sequence tinyint unsigned not null,
@@ -38,5 +38,5 @@ create table ciniki_business_plans (
     last_updated datetime not null,
     primary key(id),
     unique index (uuid),
-    index (business_id)
+    index (tnid)
 ) ENGINE=InnoDB, COMMENT='v1.02';

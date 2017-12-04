@@ -2,28 +2,28 @@
 //
 // Description
 // -----------
-// This method will set the logo image ID for a business.
+// This method will set the logo image ID for a tenant.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to set the logo image ID.
+// tnid:     The ID of the tenant to set the logo image ID.
 // image_id:        The ID of the image in the ciniki images modules 
-//                  to be used as the business logo.
+//                  to be used as the tenant logo.
 // 
 // Example Return
 // --------------
 // <rsp stat="ok" logo_id="4" />
 //
-function ciniki_businesses_logoSave(&$ciniki) {
+function ciniki_tenants_logoSave(&$ciniki) {
     //
     // Check args
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'image_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Image'), 
         ));
     if( $rc['stat'] != 'ok' ) {
@@ -34,8 +34,8 @@ function ciniki_businesses_logoSave(&$ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.logoSave');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.logoSave');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -48,19 +48,19 @@ function ciniki_businesses_logoSave(&$ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.53', 'msg'=>'Internal Error', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.53', 'msg'=>'Internal Error', 'err'=>$rc['err']));
     }   
 
     //
-    // Update business with new image id
+    // Update tenant with new image id
     //
-    $strsql = "UPDATE ciniki_businesses SET "
+    $strsql = "UPDATE ciniki_tenants SET "
         . "logo_id = '" . ciniki_core_dbQuote($ciniki, $args['image_id']) . "' "
         . ", last_updated = UTC_TIMESTAMP() "
-        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
-    $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' ";
+    $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -72,9 +72,9 @@ function ciniki_businesses_logoSave(&$ciniki) {
     //
     // Commit the transaction
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.54', 'msg'=>'Unable to save logo', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.54', 'msg'=>'Unable to save logo', 'err'=>$rc['err']));
     }
 
     return array('stat'=>'ok', 'logo_id'=>$args['image_id']);

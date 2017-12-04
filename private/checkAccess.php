@@ -3,9 +3,9 @@
 // Description
 // -----------
 // This function will check to see the requesting user has access
-// to both the businesses module and requested method.
+// to both the tenants module and requested method.
 //
-// *note* The method is not currently tested, just sysadmin or business owner.
+// *note* The method is not currently tested, just sysadmin or tenant owner.
 //
 // Info
 // ----
@@ -14,21 +14,21 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The business ID to check the session user against.
+// tnid:         The tenant ID to check the session user against.
 // method:              The method requested.
 //
 // Returns
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
+function ciniki_tenants_checkAccess(&$ciniki, $tnid, $method) {
     //
     // Get the list of modules
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
-    $rc = ciniki_businesses_checkModuleAccess($ciniki, $business_id, 'ciniki', 'businesses');
-    // Ignore if businesses module is not in the list, it's on by default
-    if( $rc['stat'] != 'ok' && $rc['err']['code'] != 'ciniki.businesses.16' ) {
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkModuleAccess');
+    $rc = ciniki_tenants_checkModuleAccess($ciniki, $tnid, 'ciniki', 'tenants');
+    // Ignore if tenants module is not in the list, it's on by default
+    if( $rc['stat'] != 'ok' && $rc['err']['code'] != 'ciniki.tenants.16' ) {
         return $rc;
     }
     // Normally there is a check here to see if permissions denied, but not used in this case
@@ -40,19 +40,19 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
     $strsql = "SELECT permission_group "
-        . "FROM ciniki_business_users "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "FROM ciniki_tenant_users "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
         . "AND package = 'ciniki' "
         . "AND status = 10 "    // Active user
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList');
-    $rc = ciniki_core_dbQueryList($ciniki, $strsql, 'ciniki.businesses', 'groups', 'permission_group');
+    $rc = ciniki_core_dbQueryList($ciniki, $strsql, 'ciniki.tenants', 'groups', 'permission_group');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     if( !isset($rc['groups']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.12', 'msg'=>'Access denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.12', 'msg'=>'Access denied'));
     }
     $groups = $rc['groups'];
 
@@ -66,55 +66,55 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     //
     // The following functions don't require any checks, any authenticated user can access them
     //
-    if( $method == 'ciniki.businesses.getUserBusinesses' 
-        || $method == 'ciniki.businesses.getUserModules' 
+    if( $method == 'ciniki.tenants.getUserTenants' 
+        || $method == 'ciniki.tenants.getUserModules' 
         ) {
         return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
     }
 
     //
-    // If no business is specified, all functions are for sysadmin only
+    // If no tenant is specified, all functions are for sysadmin only
     //
-    if( $business_id == 0 ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.13', 'msg'=>'Access denied'));
+    if( $tnid == 0 ) {
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.13', 'msg'=>'Access denied'));
     }
 
     //
-    // The following methods are only available to business owners, no employees
+    // The following methods are only available to tenant owners, no employees
     //
     $owner_methods = array(
-        'ciniki.businesses.userList',
-        'ciniki.businesses.userAdd',
-        'ciniki.businesses.userRemove',
-        'ciniki.businesses.userDetails',
-        'ciniki.businesses.userUpdateDetails',
-        'ciniki.businesses.backupList',
-        'ciniki.businesses.backupDownload',
-        'ciniki.businesses.getDetailHistory',
-        'ciniki.businesses.getDetails',
-        'ciniki.businesses.getModuleHistory',
-        'ciniki.businesses.getModuleRulesetHistory',
-        'ciniki.businesses.getModuleRulesets',
-        'ciniki.businesses.getModules',
-        'ciniki.businesses.getUserSettings',
-        'ciniki.businesses.getOwners',
-        'ciniki.businesses.employees',
-        'ciniki.businesses.updateDetails',
-        'ciniki.businesses.updateModuleRulesets',
-        'ciniki.businesses.subscriptionInfo',
-        'ciniki.businesses.subscriptionChangeCurrency',
-        'ciniki.businesses.subscriptionCustomerUpdate',
-        'ciniki.businesses.subscriptionCancel',
-        'ciniki.businesses.settingsIntlGet',
-        'ciniki.businesses.settingsIntlUpdate',
-        'ciniki.businesses.settingsAPIsGet',
-        'ciniki.businesses.settingsAPIsUpdate',
-        'ciniki.businesses.subscriptionStripeProcess',
-        'ciniki.businesses.reportAdd',
-        'ciniki.businesses.reportDelete',
-        'ciniki.businesses.reportGet',
-        'ciniki.businesses.reportList',
-        'ciniki.businesses.reportUpdate',
+        'ciniki.tenants.userList',
+        'ciniki.tenants.userAdd',
+        'ciniki.tenants.userRemove',
+        'ciniki.tenants.userDetails',
+        'ciniki.tenants.userUpdateDetails',
+        'ciniki.tenants.backupList',
+        'ciniki.tenants.backupDownload',
+        'ciniki.tenants.getDetailHistory',
+        'ciniki.tenants.getDetails',
+        'ciniki.tenants.getModuleHistory',
+        'ciniki.tenants.getModuleRulesetHistory',
+        'ciniki.tenants.getModuleRulesets',
+        'ciniki.tenants.getModules',
+        'ciniki.tenants.getUserSettings',
+        'ciniki.tenants.getOwners',
+        'ciniki.tenants.employees',
+        'ciniki.tenants.updateDetails',
+        'ciniki.tenants.updateModuleRulesets',
+        'ciniki.tenants.subscriptionInfo',
+        'ciniki.tenants.subscriptionChangeCurrency',
+        'ciniki.tenants.subscriptionCustomerUpdate',
+        'ciniki.tenants.subscriptionCancel',
+        'ciniki.tenants.settingsIntlGet',
+        'ciniki.tenants.settingsIntlUpdate',
+        'ciniki.tenants.settingsAPIsGet',
+        'ciniki.tenants.settingsAPIsUpdate',
+        'ciniki.tenants.subscriptionStripeProcess',
+        'ciniki.tenants.reportAdd',
+        'ciniki.tenants.reportDelete',
+        'ciniki.tenants.reportGet',
+        'ciniki.tenants.reportList',
+        'ciniki.tenants.reportUpdate',
         );
     if( in_array($method, $owner_methods) && in_array('owners', $groups) ) {
         return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
@@ -124,14 +124,14 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     // The following methods are available to resellers
     //
     $reseller_methods = array(
-        'ciniki.businesses.getModules',
-        'ciniki.businesses.updateModules',
-        'ciniki.businesses.getModuleFlags',
-        'ciniki.businesses.updateModuleFlags',
-        'ciniki.businesses.domainAdd',
-        'ciniki.businesses.domainGet',
-        'ciniki.businesses.domainList',
-        'ciniki.businesses.domainUpdate',
+        'ciniki.tenants.getModules',
+        'ciniki.tenants.updateModules',
+        'ciniki.tenants.getModuleFlags',
+        'ciniki.tenants.updateModuleFlags',
+        'ciniki.tenants.domainAdd',
+        'ciniki.tenants.domainGet',
+        'ciniki.tenants.domainList',
+        'ciniki.tenants.domainUpdate',
         );
     if( (in_array($method, $owner_methods) || in_array($method, $reseller_methods))
         && in_array('resellers', $groups) 
@@ -140,33 +140,33 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     }
 
     //
-    // Limit the functions the business owner has access to.  Any
+    // Limit the functions the tenant owner has access to.  Any
     // other methods will be denied access.
     //
     $employee_methods = array(
-        'ciniki.businesses.getDetailHistory',
-        'ciniki.businesses.getDetails',
-        'ciniki.businesses.getModuleHistory',
-        'ciniki.businesses.getModuleRulesetHistory',
-        'ciniki.businesses.getModuleRulesets',
-        'ciniki.businesses.getModules',
-        'ciniki.businesses.getUserSettings',
-        'ciniki.businesses.getOwners',
-        'ciniki.businesses.employees',
-        'ciniki.businesses.updateDetails',
-        'ciniki.businesses.updateModuleRulesets',
-        'ciniki.businesses.subscriptionInfo',
-        'ciniki.businesses.subscriptionChangeCurrency',
-        'ciniki.businesses.subscriptionCancel',
-        'ciniki.businesses.settingsIntlGet',
-        'ciniki.businesses.settingsIntlUpdate',
+        'ciniki.tenants.getDetailHistory',
+        'ciniki.tenants.getDetails',
+        'ciniki.tenants.getModuleHistory',
+        'ciniki.tenants.getModuleRulesetHistory',
+        'ciniki.tenants.getModuleRulesets',
+        'ciniki.tenants.getModules',
+        'ciniki.tenants.getUserSettings',
+        'ciniki.tenants.getOwners',
+        'ciniki.tenants.employees',
+        'ciniki.tenants.updateDetails',
+        'ciniki.tenants.updateModuleRulesets',
+        'ciniki.tenants.subscriptionInfo',
+        'ciniki.tenants.subscriptionChangeCurrency',
+        'ciniki.tenants.subscriptionCancel',
+        'ciniki.tenants.settingsIntlGet',
+        'ciniki.tenants.settingsIntlUpdate',
         );
     if( in_array($method, $employee_methods) && in_array('employees', $groups) ) {
         return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
     }
 
     $salesreps_methods = array(
-        'ciniki.businesses.getUserSettings',
+        'ciniki.tenants.getUserSettings',
         );
     if( in_array($method, $salesreps_methods) && in_array('salesreps', $groups) ) {
         return array('stat'=>'ok', 'modules'=>$modules, 'groups'=>$groups);
@@ -175,6 +175,6 @@ function ciniki_businesses_checkAccess(&$ciniki, $business_id, $method) {
     //
     // By default fail
     //
-    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.14', 'msg'=>'Access denied'));
+    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.14', 'msg'=>'Access denied'));
 }
 ?>

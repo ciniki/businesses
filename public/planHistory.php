@@ -10,19 +10,19 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the details for.
+// tnid:         The ID of the tenant to get the details for.
 // key:                 The detail key to get the history for.
 //
 // Returns
 // -------
 //
-function ciniki_businesses_planHistory($ciniki) {
+function ciniki_tenants_planHistory($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plan_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plan'), 
         'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Field'), 
         ));
@@ -32,16 +32,16 @@ function ciniki_businesses_planHistory($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.planHistory');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.planHistory');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
-    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        'ciniki_business_plans', $args['plan_id'], $args['field'], 'plan');
+    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        'ciniki_tenant_plans', $args['plan_id'], $args['field'], 'plan');
 }
 ?>

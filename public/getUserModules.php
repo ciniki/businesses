@@ -5,7 +5,7 @@
 //
 // DEPRECATED - This functionality should now be done via getUserSettings.
 //
-// This method will return the list of modules the user has access to and are turned on for the business.
+// This method will return the list of modules the user has access to and are turned on for the tenant.
 // The UI can use this to decide what menu items to display.
 //
 // **NOTE** Any changed in this method should be duplicated to getUserSettings.
@@ -19,15 +19,15 @@
 // -------
 // <modules>
 //      <modules name='questions' />
-// </businesses>
+// </tenants>
 //
-function ciniki_businesses_getUserModules($ciniki) {
+function ciniki_tenants_getUserModules($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -35,10 +35,10 @@ function ciniki_businesses_getUserModules($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.getUserModules');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, 0, 'ciniki.tenants.getUserModules');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -48,13 +48,13 @@ function ciniki_businesses_getUserModules($ciniki) {
     //        for what they have access to.
     //
     $strsql = "SELECT CONCAT_WS('.', package, module) AS name, package, module, flags, flags>>32 as flags2 "
-        . "FROM ciniki_business_modules "
-        . "WHERE ciniki_business_modules.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-        . "AND (ciniki_business_modules.status = 1 "
-            . "OR ciniki_business_modules.status = 2 "
+        . "FROM ciniki_tenant_modules "
+        . "WHERE ciniki_tenant_modules.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
+        . "AND (ciniki_tenant_modules.status = 1 "
+            . "OR ciniki_tenant_modules.status = 2 "
             . ") "
         . "";
-    $rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
+    $rsp = ciniki_core_dbRspQuery($ciniki, $strsql, 'ciniki.tenants', 'modules', 'module', array('stat'=>'ok', 'modules'=>array()));
 
     //
     // Check for any modules which should have some stats with them
@@ -74,9 +74,9 @@ function ciniki_businesses_getUserModules($ciniki) {
                     . "ciniki_exhibition_details.detail_value "
                     . "FROM ciniki_exhibitions "
                     . "LEFT JOIN ciniki_exhibition_details ON (ciniki_exhibitions.id = ciniki_exhibition_details.exhibition_id "
-                        . "AND ciniki_exhibition_details.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                        . "AND ciniki_exhibition_details.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                         . ") "
-                    . "WHERE ciniki_exhibitions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                    . "WHERE ciniki_exhibitions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                     . "ORDER BY ciniki_exhibitions.start_date DESC "
                     . "";
                 ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
@@ -107,7 +107,7 @@ function ciniki_businesses_getUserModules($ciniki) {
                 $strsql = "SELECT ciniki_atdos.type, COUNT(ciniki_atdos.id) AS num_items "
 //              $strsql = "SELECT 'numtasks', COUNT(ciniki_atdos.id) "
                     . "FROM ciniki_atdos, ciniki_atdo_users "
-                    . "WHERE ciniki_atdos.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                    . "WHERE ciniki_atdos.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                     . "AND (ciniki_atdos.type = 2 OR ciniki_atdos.type = 7) "   // Tasks or Projects
                     . "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
                     . "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
@@ -141,7 +141,7 @@ function ciniki_businesses_getUserModules($ciniki) {
                 //
                 $strsql = "SELECT type, COUNT(ciniki_atdos.id) AS num_items "
                     . "FROM ciniki_atdos, ciniki_atdo_users "
-                    . "WHERE ciniki_atdos.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                    . "WHERE ciniki_atdos.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                     . "AND ((ciniki_atdos.type = 5 AND ciniki_atdos.parent_id = 0) OR ciniki_atdos.type = 6 )"  // Notes or Messages
                     . "AND ciniki_atdos.id = ciniki_atdo_users.atdo_id "
                     . "AND ciniki_atdo_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
@@ -173,7 +173,7 @@ function ciniki_businesses_getUserModules($ciniki) {
 //                  . "LEFT JOIN ciniki_newsaggregator_article_users ON (ciniki_newsaggregator_articles.id = ciniki_newsaggregator_article_users.article_id "
 //                      . "AND ciniki_newsaggregator_article_users.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "') "
 //                      . "AND (ciniki_newsaggregator_article_users.flags&0x01) = 0 )
-                    . "WHERE ciniki_newsaggregator_subscriptions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                    . "WHERE ciniki_newsaggregator_subscriptions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                     . "AND ciniki_newsaggregator_subscriptions.user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
 //                  . "AND (ciniki_newsaggregator_article_users.flags = NULL OR (ciniki_newsaggregator_article_users.flags&0x01) = 0) "
                     . "AND NOT EXISTS (SELECT article_id FROM ciniki_newsaggregator_article_users "

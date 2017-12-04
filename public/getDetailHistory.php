@@ -14,7 +14,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the details for.
+// tnid:         The ID of the tenant to get the details for.
 // key:                 The detail key to get the history for.
 //
 // Returns
@@ -28,13 +28,13 @@
 //      ...
 //  </users>
 //
-function ciniki_businesses_getDetailHistory($ciniki) {
+function ciniki_tenants_getDetailHistory($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Field'), 
         ));
     if( $rc['stat'] != 'ok' ) {
@@ -43,30 +43,30 @@ function ciniki_businesses_getDetailHistory($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getDetailHistory');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $ac = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.getDetailHistory');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
-    if( $args['field'] == 'business.name' ) {
-        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-            'ciniki_businesses', '', 'name');
-    } elseif( $args['field'] == 'business.category' ) {
-        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-            'ciniki_businesses', '', 'category');
-    } elseif( $args['field'] == 'business.sitename' ) {
-        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-            'ciniki_businesses', '', 'sitename');
-    } elseif( $args['field'] == 'business.tagline' ) {
-        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-            'ciniki_businesses', '', 'tagline');
+    if( $args['field'] == 'tenant.name' ) {
+        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+            'ciniki_tenants', '', 'name');
+    } elseif( $args['field'] == 'tenant.category' ) {
+        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+            'ciniki_tenants', '', 'category');
+    } elseif( $args['field'] == 'tenant.sitename' ) {
+        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+            'ciniki_tenants', '', 'sitename');
+    } elseif( $args['field'] == 'tenant.tagline' ) {
+        return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+            'ciniki_tenants', '', 'tagline');
     }
 
-    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        'ciniki_business_details', $args['field'], 'detail_value');
+    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        'ciniki_tenant_details', $args['field'], 'detail_value');
 }
 ?>

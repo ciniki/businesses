@@ -1,19 +1,19 @@
 //
-// This class will display the form to allow admins and business owners to 
-// change the details of their business
+// This class will display the form to allow admins and tenant owners to 
+// change the details of their tenant
 //
-function ciniki_businesses_social() {
+function ciniki_tenants_social() {
     this.init = function() {
         this.main = new M.panel('Social Media',
-            'ciniki_businesses_social', 'main',
-            'mc', 'medium', 'sectioned', 'ciniki.businesses.social.main');
+            'ciniki_tenants_social', 'main',
+            'mc', 'medium', 'sectioned', 'ciniki.tenants.social.main');
         this.main.data = {};
         this.main.sections = {
             'facebook':{'label':'Facebook', 'fields':{
                 'social-facebook-url':{'label':'Page URL', 'type':'text'},
                 }},
             'twitter':{'label':'Twitter', 'fields':{
-                'social-twitter-business-name':{'label':'Business Name', 'type':'text'},
+                'social-twitter-tenant-name':{'label':'Tenant Name', 'type':'text'},
                 'social-twitter-username':{'label':'Username', 'type':'text'},
                 }},
             'flickr':{'label':'Flickr', 'fields':{
@@ -41,17 +41,17 @@ function ciniki_businesses_social() {
                 'social-vimeo-url':{'label':'URL', 'type':'text'},
                 }},
             '_save':{'label':'', 'buttons':{
-                'save':{'label':'Save', 'fn':'M.ciniki_businesses_social.saveSocial();'},
+                'save':{'label':'Save', 'fn':'M.ciniki_tenants_social.saveSocial();'},
                 }},
         };
         //
         // Callback for the field history
         //
         this.main.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.businesses.getDetailHistory', 'args':{'business_id':M.curBusinessID, 'field':i}};
+            return {'method':'ciniki.tenants.getDetailHistory', 'args':{'tnid':M.curTenantID, 'field':i}};
         }
         this.main.fieldValue = function(s, i, d) { return this.data[i]; }
-        this.main.addButton('save', 'Save', 'M.ciniki_businesses_social.saveSocial();');
+        this.main.addButton('save', 'Save', 'M.ciniki_tenants_social.saveSocial();');
         this.main.addClose('Cancel');
     }
 
@@ -60,29 +60,29 @@ function ciniki_businesses_social() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_social', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_social', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
         } 
 
         //
-        // Setup hint for twitter business name
+        // Setup hint for twitter tenant name
         //
-        M.ciniki_businesses_social.main.sections.twitter.fields['social-twitter-business-name'].hint = M.curBusiness.name;
+        M.ciniki_tenants_social.main.sections.twitter.fields['social-twitter-tenant-name'].hint = M.curTenant.name;
         
         //
         // Load details
         //
         this.main.cb = cb;
-        var rsp = M.api.getJSONCb('ciniki.businesses.getDetails', {'business_id':M.curBusinessID, 'keys':'social'}, 
+        var rsp = M.api.getJSONCb('ciniki.tenants.getDetails', {'tnid':M.curTenantID, 'keys':'social'}, 
             function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 } 
-                M.ciniki_businesses_social.main.data = rsp.details;
-                M.ciniki_businesses_social.main.show();
+                M.ciniki_tenants_social.main.data = rsp.details;
+                M.ciniki_tenants_social.main.show();
         });
         
     }
@@ -94,13 +94,13 @@ function ciniki_businesses_social() {
         // Serialize the form data into a string for posting
         var c = this.main.serializeForm('no');
         if( c != '' ) {
-            var rsp = M.api.postJSONCb('ciniki.businesses.updateDetails', 
-                {'business_id':M.curBusinessID}, c, function(rsp) {
+            var rsp = M.api.postJSONCb('ciniki.tenants.updateDetails', 
+                {'tnid':M.curTenantID}, c, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
-                    M.ciniki_businesses_social.main.close();
+                    M.ciniki_tenants_social.main.close();
                 });
         } else {
             this.main.close();

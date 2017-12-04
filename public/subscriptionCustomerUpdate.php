@@ -12,13 +12,13 @@
 // -------
 // <rsp stat='ok' id='34' />
 //
-function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
+function ciniki_tenants_subscriptionCustomerUpdate($ciniki) {
     //  
     // Find all the required and optional arguments
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'currency'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Currency'),
         'payment_frequency'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Payment Frequency'),
         'billing_email'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Billing Email'),
@@ -30,10 +30,10 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.subscriptionCustomerUpdate'); 
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.subscriptionCustomerUpdate'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -48,7 +48,7 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -60,10 +60,10 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
     // Get the existing subscription information
     //
     $strsql = "SELECT id, status, signup_date, trial_days, currency, monthly, yearly "
-        . "FROM ciniki_business_subscriptions "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "FROM ciniki_tenant_subscriptions "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'subscription');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -73,7 +73,7 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
         //
         // Start building the update SQL
         //
-        $strsql = "UPDATE ciniki_business_subscriptions SET last_updated = UTC_TIMESTAMP()";
+        $strsql = "UPDATE ciniki_tenant_subscriptions SET last_updated = UTC_TIMESTAMP()";
 
         //
         // Add all the fields to the change log
@@ -91,20 +91,20 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
                     $strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
                 }
                 // FIXME: Stored converted date/time in history
-                $rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-                    2, 'ciniki_business_subscriptions', $subscription['id'], $field, $args[$field]);
+                $rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+                    2, 'ciniki_tenant_subscriptions', $subscription['id'], $field, $args[$field]);
             }
         }
-        $strsql .= " WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        $strsql .= " WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "";
-        $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+        $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.tenants');
         if( $rc['stat'] != 'ok' ) {
-            ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+            ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
             return $rc;
         }
         if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
-            ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.103', 'msg'=>'Unable to update subscription'));
+            ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.103', 'msg'=>'Unable to update subscription'));
         }
     }
 
@@ -112,7 +112,7 @@ function ciniki_businesses_subscriptionCustomerUpdate($ciniki) {
     //
     // Commit the database changes
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

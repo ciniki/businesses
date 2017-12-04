@@ -2,7 +2,7 @@
 //
 // Description
 // -----------
-// This function will get detail values for a business.
+// This function will get detail values for a tenant.
 //
 // Info
 // ----
@@ -12,16 +12,16 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the details for.
+// tnid:         The ID of the tenant to get the details for.
 // keys:                The comma delimited list of keys to lookup values for.
 //
 // Returns
 // -------
 // <details>
-//      <business name='' tagline='' />
+//      <tenant name='' tagline='' />
 // </details>
 //
-function ciniki_businesses_web_details($ciniki, $business_id) {
+function ciniki_tenants_web_details($ciniki, $tnid) {
     $rsp = array('stat'=>'ok', 'details'=>array());
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
@@ -30,26 +30,26 @@ function ciniki_businesses_web_details($ciniki, $business_id) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 
     //
-    // Get the business name and tagline
+    // Get the tenant name and tagline
     //
-    $strsql = "SELECT name, sitename, tagline, logo_id FROM ciniki_businesses "
-        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $strsql = "SELECT name, sitename, tagline, logo_id FROM ciniki_tenants "
+        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' ";
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    if( !isset($rc['business']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.102', 'msg'=>'Unable to get business details'));
+    if( !isset($rc['tenant']) ) {
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.102', 'msg'=>'Unable to get tenant details'));
     }
-    $rsp['details']['name'] = $rc['business']['name'];
-    $rsp['details']['sitename'] = $rc['business']['sitename'];
-    $rsp['details']['tagline'] = $rc['business']['tagline'];
-    $rsp['details']['logo_id'] = $rc['business']['logo_id'];
+    $rsp['details']['name'] = $rc['tenant']['name'];
+    $rsp['details']['sitename'] = $rc['tenant']['sitename'];
+    $rsp['details']['tagline'] = $rc['tenant']['tagline'];
+    $rsp['details']['logo_id'] = $rc['tenant']['logo_id'];
 
     //
-    // Get the social media information for the business
+    // Get the social media information for the tenant
     //
-    $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_business_details', 'business_id', $business_id, 'ciniki.businesses', 'social', 'social');
+    $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_tenant_details', 'tnid', $tnid, 'ciniki.tenants', 'social', 'social');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

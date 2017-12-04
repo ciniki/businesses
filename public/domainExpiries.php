@@ -2,7 +2,7 @@
 //
 // Description
 // -----------
-// This function will lookup the client domain in the database, and return the business id.
+// This function will lookup the client domain in the database, and return the tenant id.
 //
 // Arguments
 // ---------
@@ -10,7 +10,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_domainExpiries($ciniki) {
+function ciniki_tenants_domainExpiries($ciniki) {
     //
     // Find all the required and optional arguments
     //
@@ -24,10 +24,10 @@ function ciniki_businesses_domainExpiries($ciniki) {
     $args = $rc['args'];
 
     //
-    // Check access to business_id as owner
+    // Check access to tnid as owner
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $ac = ciniki_businesses_checkAccess($ciniki, 0, 'ciniki.businesses.domainExpiries');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $ac = ciniki_tenants_checkAccess($ciniki, 0, 'ciniki.tenants.domainExpiries');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
@@ -38,33 +38,33 @@ function ciniki_businesses_domainExpiries($ciniki) {
     //
     // Query the database for the domain
     //
-    $strsql = "SELECT ciniki_business_domains.id, "
-        . "ciniki_business_domains.business_id, "
-        . "ciniki_businesses.name AS business_name, "
-        . "ciniki_businesses.status AS business_status, "
-        . "ciniki_business_domains.domain, "
-        . "ciniki_business_domains.flags, "
-        . "ciniki_business_domains.status, "
-        . "ciniki_business_domains.status AS status_text, "
-        . "IF((ciniki_business_domains.flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
-        . "IFNULL(DATE_FORMAT(ciniki_business_domains.expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
-        . "IFNULL(DATEDIFF(ciniki_business_domains.expiry_date, UTC_TIMESTAMP()), -999) AS expire_in_days, "
-        . "ciniki_business_domains.managed_by "
-        . "FROM ciniki_business_domains "
-        . "LEFT JOIN ciniki_businesses ON (ciniki_business_domains.business_id = ciniki_businesses.id) "
-        . "WHERE DATEDIFF(ciniki_business_domains.expiry_date,UTC_TIMESTAMP()) < '" . $args['days'] . "' "
-        . "OR ciniki_business_domains.expiry_date = '0000-00-00' "
+    $strsql = "SELECT ciniki_tenant_domains.id, "
+        . "ciniki_tenant_domains.tnid, "
+        . "ciniki_tenants.name AS tenant_name, "
+        . "ciniki_tenants.status AS tenant_status, "
+        . "ciniki_tenant_domains.domain, "
+        . "ciniki_tenant_domains.flags, "
+        . "ciniki_tenant_domains.status, "
+        . "ciniki_tenant_domains.status AS status_text, "
+        . "IF((ciniki_tenant_domains.flags&0x01)=0x01, 'yes', 'no') AS isprimary, "
+        . "IFNULL(DATE_FORMAT(ciniki_tenant_domains.expiry_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "'), 'expiry unknown') AS expiry_date, "
+        . "IFNULL(DATEDIFF(ciniki_tenant_domains.expiry_date, UTC_TIMESTAMP()), -999) AS expire_in_days, "
+        . "ciniki_tenant_domains.managed_by "
+        . "FROM ciniki_tenant_domains "
+        . "LEFT JOIN ciniki_tenants ON (ciniki_tenant_domains.tnid = ciniki_tenants.id) "
+        . "WHERE DATEDIFF(ciniki_tenant_domains.expiry_date,UTC_TIMESTAMP()) < '" . $args['days'] . "' "
+        . "OR ciniki_tenant_domains.expiry_date = '0000-00-00' "
         . "ORDER BY expire_in_days ASC "
         . "";
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.tenants', array(
         array('container'=>'domains', 'fname'=>'id', 'name'=>'domain',
-            'fields'=>array('id', 'business_id', 'business_name', 'business_status',
+            'fields'=>array('id', 'tnid', 'tenant_name', 'tenant_status',
                 'domain', 'flags', 'status', 'status_text', 'isprimary', 'managed_by', 
                 'expiry_date', 'expire_in_days'),
             'maps'=>array(
-                'business_status'=>array('1'=>'Active', '10'=>'Suspended', '60'=>'Deleted'),
+                'tenant_status'=>array('1'=>'Active', '10'=>'Suspended', '60'=>'Deleted'),
                 'status_text'=>array('1'=>'Active', '20'=>'Expired', '50'=>'Suspended', '60'=>'Deleted'),
             )),
         ));

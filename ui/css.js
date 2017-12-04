@@ -1,14 +1,14 @@
 //
-// This class will display the form to allow admins and business owners to 
-// change the details of their business
+// This class will display the form to allow admins and tenant owners to 
+// change the details of their tenant
 //
-function ciniki_businesses_css() {
+function ciniki_tenants_css() {
     this.settings = null;
 
     this.init = function() {
         this.settings = new M.panel('Ciniki Manage CSS',
-            'ciniki_businesses_css', 'settings',
-            'mc', 'medium', 'sectioned', 'ciniki.business.css');
+            'ciniki_tenants_css', 'settings',
+            'mc', 'medium', 'sectioned', 'ciniki.tenant.css');
         this.settings.sections = {
             'general':{'label':'Custom CSS for ciniki-manage', 'fields':{
                 'ciniki.manage.css':{'label':'', 'hidelabel':'yes', 'type':'textarea'},
@@ -21,9 +21,9 @@ function ciniki_businesses_css() {
             return '';
         }
         this.settings.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.businesses.getDetailHistory', 'args':{'business_id':M.curBusinessID, 'field':i}};
+            return {'method':'ciniki.tenants.getDetailHistory', 'args':{'tnid':M.curTenantID, 'field':i}};
         }
-        this.settings.addButton('save', 'Save', 'M.ciniki_businesses_css.save();');
+        this.settings.addButton('save', 'Save', 'M.ciniki_tenants_css.save();');
         this.settings.addClose('Cancel');
     }
 
@@ -32,22 +32,22 @@ function ciniki_businesses_css() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_css', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_css', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
         } 
         
         //
-        // Get the detail for the business.  
+        // Get the detail for the tenant.  
         //
-        var rsp = M.api.getJSONCb('ciniki.businesses.getDetails', 
-            {'business_id':M.curBusinessID, 'keys':'ciniki'}, function(rsp) {
+        var rsp = M.api.getJSONCb('ciniki.tenants.getDetails', 
+            {'tnid':M.curTenantID, 'keys':'ciniki'}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
-                var p = M.ciniki_businesses_css.settings;
+                var p = M.ciniki_tenants_css.settings;
                 p.data = rsp.details;
                 p.refresh();
                 p.show(cb);
@@ -61,13 +61,13 @@ function ciniki_businesses_css() {
         // Serialize the form data into a string for posting
         var c = this.settings.serializeForm('no');
         if( c != '' ) {
-            var rsp = M.api.postJSONCb('ciniki.businesses.updateDetails', 
-                {'business_id':M.curBusinessID}, c, function(rsp) {
+            var rsp = M.api.postJSONCb('ciniki.tenants.updateDetails', 
+                {'tnid':M.curTenantID}, c, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
-                M.ciniki_businesses_css.settings.close();
+                M.ciniki_tenants_css.settings.close();
             });
         } else {
             this.settings.close();

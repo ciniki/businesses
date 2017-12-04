@@ -2,26 +2,26 @@
 //
 // Description
 // -----------
-// This method will return the intl settings for the business.  These are 
-// used to set the locale, currency and timezone of the business.
+// This method will return the intl settings for the tenant.  These are 
+// used to set the locale, currency and timezone of the tenant.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the intl settings for.
+// tnid:         The ID of the tenant to get the intl settings for.
 //
 // Returns
 // -------
 // <settings intl-default-locale="en_US"
 //
-function ciniki_businesses_settingsAPIsGet($ciniki) {
+function ciniki_tenants_settingsAPIsGet($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -29,10 +29,10 @@ function ciniki_businesses_settingsAPIsGet($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.settingsAPIsGet');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.settingsAPIsGet');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -45,12 +45,12 @@ function ciniki_businesses_settingsAPIsGet($ciniki) {
     //
     // Check if dropbox should be allowed
     //
-    if( (isset($ciniki['business']['modules']['ciniki.directory']['flags']) && ($ciniki['business']['modules']['ciniki.directory']['flags']&0x01) > 0)
-        || (isset($ciniki['business']['modules']['ciniki.artistprofiles']['flags']) && ($ciniki['business']['modules']['ciniki.artistprofiles']['flags']&0x01) > 0)
+    if( (isset($ciniki['tenant']['modules']['ciniki.directory']['flags']) && ($ciniki['tenant']['modules']['ciniki.directory']['flags']&0x01) > 0)
+        || (isset($ciniki['tenant']['modules']['ciniki.artistprofiles']['flags']) && ($ciniki['tenant']['modules']['ciniki.artistprofiles']['flags']&0x01) > 0)
         ) {
         $csrf = base64_encode(openssl_random_pseudo_bytes(18));
         $_SESSION['dropbox-csrf'] = $csrf;
-//      $_SESSION['business_id'] = $ciniki['request']['business_id'];
+//      $_SESSION['tnid'] = $ciniki['request']['tnid'];
         $rsp['apis']['dropbox'] = array('setup'=>'no', 'name'=>'Dropbox', 
             'appkey'=>$ciniki['config']['ciniki.core']['dropbox.appkey'],
             'redirect'=>$ciniki['config']['ciniki.core']['dropbox.redirect'],
@@ -58,7 +58,7 @@ function ciniki_businesses_settingsAPIsGet($ciniki) {
             );
     }
 
-    $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_business_details', 'business_id', $args['business_id'], 'ciniki.businesses', 'details', 'apis');
+    $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_tenant_details', 'tnid', $args['tnid'], 'ciniki.tenants', 'details', 'apis');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

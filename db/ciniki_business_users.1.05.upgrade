@@ -1,6 +1,6 @@
 #
-# Add the uuid column to ciniki_business_users for replication.
+# Add the uuid column to ciniki_tenant_users for replication.
 #
-ALTER TABLE ciniki_business_users ADD COLUMN uuid char(36) not null after id;
-UPDATE ciniki_business_users SET uuid = uuid();
-ALTER TABLE ciniki_business_users COMMENT='v1.05';
+ALTER TABLE ciniki_tenant_users ADD COLUMN uuid char(36) not null after id;
+UPDATE ciniki_tenant_users SET uuid = uuid();
+ALTER TABLE ciniki_tenant_users COMMENT='v1.05';

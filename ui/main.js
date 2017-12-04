@@ -1,9 +1,9 @@
 //
-// This class will display the form to allow admins and business owners to 
-// change the details of their business
+// This class will display the form to allow admins and tenant owners to 
+// change the details of their tenant
 //
-function ciniki_businesses_main() {
-    this.businesses = null;
+function ciniki_tenants_main() {
+    this.tenants = null;
     this.menu = null;
 
     this.statusOptions = {
@@ -19,19 +19,19 @@ function ciniki_businesses_main() {
 
     this.init = function() {
         //
-        // Build the menus for the business, based on what they have access to
+        // Build the menus for the tenant, based on what they have access to
         //
-        this.menu = new M.panel('Business Menu', 'ciniki_businesses_main', 'menu', 'mc', 'medium', 'sectioned', 'ciniki.businesses.main.menu');
+        this.menu = new M.panel('Tenant Menu', 'ciniki_tenants_main', 'menu', 'mc', 'medium', 'sectioned', 'ciniki.tenants.main.menu');
         this.menu.data = {};
         this.menu.liveSearchCb = function(s, i, value) {
             if( this.sections[s].search != null && value != '' ) {
                 var sargs = (this.sections[s].search.args != null ? this.sections[s].search.args : []);
-                sargs['business_id'] = M.curBusinessID;
+                sargs['tnid'] = M.curTenantID;
                 sargs['start_needle'] = encodeURIComponent(value);
                 sargs['limit'] = 10;
                 var container = this.sections[s].search.container;
                 M.api.getJSONBgCb(this.sections[s].search.method, sargs, function(rsp) {
-                    M.ciniki_businesses_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_businesses_main.menu.panelUID + '_' + s), rsp[container]);
+                    M.ciniki_tenants_main.menu.liveSearchShow(s, null, M.gE(M.ciniki_tenants_main.menu.panelUID + '_' + s), rsp[container]);
                 });
                 return true;
             }
@@ -58,7 +58,7 @@ function ciniki_businesses_main() {
                     for(var i in this.sections[s].search.edit.args) {
                         args += (args != '' ? ', ':'') + '\'' + i + '\':' + eval(this.sections[s].search.edit.args[i]);
                     }
-                    return 'M.startApp(\'' + this.sections[s].search.edit.method + '\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{' + args + '});';
+                    return 'M.startApp(\'' + this.sections[s].search.edit.method + '\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{' + args + '});';
                 } 
                 return null;
             }
@@ -76,7 +76,7 @@ function ciniki_businesses_main() {
                 for(var i in this.sections[s].search.submit.args) {
                     args[i] = eval(this.sections[s].search.submit.args[i]);
                 }
-                M.startApp(this.sections[s].search.submit.method,null,'M.ciniki_businesses_main.showMenu();','mc',args);
+                M.startApp(this.sections[s].search.submit.method,null,'M.ciniki_tenants_main.showMenu();','mc',args);
             }
         };
         this.menu.liveSearchResultCellFn = function(s, f, i, j, d) {
@@ -89,13 +89,13 @@ function ciniki_businesses_main() {
             // FIXME: This needs to move into hooks/uiSettings
             if( this.sections[s].id == 'calendars' ) {
                 if( j == 0 && d.appointment.start_ts > 0 ) {
-                    return 'M.startApp(\'ciniki.calendars.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'date\':\'' + d.appointment.date + '\'});';
+                    return 'M.startApp(\'ciniki.calendars.main\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{\'date\':\'' + d.appointment.date + '\'});';
                 }
                 if( d.appointment.module == 'ciniki.wineproduction' ) {
-                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
                 }
                 if( d.appointment.module == 'ciniki.atdo' ) {
-                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
                 }
             }
             return '';
@@ -113,7 +113,7 @@ function ciniki_businesses_main() {
         this.menu.cellValue = function(s, i, j, d) {
             if( s == '_tasks' ) {
                 switch (j) {
-                    case 0: return '<span class="icon">' + M.curBusiness.atdo.priorities[d.task.priority] + '</span>';
+                    case 0: return '<span class="icon">' + M.curTenant.atdo.priorities[d.task.priority] + '</span>';
                     case 1: 
                         var pname = '';
                         if( d.task.project_name != null && d.task.project_name != '' ) {
@@ -126,17 +126,17 @@ function ciniki_businesses_main() {
         };
         this.menu.rowStyle = function(s, i, d) {
             if( s == '_tasks' ) {
-                if( d.task.status != 'closed' ) { return 'background: ' + M.curBusiness.atdo.settings['tasks.priority.' + d.task.priority]; }
-                else { return 'background: ' + M.curBusiness.atdo.settings['tasks.status.60']; }
+                if( d.task.status != 'closed' ) { return 'background: ' + M.curTenant.atdo.settings['tasks.priority.' + d.task.priority]; }
+                else { return 'background: ' + M.curTenant.atdo.settings['tasks.status.60']; }
             }
             if( d != null && d.task != null ) {
-                if( d.task.status != 'closed' ) { return 'background: ' + M.curBusiness.atdo.settings['tasks.priority.' + d.task.priority]; }
-                else { return 'background: ' + M.curBusiness.atdo.settings['tasks.status.60']; }
+                if( d.task.status != 'closed' ) { return 'background: ' + M.curTenant.atdo.settings['tasks.priority.' + d.task.priority]; }
+                else { return 'background: ' + M.curTenant.atdo.settings['tasks.status.60']; }
             }
             return '';
         };
         this.menu.rowFn = function(s, i, d) {
-            return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{\'atdo_id\':\'' + d.task.id + '\'});';
+            return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{\'atdo_id\':\'' + d.task.id + '\'});';
         };
         this.menu.sectionData = function(s) {
             if( s == '_tasks' ) { return this.data._tasks; }
@@ -152,35 +152,35 @@ function ciniki_businesses_main() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer('mc', 'ciniki_businesses_main', 'yes');
+        var appContainer = M.createContainer('mc', 'ciniki_tenants_main', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
         } 
 
         //
-        // Get the business_id to be opened
+        // Get the tnid to be opened
         //
         if( args.id != null && args.id != '' ) {
-            this.openBusiness(cb, args.id);
+            this.openTenant(cb, args.id);
         } else {
-            alert('Business not found');
+            alert('Tenant not found');
             return false;
         }
     }
 
     //
-    // Open a business for the specified ID
+    // Open a tenant for the specified ID
     //
-    this.openBusiness = function(cb, id) {
+    this.openTenant = function(cb, id) {
         if( id != null ) {
-            M.curBusinessID = id;
-            // (re)set the business object
-            delete M.curBusiness;
-            M.curBusiness = {'id':id};
+            M.curTenantID = id;
+            // (re)set the tenant object
+            delete M.curTenant;
+            M.curTenant = {'id':id};
         }
-        if( M.curBusinessID == null ) {
-            alert('Invalid business');
+        if( M.curTenantID == null ) {
+            alert('Invalid tenant');
         }
 
         //
@@ -206,116 +206,116 @@ function ciniki_businesses_main() {
         } else {
             this.menu.addClose('Back');
             if( typeof(Storage) !== 'undefined' ) {
-                localStorage.setItem("lastBusinessID", M.curBusinessID);
+                localStorage.setItem("lastTenantID", M.curTenantID);
             }
         }
         this.menu.cb = cb;
 
-        this.openBusinessSettings();
+        this.openTenantSettings();
     }
 
-    this.openBusinessSettings = function() {
+    this.openTenantSettings = function() {
         // 
-        // Get the list of owners and employees for the business
+        // Get the list of owners and employees for the tenant
         //
-        M.api.getJSONCb('ciniki.businesses.getUserSettings', {'business_id':M.curBusinessID}, function(rsp) {
+        M.api.getJSONCb('ciniki.tenants.getUserSettings', {'tnid':M.curTenantID}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
             }
-            M.ciniki_businesses_main.openBusinessFinish(rsp);
+            M.ciniki_tenants_main.openTenantFinish(rsp);
         });
     }
 
-    this.openBusinessFinish = function(rsp) {
+    this.openTenantFinish = function(rsp) {
         // 
         // Setup menu name
         //
-        M.curBusiness.name = rsp.name;
+        M.curTenant.name = rsp.name;
 
         //
         // Setup CSS
         //
         if( rsp.css != null && rsp.css != '' ) {
-            M.gE('business_colours').innerHTML = rsp.css;
+            M.gE('tenant_colours').innerHTML = rsp.css;
         } else {
-            M.gE('business_colours').innerHTML = M.defaultBusinessColours;
+            M.gE('tenant_colours').innerHTML = M.defaultTenantColours;
         }
 
         //
         // Setup employees
         //
-        M.curBusiness.employees = {};
+        M.curTenant.employees = {};
         var ct = 0;
         for(i in rsp.users) {
-            M.curBusiness.employees[rsp.users[i].user.id] = rsp.users[i].user.display_name;
+            M.curTenant.employees[rsp.users[i].user.id] = rsp.users[i].user.display_name;
             ct++;
         }
-        M.curBusiness.numEmployees = ct;
+        M.curTenant.numEmployees = ct;
 
         // 
-        // Setup business permissions for the user
+        // Setup tenant permissions for the user
         //
-        M.curBusiness.permissions = {};
-        M.curBusiness.permissions = rsp.permissions;
+        M.curTenant.permissions = {};
+        M.curTenant.permissions = rsp.permissions;
 
         // 
         // Setup the settings for activated modules
         //
         if( rsp.settings != null && rsp.settings['ciniki.bugs'] != null ) {
-            M.curBusiness.bugs = {};
-            M.curBusiness.bugs.priorities = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
+            M.curTenant.bugs = {};
+            M.curTenant.bugs.priorities = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
             if( M.size == 'compact' ) {
-                M.curBusiness.bugs.priorityText = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
+                M.curTenant.bugs.priorityText = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
             } else {
-                M.curBusiness.bugs.priorityText = {'10':'<span class="icon">Q</span> Low', '30':'<span class="icon">W</span> Medium', '50':'<span class="icon">E</span> High'};
+                M.curTenant.bugs.priorityText = {'10':'<span class="icon">Q</span> Low', '30':'<span class="icon">W</span> Medium', '50':'<span class="icon">E</span> High'};
             }
-            M.curBusiness.bugs.settings = rsp.settings['ciniki.bugs'];
+            M.curTenant.bugs.settings = rsp.settings['ciniki.bugs'];
         }
         if( rsp.settings != null && rsp.settings['ciniki.atdo'] != null ) {
-            M.curBusiness.atdo = {};
-            M.curBusiness.atdo.priorities = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
+            M.curTenant.atdo = {};
+            M.curTenant.atdo.priorities = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
             if( M.size == 'compact' ) {
-                M.curBusiness.atdo.priorityText = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
+                M.curTenant.atdo.priorityText = {'10':'<span class="icon">Q</span>', '30':'<span class="icon">W</span>', '50':'<span class="icon">E</span>'};
             } else {
-                M.curBusiness.atdo.priorityText = {'10':'<span class="icon">Q</span> Low', '30':'<span class="icon">W</span> Medium', '50':'<span class="icon">E</span> High'};
+                M.curTenant.atdo.priorityText = {'10':'<span class="icon">Q</span> Low', '30':'<span class="icon">W</span> Medium', '50':'<span class="icon">E</span> High'};
             }
-            M.curBusiness.atdo.settings = rsp.settings['ciniki.atdo'];
+            M.curTenant.atdo.settings = rsp.settings['ciniki.atdo'];
         }
         if( rsp.settings != null && rsp.settings['ciniki.customers'] != null ) {
-            M.curBusiness.customers = {'settings':rsp.settings['ciniki.customers']};
+            M.curTenant.customers = {'settings':rsp.settings['ciniki.customers']};
         }
         if( rsp.settings != null && rsp.settings['ciniki.taxes'] != null ) {
-            M.curBusiness.taxes = {'settings':rsp.settings['ciniki.taxes']};
+            M.curTenant.taxes = {'settings':rsp.settings['ciniki.taxes']};
         }
         if( rsp.settings != null && rsp.settings['ciniki.services'] != null ) {
-            M.curBusiness.services = {'settings':rsp.settings['ciniki.services']};
+            M.curTenant.services = {'settings':rsp.settings['ciniki.services']};
         }
         if( rsp.settings != null && rsp.settings['ciniki.mail'] != null ) {
-            M.curBusiness.mail = {'settings':rsp.settings['ciniki.mail']};
+            M.curTenant.mail = {'settings':rsp.settings['ciniki.mail']};
         }
         if( rsp.settings != null && rsp.settings['ciniki.artcatalog'] != null ) {
-            M.curBusiness.artcatalog = {'settings':rsp.settings['ciniki.artcatalog']};
+            M.curTenant.artcatalog = {'settings':rsp.settings['ciniki.artcatalog']};
         }
         if( rsp.settings != null && rsp.settings['ciniki.sapos'] != null ) {
-            M.curBusiness.sapos = {'settings':rsp.settings['ciniki.sapos']};
+            M.curTenant.sapos = {'settings':rsp.settings['ciniki.sapos']};
         }
         if( rsp.settings != null && rsp.settings['ciniki.products'] != null ) {
-            M.curBusiness.products = {'settings':rsp.settings['ciniki.products']};
+            M.curTenant.products = {'settings':rsp.settings['ciniki.products']};
         }
         if( rsp.settings != null ) {
-            if( M.curBusiness.settings == null ) {
-                M.curBusiness.settings = {};
+            if( M.curTenant.settings == null ) {
+                M.curTenant.settings = {};
             }
             if( rsp.settings['googlemapsapikey'] != null && rsp.settings['googlemapsapikey'] != '' ) {
-                M.curBusiness.settings.googlemapsapikey = rsp.settings['googlemapsapikey'];
+                M.curTenant.settings.googlemapsapikey = rsp.settings['googlemapsapikey'];
             }
             if( rsp.settings['uiAppOverrides'] != null && rsp.settings['uiAppOverrides'] != '' ) {
-                M.curBusiness.settings.uiAppOverrides = rsp.settings['uiAppOverrides'];
+                M.curTenant.settings.uiAppOverrides = rsp.settings['uiAppOverrides'];
             }
         }
         if( rsp.intl != null ) {
-            M.curBusiness.intl = rsp.intl;
+            M.curTenant.intl = rsp.intl;
         }
 
         var modules = {};
@@ -325,10 +325,10 @@ function ciniki_businesses_main() {
                 modules[rsp.modules[i].module.name].settings = rsp.settings[rsp.modules[i].module.name];
             }
         }
-        M.curBusiness.modules = modules;
+        M.curTenant.modules = modules;
 
         //
-        // FIXME: Check if business is suspended status, and display message
+        // FIXME: Check if tenant is suspended status, and display message
         //
 
         //
@@ -344,36 +344,36 @@ function ciniki_businesses_main() {
         //
         // Get the list of modules (along with other information that's not required)
         //
-        M.api.getJSONCb('ciniki.businesses.getUserSettings', {'business_id':M.curBusinessID}, function(rsp) {
+        M.api.getJSONCb('ciniki.tenants.getUserSettings', {'tnid':M.curTenantID}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
             }
-            M.ciniki_businesses_main.openBusinessFinish(rsp, 'no');
+            M.ciniki_tenants_main.openTenantFinish(rsp, 'no');
         });
     }
 
     this.showMenuFinish = function(r, autoopen) {
-        this.menu.title = M.curBusiness.name;
+        this.menu.title = M.curTenant.name;
         //
-        // If sysadmin, or business owner
+        // If sysadmin, or tenant owner
         //
-        if( M.userID > 0 && ( (M.userPerms&0x01) == 0x01 || M.curBusiness.permissions.owners != null || M.curBusiness.permissions.resellers != null )) {
-            this.menu.addButton('settings', 'Settings', 'M.startApp(\'ciniki.businesses.settings\',null,\'M.ciniki_businesses_main.openBusinessSettings();\');');
-            M.curBusiness.settings_menu_items = r.settings_menu_items;
+        if( M.userID > 0 && ( (M.userPerms&0x01) == 0x01 || M.curTenant.permissions.owners != null || M.curTenant.permissions.resellers != null )) {
+            this.menu.addButton('settings', 'Settings', 'M.startApp(\'ciniki.tenants.settings\',null,\'M.ciniki_tenants_main.openTenantSettings();\');');
+            M.curTenant.settings_menu_items = r.settings_menu_items;
         }
 
         var c = 0;
         var join = -1;  // keep track of how many are already joined together
 
-        var perms = M.curBusiness.permissions;
+        var perms = M.curTenant.permissions;
 
         //
-        // Check that the module is turned on for the business, and the user has permissions to the module
+        // Check that the module is turned on for the tenant, and the user has permissions to the module
         //
 
         this.menu.sections = {};
-        var business_possession = 'our';
+        var tenant_possession = 'our';
         var g = 0;
         var menu_search = 0;
 
@@ -398,9 +398,9 @@ function ciniki_businesses_main() {
                         for(var j in r.menu_items[i].edit.args) {
                             args += (args != '' ? ', ':'') + '\'' + j + '\':' + eval(r.menu_items[i].edit.args[j]);
                         }
-                        item.fn = 'M.startApp(\'' + r.menu_items[i].edit.app + '\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{' + args + '});';
+                        item.fn = 'M.startApp(\'' + r.menu_items[i].edit.app + '\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{' + args + '});';
                     } else {
-                        item.fn = 'M.startApp(\'' + r.menu_items[i].edit.app + '\',null,\'M.ciniki_businesses_main.showMenu();\');';
+                        item.fn = 'M.startApp(\'' + r.menu_items[i].edit.app + '\',null,\'M.ciniki_tenants_main.showMenu();\');';
                     }
                 } else if( r.menu_items[i].fn != null ) {
                     item.fn = r.menu_items[i].fn;
@@ -413,7 +413,7 @@ function ciniki_businesses_main() {
                     for(var j in r.menu_items[i].add.args) {
                         args += (args != '' ? ', ':'') + '\'' + j + '\':' + eval(r.menu_items[i].add.args[j]);
                     }
-                    item.addFn = 'M.startApp(\'' + r.menu_items[i].add.app + '\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{' + args + '});';
+                    item.addFn = 'M.startApp(\'' + r.menu_items[i].add.app + '\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{' + args + '});';
                 }
 
                 if( r.menu_items[i].search != null && menu_search > 0 ) {
@@ -444,7 +444,7 @@ function ciniki_businesses_main() {
                         for(var k in r.menu_items[i].subitems[j].edit.args) {
                             args += (args != '' ? ', ':'') + '\'' + k + '\':' + eval(r.menu_items[i].subitems[j].edit.args[k]);
                         }
-                        item.list[j] = {'label':r.menu_items[i].subitems[j].label, 'fn':'M.startApp(\'' + r.menu_items[i].subitems[j].edit.app + '\',null,\'M.ciniki_businesses_main.showMenu();\',\'mc\',{' + args + '});'};
+                        item.list[j] = {'label':r.menu_items[i].subitems[j].label, 'fn':'M.startApp(\'' + r.menu_items[i].subitems[j].edit.app + '\',null,\'M.ciniki_tenants_main.showMenu();\',\'mc\',{' + args + '});'};
                         if( r.menu_items[i].subitems[j].count != null ) {
                             item.list[j].count = r.menu_items[i].subitems[j].count;
                         }
@@ -500,9 +500,9 @@ function ciniki_businesses_main() {
         // Check if there should be a task list displayed
         // FIXME: Change to background load
         //
-        if( M.curBusiness.modules['ciniki.atdo'] != null && M.curBusiness.atdo != null
-            && M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != null 
-            && M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != ''
+        if( M.curTenant.modules['ciniki.atdo'] != null && M.curTenant.atdo != null
+            && M.curTenant.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != null 
+            && M.curTenant.atdo.settings['tasks.ui.mainmenu.category.'+M.userID] != ''
             && (perms.owners != null || perms.employees != null || perms.resellers != null || (M.userPerms&0x01) == 1) 
             ) {
             this.menu.data._tasks = {};
@@ -511,14 +511,14 @@ function ciniki_businesses_main() {
                 'cellClasses':['multiline aligncenter', 'multiline', 'multiline'],
                 'noData':'No tasks found',
                 };
-            M.api.getJSONCb('ciniki.atdo.tasksList', {'business_id':M.curBusiness.id,
-                'category':M.curBusiness.atdo.settings['tasks.ui.mainmenu.category.'+M.userID], 'assigned':'yes', 'status':'open'},
+            M.api.getJSONCb('ciniki.atdo.tasksList', {'tnid':M.curTenant.id,
+                'category':M.curTenant.atdo.settings['tasks.ui.mainmenu.category.'+M.userID], 'assigned':'yes', 'status':'open'},
                 function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
-                    var p = M.ciniki_businesses_main.menu;
+                    var p = M.ciniki_tenants_main.menu;
                     if( rsp.categories[0] != null && rsp.categories[0].category != null ) {
                         p.data._tasks = rsp.categories[0].category.tasks;
                         p.sections._tasks.visible = 'yes';

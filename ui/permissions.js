@@ -1,12 +1,12 @@
 //
 //
-function ciniki_businesses_permissions() {
+function ciniki_tenants_permissions() {
     this.permissions = null;
 
     this.init = function() {
         this.permissions = new M.panel('Permissions',
-            'ciniki_businesses_permissions', 'permissions',
-            'mc', 'medium', 'sectioned', 'ciniki.businesses.permissions');
+            'ciniki_tenants_permissions', 'permissions',
+            'mc', 'medium', 'sectioned', 'ciniki.tenants.permissions');
         this.permissions.sections = {'f':{'label':'', 'fields':{}}};
         this.permissions.data = {};
         this.permissions.noData = function() { return 'No modules have been activated.'; }
@@ -26,10 +26,10 @@ function ciniki_businesses_permissions() {
                     break;
                 }
             }
-            return {'method':'ciniki.businesses.getModuleRulesetHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.tenants.getModuleRulesetHistory', 'args':{'tnid':M.curTenantID, 
                 'field':this.data[fid].module.name}};
         }
-        this.permissions.addButton('save', 'Save', 'M.ciniki_businesses_permissions.save();');
+        this.permissions.addButton('save', 'Save', 'M.ciniki_tenants_permissions.save();');
         this.permissions.addClose('Cancel');
 
     }
@@ -39,7 +39,7 @@ function ciniki_businesses_permissions() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_permissions', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_permissions', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
@@ -47,16 +47,16 @@ function ciniki_businesses_permissions() {
 
         //
         // Get the detail for the user.  Do this for each request, to make sure
-        // we have the current data.  If the user switches businesses, then we
+        // we have the current data.  If the user switches tenants, then we
         // want this data reloaded.
         //
-        var rsp = M.api.getJSONCb('ciniki.businesses.getModuleRulesets', 
-            {'business_id':M.curBusinessID}, function(rsp) {
+        var rsp = M.api.getJSONCb('ciniki.tenants.getModuleRulesets', 
+            {'tnid':M.curTenantID}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
-                var p = M.ciniki_businesses_permissions.permissions;
+                var p = M.ciniki_tenants_permissions.permissions;
                 var count = 0;
                 for(i in rsp.modules) {
                     var m = rsp.modules[i].module;
@@ -77,8 +77,8 @@ function ciniki_businesses_permissions() {
     }
 
 //  this.toggleFieldHelp = function(formID, field) {
-//      M.setHelpURL('', 'ciniki.businesses.permissions.' + field); 
-//      M.showHelpContent('ciniki.businesses.permissions.' + field, content);
+//      M.setHelpURL('', 'ciniki.tenants.permissions.' + field); 
+//      M.showHelpContent('ciniki.tenants.permissions.' + field, content);
 //  }
 
 //  this.showFieldHelp = function(field) {
@@ -97,7 +97,7 @@ function ciniki_businesses_permissions() {
 //              }
 //          }
 //      }
-//      M.toggleHelp('ciniki.businesses.permissions.' + this.permissions.data[field]['module']['name']);
+//      M.toggleHelp('ciniki.tenants.permissions.' + this.permissions.data[field]['module']['name']);
 //  }
     
     // 
@@ -109,13 +109,13 @@ function ciniki_businesses_permissions() {
         for(i in this.modules) {
             
         }
-        var rsp = M.api.postJSONCb('ciniki.businesses.updateModuleRulesets', 
-            {'business_id':M.curBusinessID}, c, function(rsp) {
+        var rsp = M.api.postJSONCb('ciniki.tenants.updateModuleRulesets', 
+            {'tnid':M.curTenantID}, c, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
-                M.ciniki_businesses_permissions.permissions.close();
+                M.ciniki_tenants_permissions.permissions.close();
             });
     }
 }

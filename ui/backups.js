@@ -1,12 +1,12 @@
 //
-// This class will display the form to allow admins and business owners to 
-// change the details of their business
+// This class will display the form to allow admins and tenant owners to 
+// change the details of their tenant
 //
-function ciniki_businesses_backups() {
+function ciniki_tenants_backups() {
     this.init = function() {
         this.main = new M.panel('Backups',
-            'ciniki_businesses_backups', 'main',
-            'mc', 'narrow', 'sectioned', 'ciniki.businesses.backups.main');
+            'ciniki_tenants_backups', 'main',
+            'mc', 'narrow', 'sectioned', 'ciniki.tenants.backups.main');
         this.main.data = {};
         this.main.sections = {
             'backups':{'label':'Backups', 'type':'simplegrid', 'num_cols':2,
@@ -19,7 +19,7 @@ function ciniki_businesses_backups() {
                 return d.backup.name;
             }
             if( j == 1 ) {
-                return "<button onclick=\"event.stopPropagation(); M.ciniki_businesses_backups.downloadBackup(\'" + d.backup.id + "\'); return false;\">Download</button>"
+                return "<button onclick=\"event.stopPropagation(); M.ciniki_tenants_backups.downloadBackup(\'" + d.backup.id + "\'); return false;\">Download</button>"
             }
         };
         this.main.noData = function(s) {
@@ -33,7 +33,7 @@ function ciniki_businesses_backups() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_backups', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_backups', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
@@ -43,12 +43,12 @@ function ciniki_businesses_backups() {
     }
 
     this.showMain = function(cb) {
-        M.api.getJSONCb('ciniki.businesses.backupList', {'business_id':M.curBusinessID}, function(rsp) {
+        M.api.getJSONCb('ciniki.tenants.backupList', {'tnid':M.curTenantID}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
             }
-            var p = M.ciniki_businesses_backups.main;
+            var p = M.ciniki_tenants_backups.main;
             p.data = {'backups':rsp.backups};
             p.refresh();
             p.show(cb);
@@ -56,6 +56,6 @@ function ciniki_businesses_backups() {
     }
 
     this.downloadBackup = function(bid) {
-        M.api.openFile('ciniki.businesses.backupDownload', {'business_id':M.curBusinessID, 'backup_id':bid});
+        M.api.openFile('ciniki.tenants.backupDownload', {'tnid':M.curTenantID, 'backup_id':bid});
     }
 }

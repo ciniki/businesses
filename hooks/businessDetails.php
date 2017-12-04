@@ -2,7 +2,7 @@
 //
 // Description
 // -----------
-// This function will get detail values for a business.
+// This function will get detail values for a tenant.
 //
 // Info
 // ----
@@ -12,16 +12,16 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the details for.
+// tnid:         The ID of the tenant to get the details for.
 // keys:                The comma delimited list of keys to lookup values for.
 //
 // Returns
 // -------
 // <details>
-//      <business name='' tagline='' />
+//      <tenant name='' tagline='' />
 // </details>
 //
-function ciniki_businesses_hooks_businessDetails($ciniki, $business_id, $args) {
+function ciniki_tenants_hooks_tenantDetails($ciniki, $tnid, $args) {
     $rsp = array('stat'=>'ok', 'details'=>array());
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
@@ -30,26 +30,26 @@ function ciniki_businesses_hooks_businessDetails($ciniki, $business_id, $args) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
 
     //
-    // Get the business name and tagline
+    // Get the tenant name and tagline
     //
-    $strsql = "SELECT name, sitename, tagline, logo_id FROM ciniki_businesses "
-        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $strsql = "SELECT name, sitename, tagline, logo_id FROM ciniki_tenants "
+        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' ";
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    if( !isset($rc['business']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.1', 'msg'=>'Unable to get business details'));
+    if( !isset($rc['tenant']) ) {
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.1', 'msg'=>'Unable to get tenant details'));
     }
-    $rsp['details']['name'] = $rc['business']['name'];
-    $rsp['details']['sitename'] = $rc['business']['sitename'];
-    $rsp['details']['tagline'] = $rc['business']['tagline'];
-    $rsp['details']['logo_id'] = $rc['business']['logo_id'];
+    $rsp['details']['name'] = $rc['tenant']['name'];
+    $rsp['details']['sitename'] = $rc['tenant']['sitename'];
+    $rsp['details']['tagline'] = $rc['tenant']['tagline'];
+    $rsp['details']['logo_id'] = $rc['tenant']['logo_id'];
 
     //
-    // Get the social media information for the business
+    // Get the social media information for the tenant
     //
-    $rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_business_details', 'business_id', $business_id, 'ciniki.businesses', 'contact', 'contact');
+    $rc = ciniki_core_dbDetailsQuery($ciniki, 'ciniki_tenant_details', 'tnid', $tnid, 'ciniki.tenants', 'contact', 'contact');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -62,14 +62,14 @@ function ciniki_businesses_hooks_businessDetails($ciniki, $business_id, $args) {
     //
     // Check if web module is enabled, and determine the web address
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkModuleAccess');
-    $rc = ciniki_businesses_checkModuleAccess($ciniki, $business_id, 'ciniki', 'web');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkModuleAccess');
+    $rc = ciniki_tenants_checkModuleAccess($ciniki, $tnid, 'ciniki', 'web');
     if( $rc['stat'] == 'ok' ) {
         //
         // Lookup the web address
         //
-        ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'lookupBusinessURL');
-        $rc = ciniki_web_lookupBusinessURL($ciniki, $business_id);
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'private', 'lookupTenantURL');
+        $rc = ciniki_web_lookupTenantURL($ciniki, $tnid);
         if( $rc['stat'] == 'ok' ) {
             // Remove the http from the url
             $rsp['details']['contact-website-url'] = preg_replace('/http:\/\/www\./', '', $rc['url']);

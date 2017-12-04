@@ -21,7 +21,7 @@
 # local_id:             The local_id which should be substituted for the remote_uuid when
 #                       inserted into this server.
 #
-create table ciniki_business_sync_uuidmaps (
+create table ciniki_tenant_sync_uuidmaps (
     sync_id int not null,
     table_name varchar(150) not null,
     remote_uuid char(36) not null,

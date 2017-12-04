@@ -1,6 +1,6 @@
 #
-# This file will upgrade the database table businesses to version 1.04.
+# This file will upgrade the database table tenants to version 1.04.
 #
-ALTER TABLE ciniki_business_users DROP COLUMN groups;
-ALTER TABLE ciniki_business_users DROP COLUMN type;
-ALTER TABLE ciniki_business_users COMMENT='v1.04';
+ALTER TABLE ciniki_tenant_users DROP COLUMN groups;
+ALTER TABLE ciniki_tenant_users DROP COLUMN type;
+ALTER TABLE ciniki_tenant_users COMMENT='v1.04';

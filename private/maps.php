@@ -10,7 +10,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_maps($ciniki) {
+function ciniki_tenants_maps($ciniki) {
     $maps = array();
     $maps['report'] = array(
         'frequency'=>array(

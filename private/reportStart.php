@@ -7,13 +7,13 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The ID of the business the reports is attached to.
+// tnid:         The ID of the tenant the reports is attached to.
 // report_id:           The ID of the reports to get the details for.
 //
 // Returns
 // -------
 //
-function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
+function ciniki_tenants_reportStart($ciniki, $tnid, &$report) {
 
     $report['text'] = '';
     $report['html'] = '';
@@ -21,17 +21,17 @@ function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
     $report['excel'] = null;
 
     //
-    // Load business details
+    // Load tenant details
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'businessDetails');
-    $rc = ciniki_businesses_businessDetails($ciniki, $business_id);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'tenantDetails');
+    $rc = ciniki_tenants_tenantDetails($ciniki, $tnid);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     if( isset($rc['details']) && is_array($rc['details']) ) {   
-        $business_details = $rc['details'];
+        $tenant_details = $rc['details'];
     } else {
-        $business_details = array();
+        $tenant_details = array();
     }
 
     //
@@ -44,7 +44,7 @@ function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
         require_once($ciniki['config']['ciniki.core']['lib_dir'] . '/tcpdf/tcpdf.php');
 
         class MYPDF extends TCPDF {
-            public $business_name = '';
+            public $tenant_name = '';
             public $title = '';
             public $pagenumbers = 'yes';
             public $coverpage = 'no';
@@ -186,8 +186,8 @@ function ciniki_businesses_reportStart($ciniki, $business_id, &$report) {
     // Set PDF basics
     //
     $report['pdf']->SetCreator('Ciniki');
-    $report['pdf']->SetAuthor($business_details['name']);
-    $report['pdf']->footer_text = $business_details['name'];
+    $report['pdf']->SetAuthor($tenant_details['name']);
+    $report['pdf']->footer_text = $tenant_details['name'];
     $report['pdf']->SetTitle($report['title']);
     $report['pdf']->SetSubject('');
     $report['pdf']->SetKeywords('');

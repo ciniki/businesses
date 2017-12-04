@@ -2,37 +2,37 @@
 //
 // Description
 // -----------
-// This function will verify the business is active, and the module is active.
+// This function will verify the tenant is active, and the module is active.
 //
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The business ID to check the session user against.
+// tnid:         The tenant ID to check the session user against.
 // method:              The requested method.
 //
 // Returns
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_getUserPermissions(&$ciniki, $business_id) {
+function ciniki_tenants_getUserPermissions(&$ciniki, $tnid) {
 
     //
     // Get the list of permission_groups the user is a part of
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
     $strsql = "SELECT permission_group "
-        . "FROM ciniki_business_users "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "FROM ciniki_tenant_users "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND user_id = '" . ciniki_core_dbQuote($ciniki, $ciniki['session']['user']['id']) . "' "
         . "AND status = 10 "    // Active user
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList');
-    $rc = ciniki_core_dbQueryList($ciniki, $strsql, 'ciniki.businesses', 'groups', 'permission_group');
+    $rc = ciniki_core_dbQueryList($ciniki, $strsql, 'ciniki.tenants', 'groups', 'permission_group');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     if( !isset($rc['groups']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.21', 'msg'=>'Access denied'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.21', 'msg'=>'Access denied'));
     }
     $groups = $rc['groups'];
 
@@ -41,7 +41,7 @@ function ciniki_businesses_getUserPermissions(&$ciniki, $business_id) {
     if( in_array('employees', $groups) ) { $perms |= 0x02; }
     if( in_array('salesreps', $groups) ) { $perms |= 0x04; }
     if( in_array('resellers', $groups) ) { $perms |= 0x100; }
-    $ciniki['business']['user']['perms'] = $perms;
+    $ciniki['tenant']['user']['perms'] = $perms;
 
     //
     // Return the ruleset

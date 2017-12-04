@@ -1,5 +1,5 @@
 #
-# This file will upgrade the database table businesses to version 1.02.
+# This file will upgrade the database table tenants to version 1.02.
 #
-ALTER TABLE ciniki_business_plans ADD COLUMN sequence tinyint unsigned not null AFTER flags;
-ALTER TABLE ciniki_business_plans COMMENT='v1.02';
+ALTER TABLE ciniki_tenant_plans ADD COLUMN sequence tinyint unsigned not null AFTER flags;
+ALTER TABLE ciniki_tenant_plans COMMENT='v1.02';

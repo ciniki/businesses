@@ -2,7 +2,7 @@
 //
 // Description
 // ===========
-// This method will return subscription information for a business.
+// This method will return subscription information for a tenant.
 //
 // Arguments
 // ---------
@@ -11,13 +11,13 @@
 // Returns
 // -------
 //
-function ciniki_businesses_subscriptionInfo($ciniki) {
+function ciniki_tenants_subscriptionInfo($ciniki) {
     //  
     // Find all the required and optional arguments
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -26,10 +26,10 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.subscriptionInfo'); 
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.subscriptionInfo'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -42,10 +42,10 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
     //
     // Get the billing information from the subscription table
     //
-    $strsql = "SELECT ciniki_businesses.name, "
-        . "ciniki_businesses.uuid, "
-        . "ciniki_business_subscriptions.id, "
-        . "ciniki_business_subscriptions.status, "
+    $strsql = "SELECT ciniki_tenants.name, "
+        . "ciniki_tenants.uuid, "
+        . "ciniki_tenant_subscriptions.id, "
+        . "ciniki_tenant_subscriptions.status, "
         . "signup_date, "
         . "trial_days, "
         . "currency, "
@@ -56,20 +56,20 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
         . "paypal_payer_email, "
         . "paypal_payer_id, "
         . "paypal_amount, "
-        . "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_business_subscriptions.last_payment_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
+        . "IF(last_payment_date='0000-00-00', '', DATE_FORMAT(CONVERT_TZ(ciniki_tenant_subscriptions.last_payment_date, '+00:00', '" . ciniki_core_dbQuote($ciniki, $utc_offset) . "'), '%b %e, %Y %l:%i %p')) AS last_payment_date, "
         . "DATE_FORMAT(paid_until, '%b %e, %Y') AS paid_until, "
         . "DATE_FORMAT(trial_start_date, '%b %e, %Y') AS trial_start_date, "
-        //. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_business_subscriptions.signup_date))/86400) AS trial_remaining, "
+        //. "trial_days - FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP())-UNIX_TIMESTAMP(ciniki_tenant_subscriptions.signup_date))/86400) AS trial_remaining, "
         . "payment_type, "
         . "payment_frequency, "
         . "notes "
-        . "FROM ciniki_business_subscriptions, ciniki_businesses "
-        . "WHERE ciniki_business_subscriptions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-        . "AND ciniki_business_subscriptions.business_id = ciniki_businesses.id "
+        . "FROM ciniki_tenant_subscriptions, ciniki_tenants "
+        . "WHERE ciniki_tenant_subscriptions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
+        . "AND ciniki_tenant_subscriptions.tnid = ciniki_tenants.id "
         . "";
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'subscription');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'subscription');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -130,30 +130,30 @@ function ciniki_businesses_subscriptionInfo($ciniki) {
     } 
 
     //
-    // get the business email address
+    // get the tenant email address
     //
     $strsql = "SELECT detail_value "
-        . "FROM ciniki_business_details "
-        . "WHERE ciniki_business_details.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "FROM ciniki_tenant_details "
+        . "WHERE ciniki_tenant_details.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND detail_key = 'contact.email.address' "
         . "";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'contact');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'contact');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     if( isset($rc['contact']['detail_value']) ) {
-        $subscription['business_email'] = $rc['contact']['detail_value'];
+        $subscription['tenant_email'] = $rc['contact']['detail_value'];
     }
-    if( isset($ciniki['config']['ciniki.businesses']['stripe.public']) ) {
-        $subscription['stripe_public_key'] = $ciniki['config']['ciniki.businesses']['stripe.public'];
+    if( isset($ciniki['config']['ciniki.tenants']['stripe.public']) ) {
+        $subscription['stripe_public_key'] = $ciniki['config']['ciniki.tenants']['stripe.public'];
     }
 
     $rsp = array('stat'=>'ok', 'subscription'=>$subscription, 
         'paypal'=>array(
-            'url'=>$ciniki['config']['ciniki.businesses']['paypal.url'],
-            'business'=>$ciniki['config']['ciniki.businesses']['paypal.business'],
-            'prefix'=>$ciniki['config']['ciniki.businesses']['paypal.item_name.prefix'],
-            'ipn'=>$ciniki['config']['ciniki.businesses']['paypal.ipn']
+            'url'=>$ciniki['config']['ciniki.tenants']['paypal.url'],
+            'tenant'=>$ciniki['config']['ciniki.tenants']['paypal.business'],
+            'prefix'=>$ciniki['config']['ciniki.tenants']['paypal.item_name.prefix'],
+            'ipn'=>$ciniki['config']['ciniki.tenants']['paypal.ipn']
             ),
         );
 

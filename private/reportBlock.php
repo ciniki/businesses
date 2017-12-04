@@ -6,13 +6,13 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The ID of the business the reports is attached to.
+// tnid:         The ID of the tenant the reports is attached to.
 // report_id:           The ID of the reports to get the details for.
 //
 // Returns
 // -------
 //
-function ciniki_businesses_reportBlock($ciniki, $business_id, &$report, $block) {
+function ciniki_tenants_reportBlock($ciniki, $tnid, &$report, $block) {
 
     //
     // Make sure chunks are defined
@@ -39,11 +39,11 @@ function ciniki_businesses_reportBlock($ciniki, $business_id, &$report, $block) 
         foreach($block['chunks'] as $chunk) {
             $fn = '';
             switch($chunk['type']) {
-                case 'message': $fn = 'ciniki_businesses_reportChunkMessage'; break;
-                case 'table': $fn = 'ciniki_businesses_reportChunkTable'; break;
-                case 'text': $fn = 'ciniki_businesses_reportChunkText'; break;
+                case 'message': $fn = 'ciniki_tenants_reportChunkMessage'; break;
+                case 'table': $fn = 'ciniki_tenants_reportChunkTable'; break;
+                case 'text': $fn = 'ciniki_tenants_reportChunkText'; break;
             }
-            $rc = $fn($ciniki, $business_id, $report, $chunk);
+            $rc = $fn($ciniki, $tnid, $report, $chunk);
             if( $rc['stat'] != 'ok' ) {
                 return $rc;
             }

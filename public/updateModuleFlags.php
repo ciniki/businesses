@@ -3,13 +3,13 @@
 // Description
 // -----------
 // This function will return the list of modules available in the system,
-// and which modules the requested business has access to.
+// and which modules the requested tenant has access to.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the module list for.
+// tnid:         The ID of the tenant to get the module list for.
 // MODULE_NAME:         The name of the module, and the value if it's On or Off.
 //
 // Returns
@@ -18,13 +18,13 @@
 //      <module name='Products' active='On|Off' />
 // </modules>
 //
-function ciniki_businesses_updateModuleFlags($ciniki) {
+function ciniki_tenants_updateModuleFlags($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -32,10 +32,10 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin. 
+    // Check access to tnid as owner, or sys admin. 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.updateModuleFlags');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $ac = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.updateModuleFlags');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
@@ -45,12 +45,12 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbInsert');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
     $strsql = "SELECT CONCAT_WS('.', package, module) AS name, module, status "
-        . "FROM ciniki_business_modules WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "'";  
-    $rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'name');
+        . "FROM ciniki_tenant_modules WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "'";  
+    $rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.tenants', 'modules', 'name');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    $business_modules = $rc['modules'];
+    $tenant_modules = $rc['modules'];
 
     //  
     // Get the list of available modules
@@ -68,7 +68,7 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
     require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionStart.php');
     require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionRollback.php');
     require($ciniki['config']['core']['modules_dir'] . '/core/private/dbTransactionCommit.php');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -83,10 +83,10 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
             //
             // Add the module if it doesn't exist
             //
-            if( !isset($business_modules[$name]) ) {
-                $strsql = "INSERT INTO ciniki_business_modules (business_id, package, module, "
+            if( !isset($tenant_modules[$name]) ) {
+                $strsql = "INSERT INTO ciniki_tenant_modules (tnid, package, module, "
                     . "status, flags, ruleset, date_added, last_updated) VALUES ("
-                    . "'" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                    . "'" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                     . ", '" . ciniki_core_dbQuote($ciniki, $module['package']) . "' "
                     . ", '" . ciniki_core_dbQuote($ciniki, $module['name']) . "' "
                     . ", '2'"
@@ -94,41 +94,41 @@ function ciniki_businesses_updateModuleFlags($ciniki) {
                     . ", ''"
                     . ", UTC_TIMESTAMP(), UTC_TIMESTAMP() "
                     . ")";
-                $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.businesses');
+                $rc = ciniki_core_dbInsert($ciniki, $strsql, 'ciniki.tenants');
                 if( $rc['stat'] != 'ok' ) {
-                    ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+                    ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
                     return $rc;
                 } 
-                ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
-                    $args['business_id'], 1, 'ciniki_business_modules', $name, 'status', '2');
-                ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
-                    $args['business_id'], 1, 'ciniki_business_modules', $name, 'flags', 
+                ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', 
+                    $args['tnid'], 1, 'ciniki_tenant_modules', $name, 'status', '2');
+                ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', 
+                    $args['tnid'], 1, 'ciniki_tenant_modules', $name, 'flags', 
                     $ciniki['request']['args'][$name]);
             } 
             //
             // Update the existing module
             //
             else {
-                $strsql = "UPDATE ciniki_business_modules SET "
+                $strsql = "UPDATE ciniki_tenant_modules SET "
                     . "flags = '" . ciniki_core_dbQuote($ciniki, $ciniki['request']['args'][$name]) . "', "
                     . "last_updated = UTC_TIMESTAMP() "
-                    . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                    . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                     . "AND package = '" . ciniki_core_dbQuote($ciniki, $module['package']) . "' "
                     . "AND module = '" . ciniki_core_dbQuote($ciniki, $module['name']) . "' "
                     . "";
-                $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+                $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.tenants');
                 if( $rc['stat'] != 'ok' ) {
-                    ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+                    ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
                     return $rc;
                 } 
-                ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', 
-                    $args['business_id'], 2, 'ciniki_business_modules', $name, 'flags', 
+                ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', 
+                    $args['tnid'], 2, 'ciniki_tenant_modules', $name, 'flags', 
                     $ciniki['request']['args'][$name]);
             }
         }
     }
 
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     } 

@@ -12,13 +12,13 @@
 // -------
 // <rsp stat='ok' id='34' />
 //
-function ciniki_businesses_domainDelete($ciniki) {
+function ciniki_tenants_domainDelete($ciniki) {
     //  
     // Find all the required and optional arguments
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'domain_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Domain'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
@@ -28,10 +28,10 @@ function ciniki_businesses_domainDelete($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.domainDelete'); 
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.domainDelete'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -45,7 +45,7 @@ function ciniki_businesses_domainDelete($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDelete');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -53,31 +53,31 @@ function ciniki_businesses_domainDelete($ciniki) {
     //
     // Start building the delete SQL
     //
-    $strsql = "DELETE FROM ciniki_business_domains "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+    $strsql = "DELETE FROM ciniki_tenant_domains "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['domain_id']) . "' "
         . "";
 
-    $rc = ciniki_core_dbDelete($ciniki, $strsql, 'ciniki.businesses');
+    $rc = ciniki_core_dbDelete($ciniki, $strsql, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
-        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
         return $rc;
     }
     if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
-        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.41', 'msg'=>'Unable to update art'));
+        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.41', 'msg'=>'Unable to update art'));
     }
 
     //
     // Log the deletion
     //
-    $rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-        3, 'ciniki_business_domains', $args['domain_id'], '*', '');
+    $rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+        3, 'ciniki_tenant_domains', $args['domain_id'], '*', '');
 
     //
     // Commit the database changes
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

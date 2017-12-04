@@ -1,5 +1,5 @@
 #
-# This file will upgrade the database table businesses to version 1.02.
+# This file will upgrade the database table tenants to version 1.02.
 #
-ALTER TABLE ciniki_businesses MODIFY COLUMN modules int unsigned not null;
-ALTER TABLE ciniki_businesses COMMENT='v1.02';
+ALTER TABLE ciniki_tenants MODIFY COLUMN modules int unsigned not null;
+ALTER TABLE ciniki_tenants COMMENT='v1.02';

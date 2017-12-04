@@ -1,7 +1,7 @@
 //
 // This app is a placeholder
 //
-function ciniki_businesses_assets() {
+function ciniki_tenants_assets() {
     //
     // Panels
     //
@@ -13,14 +13,14 @@ function ciniki_businesses_assets() {
         // sites panel
         //
         this.settings = new M.panel('title',
-            'ciniki_businesses_assets', 'settings',
-            'mc', 'medium', 'sectioned', 'ciniki.businesses.assets');
+            'ciniki_tenants_assets', 'settings',
+            'mc', 'medium', 'sectioned', 'ciniki.tenants.assets');
         this.settings.sections = {
             'sites':{'name':'', 'list':{}},
             };
         // FIXME: Change title
         this.settings.sectionLabel = function(i, d) { return 'Image Assets'; }
-        this.settings.noData = function() { return '**  placeholder ** <br/><br/>this is where the settings for configuring the business\'s assets will go.'; }
+        this.settings.noData = function() { return '**  placeholder ** <br/><br/>this is where the settings for configuring the tenant\'s assets will go.'; }
         this.settings.addClose('Back');
     }
 
@@ -38,14 +38,14 @@ function ciniki_businesses_assets() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_assets', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_assets', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
         } 
 
-        var rsp = M.api.getJSONCb('ciniki.businesses.brokenonpurpose', 
-            {'business_id':M.curBusinessID}, function(rsp) {
+        var rsp = M.api.getJSONCb('ciniki.tenants.brokenonpurpose', 
+            {'tnid':M.curTenantID}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;

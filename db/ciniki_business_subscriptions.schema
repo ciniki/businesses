@@ -1,12 +1,12 @@
 #
 # Description
 # -----------
-# This table stores the subscriptions for businesses.
+# This table stores the subscriptions for tenants.
 #
 # Fields
 # ------
 # id:                   The subscription id.
-# business_id:          The id of the business.
+# tnid:                 The id of the tenant.
 #
 # status:               The current status of the subscription.
 #
@@ -19,12 +19,12 @@
 #                       60 - Cancelled
 #                       61 - Pending cancel at paypal
 #
-# signup_date:          The UTC date and time the business was created in the system.  
+# signup_date:          The UTC date and time the tenant was created in the system.  
 #                       This is used to calculated the trial period.
 # trial_start_date:     The start date of the trial.
 # trial_days:           The number of days the trial should last.
 #
-# currency:             USD, CAD - The currency the business pays in.
+# currency:             USD, CAD - The currency the tenant pays in.
 # monthly:              The monthly amount to be payed.
 # yearly:               The yearly amount to be payed.
 # discount_percent:     The discount to be applied in a percentage.
@@ -53,16 +53,16 @@
 # stripe_subscription_id:   The ID for the customer subscription at stripe.
 #
 # last_payment_date:    The UTC date and time the last payment was received.
-# paid_until:           The UTC date and time the business is paid up until.
+# paid_until:           The UTC date and time the tenant is paid up until.
 #
-# notes:                Any notes on the business.
+# notes:                Any notes on the tenant.
 #
 # date_added:           The UTC date and time the record was created.
 # last_updated:         The UTC date and time the record was last_updated.
 # 
-create table ciniki_business_subscriptions (
+create table ciniki_tenant_subscriptions (
     id int not null auto_increment,
-    business_id int not null,
+    tnid int not null,
     status tinyint unsigned not null,
     signup_date datetime not null,
     trial_start_date datetime not null,
@@ -87,5 +87,5 @@ create table ciniki_business_subscriptions (
     date_added datetime not null,
     last_updated datetime not null,
     primary key (id),
-    unique index (business_id)
+    unique index (tnid)
 ) ENGINE=InnoDB, COMMENT='v1.05';

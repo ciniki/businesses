@@ -2,26 +2,26 @@
 //
 // Description
 // -----------
-// This method will sync the business information
+// This method will sync the tenant information
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:             The ID of the business to sync.
+// tnid:             The ID of the tenant to sync.
 // sync_id:                 The ID of the sync to update.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_syncNow($ciniki) {
+function ciniki_tenants_syncNow($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Sync'), 
         'type'=>array('required'=>'yes', 'blank'=>'no', 'validlist'=>array('incremental', 'partial', 'full'), 'name'=>'Type'),
         'module'=>array('required'=>'no', 'blank'=>'no', 'default'=>'', 'name'=>'Module'),
@@ -34,8 +34,8 @@ function ciniki_businesses_syncNow($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncNow');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.syncNow');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -47,14 +47,14 @@ function ciniki_businesses_syncNow($ciniki) {
     // Load the sync info
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncLoad');
-    $rc = ciniki_core_syncLoad($ciniki, $args['business_id'], $args['sync_id']);
+    $rc = ciniki_core_syncLoad($ciniki, $args['tnid'], $args['sync_id']);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     $sync = $rc['sync'];
 
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncBusiness');
-    $rc = ciniki_core_syncBusiness($ciniki, $sync, $args['business_id'], $args['type'], $args['module']);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncTenant');
+    $rc = ciniki_core_syncTenant($ciniki, $sync, $args['tnid'], $args['type'], $args['module']);
     return $rc;
 }
 ?>

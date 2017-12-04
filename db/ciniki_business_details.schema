@@ -1,16 +1,16 @@
 #
 # Description
 # -----------
-# The business_details table stores extra information for a
-# business such as configuration, options, and other values
+# The tenant_details table stores extra information for a
+# tenant such as configuration, options, and other values
 # required.  This table provides the 
-# flexibility to store only what is required for each business.
+# flexibility to store only what is required for each tenant.
 #
 # The commonly used information is stored directly in the 
-# businesses table for fast indexing and searching.
+# tenants table for fast indexing and searching.
 #
 # Some examples:
-# - config.business.year_end = <number> (date of their fiscal year end)
+# - config.tenant.year_end = <number> (date of their fiscal year end)
 #
 # - contact.address.street = <string>
 # - contact.address.city = <string>
@@ -39,7 +39,7 @@
 # Remote services API connections
 # - apis-dropbox-access-token
 #
-# Set up the international settings for the business.  This is used
+# Set up the international settings for the tenant.  This is used
 # 
 # - intl-default-locale = <string> Default to en_US
 # - intl-default-currency = <string> Default to USD
@@ -48,23 +48,23 @@
 # - mossi.theme = <string>
 # - custom.name = <string> (custom fields created by user)
 #
-# **Note** business config information might need it's own table or module.
+# **Note** tenant config information might need it's own table or module.
 #
 #
 # Fields
 # ------
-# business_id:  The id of the business the detail is for.
+# tnid:         The id of the tenant the detail is for.
 # detail_key:   The unique key for the detail.
 # detail_value: The value stored for this key.
 # date_added:   The UTC date and time the entry was created in the database.
 # last_updated: The UTC date and time the entry was last updated.
 #
-create table ciniki_business_details (
-    business_id int not null,
+create table ciniki_tenant_details (
+    tnid int not null,
     detail_key varchar(50) not null,
     detail_value varchar(6000) not null,
     date_added datetime not null,
     last_updated datetime not null,
-    primary key (business_id, detail_key),
+    primary key (tnid, detail_key),
     index (last_updated)
 ) ENGINE=InnoDB, COMMENT='v1.02';

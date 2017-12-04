@@ -9,20 +9,20 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:             The ID of the business to lock.
+// tnid:             The ID of the tenant to lock.
 // sync_id:                 The ID of the sync to remove.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_syncDelete($ciniki) {
+function ciniki_tenants_syncDelete($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Sync'), 
         ));
     if( $rc['stat'] != 'ok' ) {
@@ -33,8 +33,8 @@ function ciniki_businesses_syncDelete($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncDelete');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.syncDelete');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -49,7 +49,7 @@ function ciniki_businesses_syncDelete($ciniki) {
     //
     // Create transaction
     //
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }
@@ -58,7 +58,7 @@ function ciniki_businesses_syncDelete($ciniki) {
     // Grab the sync information
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'syncLoad');
-    $rc = ciniki_core_syncLoad($ciniki, $args['business_id'], $args['sync_id']);
+    $rc = ciniki_core_syncLoad($ciniki, $args['tnid'], $args['sync_id']);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -77,20 +77,20 @@ function ciniki_businesses_syncDelete($ciniki) {
     //
     // Delete from local server
     //
-    $strsql = "DELETE FROM ciniki_business_syncs "
+    $strsql = "DELETE FROM ciniki_tenant_syncs "
         . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['sync_id']) . "' "
-        . "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "";
     $rc = ciniki_core_dbDelete($ciniki, $strsql, 'ciniki.customers');
     if( $rc['stat'] != 'ok' ) {
-        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
         return $rc;
     }
 
     //
     // Commit transaction
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   

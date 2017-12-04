@@ -1,6 +1,6 @@
 #
-# This file will upgrade the database table businesses to version 1.03.
+# This file will upgrade the database table tenants to version 1.03.
 #
-ALTER TABLE ciniki_businesses ADD COLUMN uuid char(36) not null after id;
-UPDATE ciniki_businesses SET uuid = uuid();
-ALTER TABLE ciniki_businesses COMMENT='v1.03';
+ALTER TABLE ciniki_tenants ADD COLUMN uuid char(36) not null after id;
+UPDATE ciniki_tenants SET uuid = uuid();
+ALTER TABLE ciniki_tenants COMMENT='v1.03';

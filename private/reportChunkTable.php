@@ -7,13 +7,13 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The ID of the business the reports is attached to.
+// tnid:         The ID of the tenant the reports is attached to.
 // report_id:           The ID of the reports to get the details for.
 //
 // Returns
 // -------
 //
-function ciniki_businesses_reportChunkTable($ciniki, $business_id, &$report, $chunk) {
+function ciniki_tenants_reportChunkTable($ciniki, $tnid, &$report, $chunk) {
 
     if( isset($chunk['textlist']) && $chunk['textlist'] != '' ) {
         $report['text'] .= $chunk['textlist'];

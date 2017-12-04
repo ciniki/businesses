@@ -2,26 +2,26 @@
 //
 // Description
 // -----------
-// This method will return the intl settings for the business.  These are 
-// used to set the locale, currency and timezone of the business.
+// This method will return the intl settings for the tenant.  These are 
+// used to set the locale, currency and timezone of the tenant.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the intl settings for.
+// tnid:         The ID of the tenant to get the intl settings for.
 //
 // Returns
 // -------
 // <settings intl-default-locale="en_US"
 //
-function ciniki_businesses_settingsIntlGet($ciniki) {
+function ciniki_tenants_settingsIntlGet($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -29,10 +29,10 @@ function ciniki_businesses_settingsIntlGet($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.settingsIntlGet');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $ac = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.settingsIntlGet');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
@@ -50,8 +50,8 @@ function ciniki_businesses_settingsIntlGet($ciniki) {
         );
     
     $strsql = "SELECT detail_key, detail_value "
-        . "FROM ciniki_business_details "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "FROM ciniki_tenant_details "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND detail_key IN ("
             . "'intl-default-locale', "
             . "'intl-default-currency', "
@@ -59,7 +59,7 @@ function ciniki_businesses_settingsIntlGet($ciniki) {
             . "'intl-default-distance-units' "
             . ") "
         . "";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'setting');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'setting');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

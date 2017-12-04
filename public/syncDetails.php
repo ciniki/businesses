@@ -8,20 +8,20 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to get the sync information for.
+// tnid:     The ID of the tenant to get the sync information for.
 // sync_id:         The ID of the syncronization to get the information for.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_syncDetails($ciniki) {
+function ciniki_tenants_syncDetails($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'sync_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Sync'), 
         ));
     if( $rc['stat'] != 'ok' ) {
@@ -32,8 +32,8 @@ function ciniki_businesses_syncDetails($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncDetails');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.syncDetails');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -44,24 +44,24 @@ function ciniki_businesses_syncDetails($ciniki) {
     //
     // Get the information for the syncronization
     //
-    $strsql = "SELECT id, business_id, flags, status, "
+    $strsql = "SELECT id, tnid, flags, status, "
         . "remote_name, remote_url, remote_uuid, "
         . "DATE_FORMAT(date_added, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as date_added, "
         . "DATE_FORMAT(last_updated, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_updated, "
         . "DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_sync, "
         . "DATE_FORMAT(last_partial, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_partial, "
         . "DATE_FORMAT(last_full, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "') as last_full "
-        . "FROM ciniki_business_syncs "
-        . "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
-        . "AND ciniki_business_syncs.id = '" . ciniki_core_dbQuote($ciniki, $args['sync_id']) . "' " 
+        . "FROM ciniki_tenant_syncs "
+        . "WHERE ciniki_tenant_syncs.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' " 
+        . "AND ciniki_tenant_syncs.id = '" . ciniki_core_dbQuote($ciniki, $args['sync_id']) . "' " 
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'sync');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'sync');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
     if( !isset($rc['sync']) ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.82', 'msg'=>'Unable to find syncronization'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.82', 'msg'=>'Unable to find syncronization'));
     }
 
     if( ($rc['sync']['flags']&0x03) == 0x03 ) {

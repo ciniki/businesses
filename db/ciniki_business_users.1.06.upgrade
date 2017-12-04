@@ -1,5 +1,5 @@
 #
-# Add the uuid column to ciniki_business_users for replication.
+# Add the uuid column to ciniki_tenant_users for replication.
 #
-ALTER TABLE ciniki_business_users ADD COLUMN eid varchar(50) not null AFTER user_id;
-ALTER TABLE ciniki_business_users COMMENT='v1.06';
+ALTER TABLE ciniki_tenant_users ADD COLUMN eid varchar(50) not null AFTER user_id;
+ALTER TABLE ciniki_tenant_users COMMENT='v1.06';

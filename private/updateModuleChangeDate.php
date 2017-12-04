@@ -9,7 +9,7 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The ID of the business to update the module for.
+// tnid:         The ID of the tenant to update the module for.
 // package:             The package the module is contained within.
 // module:              The module that needs to be updated.
 //
@@ -17,22 +17,22 @@
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_updateModuleChangeDate($ciniki, $business_id, $package, $module) {
+function ciniki_tenants_updateModuleChangeDate($ciniki, $tnid, $package, $module) {
 
     //
-    // If business_id is passed as zero, then don't updated the module last_change field
+    // If tnid is passed as zero, then don't updated the module last_change field
     //
-    if( $business_id == 0 ) {
+    if( $tnid == 0 ) {
         return array('stat'=>'ok');
     }
 
     //
-    // Update the module.  Assume the module has been added to the ciniki_business_modules table,
+    // Update the module.  Assume the module has been added to the ciniki_tenant_modules table,
     // if not run an insert.
     //
-    $strsql = "UPDATE ciniki_business_modules "
+    $strsql = "UPDATE ciniki_tenant_modules "
         . "SET last_change = UTC_TIMESTAMP() "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND package = '" . ciniki_core_dbQuote($ciniki, $package) . "' "
         . "AND module = '" . ciniki_core_dbQuote($ciniki, $module) . "' "
         . "";
@@ -46,9 +46,9 @@ function ciniki_businesses_updateModuleChangeDate($ciniki, $business_id, $packag
     // Check if a row was updated, if not, run an insert
     //
     if( isset($rc['num_affected_rows']) && $rc['num_affected_rows'] == 0 ) {
-        $strsql = "INSERT INTO ciniki_business_modules (business_id, package, module, "
+        $strsql = "INSERT INTO ciniki_tenant_modules (tnid, package, module, "
             . "status, ruleset, date_added, last_updated, last_change) VALUES ("
-            . "'" . ciniki_core_dbQuote($ciniki, $business_id) . "', "
+            . "'" . ciniki_core_dbQuote($ciniki, $tnid) . "', "
             . "'" . ciniki_core_dbQuote($ciniki, $package) . "', "
             . "'" . ciniki_core_dbQuote($ciniki, $module) . "', "
             . "2, '', UTC_TIMESTAMP(), UTC_TIMESTAMP(), UTC_TIMESTAMP() "

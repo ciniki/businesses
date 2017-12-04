@@ -3,10 +3,10 @@
 // Description
 // -----------
 // This function will retrieve the users who are owners or employee's 
-// of the specified business.  No customers will be returned in this query,
-// unless they are also an owner or employee of this business.
+// of the specified tenant.  No customers will be returned in this query,
+// unless they are also an owner or employee of this tenant.
 //
-// *note* Only business owners are implemented, employee's will be in the future.
+// *note* Only tenant owners are implemented, employee's will be in the future.
 //
 // Info
 // ----
@@ -16,7 +16,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the users for.
+// tnid:         The ID of the tenant to get the users for.
 //
 // Returns
 // -------
@@ -24,13 +24,13 @@
 //      <user id='1' email='' firstname='' lastname='' display_name='' />
 // </users>
 //
-function ciniki_businesses_getOwners($ciniki) {
+function ciniki_tenants_getOwners($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -38,22 +38,22 @@ function ciniki_businesses_getOwners($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $ac = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.getOwners');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $ac = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.getOwners');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
 
     //
-    // Query for the business users
+    // Query for the tenant users
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-    $strsql = "SELECT user_id FROM ciniki_business_users "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+    $strsql = "SELECT user_id FROM ciniki_tenant_users "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND type = 1 ";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

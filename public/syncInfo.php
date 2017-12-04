@@ -9,19 +9,19 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:             The ID of the business to lock.
+// tnid:             The ID of the tenant to lock.
 //
 // Returns
 // -------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_syncInfo($ciniki) {
+function ciniki_tenants_syncInfo($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -31,8 +31,8 @@ function ciniki_businesses_syncInfo($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.syncInfo');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.syncInfo');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -41,38 +41,38 @@ function ciniki_businesses_syncInfo($ciniki) {
     $datetime_format = ciniki_users_datetimeFormat($ciniki);
 
     //
-    // Get the local business information
+    // Get the local tenant information
     //
     $strsql = "SELECT uuid "
-        . "FROM ciniki_businesses "
-        . "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
+        . "FROM ciniki_tenants "
+        . "WHERE ciniki_tenants.id = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' " 
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    if( !isset($rc['business']) ) { 
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.83', 'msg'=>'Unable to get business information'));
+    if( !isset($rc['tenant']) ) { 
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.83', 'msg'=>'Unable to get tenant information'));
     }
-    $uuid = $rc['business']['uuid'];
+    $uuid = $rc['tenant']['uuid'];
 
     //
-    // Get the list of syncs setup for this business
+    // Get the list of syncs setup for this tenant
     //
-    $strsql = "SELECT id, business_id, flags, flags AS type, status, status AS status_text, "
+    $strsql = "SELECT id, tnid, flags, flags AS type, status, status AS status_text, "
         . "remote_name, remote_url, remote_uuid, "
         . "IFNULL(DATE_FORMAT(last_sync, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_sync, "
         . "IFNULL(DATE_FORMAT(last_partial, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_partial, "
         . "IFNULL(DATE_FORMAT(last_full, '" . ciniki_core_dbQuote($ciniki, $datetime_format) . "'), '') as last_full "
-        . "FROM ciniki_business_syncs "
-        . "WHERE ciniki_business_syncs.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
+        . "FROM ciniki_tenant_syncs "
+        . "WHERE ciniki_tenant_syncs.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' " 
         . "ORDER BY remote_name "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.businesses', array(
+    $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.tenants', array(
         array('container'=>'syncs', 'fname'=>'id', 'name'=>'sync',
-            'fields'=>array('id', 'business_id', 'flags', 'type', 'status', 'status_text', 'remote_name', 'remote_url', 'remote_uuid',
+            'fields'=>array('id', 'tnid', 'flags', 'type', 'status', 'status_text', 'remote_name', 'remote_url', 'remote_uuid',
                 'last_sync', 'last_partial', 'last_full'),
             'maps'=>array('status_text'=>array('10'=>'Active', '60'=>'Suspended'),
                 'type'=>array('1'=>'Push', '2'=>'Pull', '3'=>'Bi'))),

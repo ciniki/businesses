@@ -12,13 +12,13 @@
 // -------
 // <rsp stat='ok' id='34' />
 //
-function ciniki_businesses_planUpdate($ciniki) {
+function ciniki_tenants_planUpdate($ciniki) {
     //  
     // Find all the required and optional arguments
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plan_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plan'), 
         'name'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Name'), 
         'flags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Flags'), 
@@ -35,10 +35,10 @@ function ciniki_businesses_planUpdate($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.planUpdate'); 
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.planUpdate'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -52,7 +52,7 @@ function ciniki_businesses_planUpdate($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbAddModuleHistory');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -60,7 +60,7 @@ function ciniki_businesses_planUpdate($ciniki) {
     //
     // Start building the update SQL
     //
-    $strsql = "UPDATE ciniki_business_plans SET last_updated = UTC_TIMESTAMP()";
+    $strsql = "UPDATE ciniki_tenant_plans SET last_updated = UTC_TIMESTAMP()";
 
     //
     // Add all the fields to the change log
@@ -77,26 +77,26 @@ function ciniki_businesses_planUpdate($ciniki) {
     foreach($changelog_fields as $field) {
         if( isset($args[$field]) ) {
             $strsql .= ", $field = '" . ciniki_core_dbQuote($ciniki, $args[$field]) . "' ";
-            $rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.businesses', 'ciniki_business_history', $args['business_id'], 
-                2, 'ciniki_business_plans', $args['plan_id'], $field, $args[$field]);
+            $rc = ciniki_core_dbAddModuleHistory($ciniki, 'ciniki.tenants', 'ciniki_tenant_history', $args['tnid'], 
+                2, 'ciniki_tenant_plans', $args['plan_id'], $field, $args[$field]);
         }
     }
-    $strsql .= "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+    $strsql .= "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['plan_id']) . "' ";
-    $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+    $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
-        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
+        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
         return $rc;
     }
     if( !isset($rc['num_affected_rows']) || $rc['num_affected_rows'] != 1 ) {
-        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.businesses');
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.58', 'msg'=>'Unable to update plan'));
+        ciniki_core_dbTransactionRollback($ciniki, 'ciniki.tenants');
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.58', 'msg'=>'Unable to update plan'));
     }
 
     //
     // Commit the database changes
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }

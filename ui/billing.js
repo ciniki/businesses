@@ -1,7 +1,7 @@
 //
-// The app to manage businesses domains for a business
+// The app to manage tenants domains for a tenant
 //
-function ciniki_businesses_billing() {
+function ciniki_tenants_billing() {
 
     this.script = null;
 
@@ -32,9 +32,9 @@ function ciniki_businesses_billing() {
     //
     // The main menu/subscribe form
     //
-    this.menu = new M.panel('Billing', 'ciniki_businesses_billing', 'menu', 'mc', 'medium', 'sectioned', 'ciniki.businesses.billing.menu');
+    this.menu = new M.panel('Billing', 'ciniki_tenants_billing', 'menu', 'mc', 'medium', 'sectioned', 'ciniki.tenants.billing.menu');
     this.menu.subscription_id = 0;
-    this.menu.business_id = 0;
+    this.menu.tnid = 0;
     this.menu.data = {};
     this.menu.sections = {
         'info':{'label':'Subscription', 'list':{
@@ -42,26 +42,26 @@ function ciniki_businesses_billing() {
             'payments':{'label':'Payments'},
             }},
         'subscription':{'label':'Subscription', 
-            'visible':function() { return (M.ciniki_businesses_billing.menu.data != null && M.ciniki_businesses_billing.menu.data.status == 2) ? 'yes' : 'no'; }, 
+            'visible':function() { return (M.ciniki_tenants_billing.menu.data != null && M.ciniki_tenants_billing.menu.data.status == 2) ? 'yes' : 'no'; }, 
             'fields':{
                 'currency':{'label':'Currency', 'type':'toggle', 'toggles':this.currencies,
-                    'onchange':'M.ciniki_businesses_billing.menu.updatePayments',
+                    'onchange':'M.ciniki_tenants_billing.menu.updatePayments',
                     },
                 'payment_frequency':{'label':'Frequency', 'type':'toggle', 'toggles':this.paymentFrequencies,
-                    'onchange':'M.ciniki_businesses_billing.menu.updatePayments',
+                    'onchange':'M.ciniki_tenants_billing.menu.updatePayments',
                     },
                 'billing_email':{'label':'Billing Email', 'type':'text'},
             }},
         '_buttons':{'label':'', 'buttons':{
             'stripe':{'label':'Subscribe with Credit Card', 
-                'visible':function() { return (M.ciniki_businesses_billing.menu.data != null && M.ciniki_businesses_billing.menu.data.status == 2) ? 'yes' : 'no'; }, 
-                'fn':'M.ciniki_businesses_billing.menu.save(\'M.ciniki_businesses_billing.menu.paynow();\');'},
+                'visible':function() { return (M.ciniki_tenants_billing.menu.data != null && M.ciniki_tenants_billing.menu.data.status == 2) ? 'yes' : 'no'; }, 
+                'fn':'M.ciniki_tenants_billing.menu.save(\'M.ciniki_tenants_billing.menu.paynow();\');'},
             'edit':{'label':'Edit', 
                 'visible':function() { return (M.userPerms&0x01) == 0x01 ? 'yes': 'no'; }, 
-                'fn':'M.ciniki_businesses_billing.edit.open(\'M.ciniki_businesses_billing.menu.open();\',M.ciniki_businesses_billing.menu.business_id);'},
+                'fn':'M.ciniki_tenants_billing.edit.open(\'M.ciniki_tenants_billing.menu.open();\',M.ciniki_tenants_billing.menu.tnid);'},
             'delete':{'label':'Cancel Subscription', 
-                'visible':function() { return (M.ciniki_businesses_billing.menu.data != null && M.ciniki_businesses_billing.menu.data.status == 10) ? 'yes' : 'no'; }, 
-                'fn':'M.ciniki_businesses_billing.menu.cancelSubscription();'},
+                'visible':function() { return (M.ciniki_tenants_billing.menu.data != null && M.ciniki_tenants_billing.menu.data.status == 10) ? 'yes' : 'no'; }, 
+                'fn':'M.ciniki_tenants_billing.menu.cancelSubscription();'},
             }},
     }
     this.menu.listLabel = function(s, i, d) { return d.label; }
@@ -70,18 +70,18 @@ function ciniki_businesses_billing() {
     }
     this.menu.fieldValue = function(s, i, d) { 
         if( i == 'billing_email' && this.data[i] == '' ) {
-            return this.data.business_email;
+            return this.data.tenant_email;
         }
         return this.data[i]; 
     }
     this.menu.open = function(cb, bid) {
-        if( bid != null ) { this.business_id = bid; }
-        M.api.getJSONCb('ciniki.businesses.subscriptionInfo', {'business_id':this.business_id}, function(rsp) {
+        if( bid != null ) { this.tnid = bid; }
+        M.api.getJSONCb('ciniki.tenants.subscriptionInfo', {'tnid':this.tnid}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
             }
-            var p = M.ciniki_businesses_billing.menu;
+            var p = M.ciniki_tenants_billing.menu;
             p.data = rsp.subscription;
             if( p.data.status == 2 ) {
                 p.stripeHandler = StripeCheckout.configure({
@@ -90,16 +90,16 @@ function ciniki_businesses_billing() {
                     locale: 'auto',
                     allowRememberMe: false,
                     token: function(token) {
-                        var c = M.ciniki_businesses_billing.menu.serializeForm('no');
+                        var c = M.ciniki_tenants_billing.menu.serializeForm('no');
                         c += '&token=' + encodeURIComponent(token.id);
-                        M.api.postJSONCb('ciniki.businesses.subscriptionStripeProcess', 
-                            {'business_id':M.ciniki_businesses_billing.menu.business_id, 'action':'subscribe'}, c, function(rsp) {
+                        M.api.postJSONCb('ciniki.tenants.subscriptionStripeProcess', 
+                            {'tnid':M.ciniki_tenants_billing.menu.tnid, 'action':'subscribe'}, c, function(rsp) {
                                 if( rsp.stat != 'ok' ) {
                                     M.api.err(rsp);
                                     return false;
                                 }
                                 // Reopen this window to show new status, etc
-                                M.ciniki_businesses_billing.menu.open()
+                                M.ciniki_tenants_billing.menu.open()
                             });
                     },
                 });
@@ -129,11 +129,11 @@ function ciniki_businesses_billing() {
             this.close(); 
             return true; 
         }
-        if( cb == null ) { cb = 'M.ciniki_businesses_billing.menu.close();'; }
+        if( cb == null ) { cb = 'M.ciniki_tenants_billing.menu.close();'; }
         var c = this.serializeForm('no');
         if( c != '' ) {
             console.log(c);
-            M.api.postJSONCb('ciniki.businesses.subscriptionCustomerUpdate', {'business_id':this.business_id}, c, function(rsp) {
+            M.api.postJSONCb('ciniki.tenants.subscriptionCustomerUpdate', {'tnid':this.tnid}, c, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -157,22 +157,22 @@ function ciniki_businesses_billing() {
     }
     this.menu.cancelSubscription = function() {
         if( confirm("Are you sure you want to cancel your subscription and close your account?") ) {
-            M.api.getJSONCb('ciniki.businesses.subscriptionCancel', {'business_id':this.business_id}, function(rsp) {
+            M.api.getJSONCb('ciniki.tenants.subscriptionCancel', {'tnid':this.tnid}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
-                M.ciniki_businesses_billing.menu.open();
+                M.ciniki_tenants_billing.menu.open();
             });
         }
     }
-    this.menu.addLeftButton('back', 'Back', 'M.ciniki_businesses_billing.menu.save();');
+    this.menu.addLeftButton('back', 'Back', 'M.ciniki_tenants_billing.menu.save();');
 
     //
     // Edit form for sysadmins to change the billing
     //
-    this.edit = new M.panel('Edit Billing', 'ciniki_businesses_billing', 'edit', 'mc', 'medium', 'sectioned', 'ciniki.businesses.billing.edit');
-    this.edit.business_id = 0;
+    this.edit = new M.panel('Edit Billing', 'ciniki_tenants_billing', 'edit', 'mc', 'medium', 'sectioned', 'ciniki.tenants.billing.edit');
+    this.edit.tnid = 0;
     this.edit.data = null;
     this.edit.sections = {
         'subscription':{'label':'Subscription', 'fields':{
@@ -193,18 +193,18 @@ function ciniki_businesses_billing() {
             'notes':{'label':'', 'hidelabel':'yes', 'type':'textarea', 'size':'medium'},
             }},
         '_save':{'label':'', 'buttons':{
-            'save':{'label':'Save', 'fn':'M.ciniki_businesses_billing.edit.save();'},
+            'save':{'label':'Save', 'fn':'M.ciniki_tenants_billing.edit.save();'},
             }},
         };
     this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
     this.edit.open = function(cb, bid) {
-        if( bid != null ) { this.business_id = bid; }
-        M.api.getJSONCb('ciniki.businesses.subscriptionInfo', {'business_id':this.business_id}, function(rsp) {
+        if( bid != null ) { this.tnid = bid; }
+        M.api.getJSONCb('ciniki.tenants.subscriptionInfo', {'tnid':this.tnid}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
             }
-            var p = M.ciniki_businesses_billing.edit;
+            var p = M.ciniki_tenants_billing.edit;
             p.data = rsp.subscription;
             p.subscription_id = rsp.subscription.id;
             if( p.data.currency == null ) {
@@ -220,18 +220,18 @@ function ciniki_businesses_billing() {
     this.edit.save = function() {
         var c = this.serializeForm('no');
         if( c != '' ) {
-            M.api.postJSONCb('ciniki.businesses.subscriptionUpdate', {'business_id':this.business_id}, c, function(rsp) {
+            M.api.postJSONCb('ciniki.tenants.subscriptionUpdate', {'tnid':this.tnid}, c, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
-                M.ciniki_businesses_billing.edit.close();
+                M.ciniki_tenants_billing.edit.close();
             });
         } else {
             this.close();
         }
     } 
-    this.edit.addButton('save', 'Save', 'M.ciniki_businesses_billing.edit.save();');
+    this.edit.addButton('save', 'Save', 'M.ciniki_tenants_billing.edit.save();');
     this.edit.addClose('Cancel');
 
     //
@@ -248,7 +248,7 @@ function ciniki_businesses_billing() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(ap, 'ciniki_businesses_billing', 'yes');
+        var appContainer = M.createContainer(ap, 'ciniki_tenants_billing', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;
@@ -277,7 +277,7 @@ function ciniki_businesses_billing() {
                 if(!done&&(!this.readyState||this.readyState==="loaded"||this.readyState==="complete")){
                     done = true;
                  
-                    M.ciniki_businesses_billing.startAfterStripe();
+                    M.ciniki_tenants_billing.startAfterStripe();
                    
                     // Handle memory leak in IE
     //                script.onload = script.onreadystatechange = null;
@@ -293,10 +293,10 @@ function ciniki_businesses_billing() {
     }
 
     this.startAfterStripe = function() {
-        if( this.args.business_id != null && this.args.business_id > 0 ) {
-            this.menu.open(this.cb, this.args.business_id);
+        if( this.args.tnid != null && this.args.tnid > 0 ) {
+            this.menu.open(this.cb, this.args.tnid);
         } else {
-            this.menu.open(this.cb, M.curBusinessID);
+            this.menu.open(this.cb, M.curTenantID);
         }
     }
 }

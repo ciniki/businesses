@@ -7,16 +7,16 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The ID of the business the reports is attached to.
+// tnid:         The ID of the tenant the reports is attached to.
 // report_id:           The ID of the reports to get the details for.
 //
 // Returns
 // -------
 //
-function ciniki_businesses_reportRun($ciniki, $business_id, $report_id) {
+function ciniki_tenants_reportRun($ciniki, $tnid, $report_id) {
 
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'reportExec');
-    $rc = ciniki_businesses_reportExec($ciniki, $business_id, $report_id);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'reportExec');
+    $rc = ciniki_tenants_reportExec($ciniki, $tnid, $report_id);
     if( $rc['stat'] != 'ok' ) {
         //
         // Email the error code and information, that way they know the report ran but there was a problem.

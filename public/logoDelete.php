@@ -2,26 +2,26 @@
 //
 // Description
 // -----------
-// This method will remove the logo image from the business.
+// This method will remove the logo image from the tenant.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to delete the logo from.
+// tnid:     The ID of the tenant to delete the logo from.
 // 
 // Example Return
 // --------------
 // <rsp stat="ok" />
 //
-function ciniki_businesses_logoDelete(&$ciniki) {
+function ciniki_tenants_logoDelete(&$ciniki) {
     //
     // Check args
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -31,8 +31,8 @@ function ciniki_businesses_logoDelete(&$ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.logoDelete');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.logoDelete');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -45,18 +45,18 @@ function ciniki_businesses_logoDelete(&$ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUpdate');
-    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) { 
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.51', 'msg'=>'Internal Error', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.51', 'msg'=>'Internal Error', 'err'=>$rc['err']));
     }   
 
     //
-    // Remove logo_id from business
+    // Remove logo_id from tenant
     //
-    $strsql = "UPDATE ciniki_businesses SET logo_id = 0 "
+    $strsql = "UPDATE ciniki_tenants SET logo_id = 0 "
         . ", last_updated = UTC_TIMESTAMP() "
-        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' ";
-    $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.businesses');
+        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' ";
+    $rc = ciniki_core_dbUpdate($ciniki, $strsql, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -64,9 +64,9 @@ function ciniki_businesses_logoDelete(&$ciniki) {
     //
     // Commit the transaction
     //
-    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.businesses');
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.tenants');
     if( $rc['stat'] != 'ok' ) {
-        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.52', 'msg'=>'Unable to delete logo', 'err'=>$rc['err']));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.52', 'msg'=>'Unable to delete logo', 'err'=>$rc['err']));
     }
 
     return array('stat'=>'ok');

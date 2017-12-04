@@ -1,24 +1,24 @@
 #
 # Description
 # -----------
-# This table stores the businesses for this install of sIT.  
+# This table stores the tenants for this install of sIT.  
 #
 # Fields
 # ------
 # id:           The internal database ID of the company.
 #
-# uuid:         The unique ID for the business, which is unique across all database instances.
+# uuid:         The unique ID for the tenant, which is unique across all database instances.
 #
-# name:         The common name of the business, which is used on the website and marketing materials.
+# name:         The common name of the tenant, which is used on the website and marketing materials.
 #
-# category:     The category name for use by sysadmin.  Allows admins to view businesses by category, helps to keep them sorted.
+# category:     The category name for use by sysadmin.  Allows admins to view tenants by category, helps to keep them sorted.
 #
-# tagline:      The brief one line business description.
+# tagline:      The brief one line tenant description.
 #
-# sitename:     The unique name of the business website.  Used in web delivery, and must be
+# sitename:     The unique name of the tenant website.  Used in web delivery, and must be
 #               only lowercase letters, numbers, underscore (_) and dash (-).
 #
-# description:  A description of the business, for internal use.
+# description:  A description of the tenant, for internal use.
 #
 # status:    0 - unknown
 #            1 - active
@@ -31,14 +31,14 @@
 #               tables to be in their own database.
 #               This may be done for security.
 #
-# logo_id:      The business logo stored in the module ciniki.images
+# logo_id:      The tenant logo stored in the module ciniki.images
 #
-# reseller_id:  The ID of the business that is the registered reseller for this business.
+# reseller_id:  The ID of the tenant that is the registered reseller for this tenant.
 #   
-# date_added:   The date and time the business was created in the database.
-# last_updated: The date and time the business record was last updated.
+# date_added:   The date and time the tenant was created in the database.
+# last_updated: The date and time the tenant record was last updated.
 #
-create table ciniki_businesses (
+create table ciniki_tenants (
     id int not null auto_increment,
     uuid char(36) not null,
     name varchar(150) not null,

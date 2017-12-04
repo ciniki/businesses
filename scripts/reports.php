@@ -2,7 +2,7 @@
 //
 // Description
 // -----------
-// This script will run the reports for businesses. This is separate from cron jobs
+// This script will run the reports for tenants. This is separate from cron jobs
 // so a break in the report code will not stop cron jobs.
 //
 
@@ -20,8 +20,8 @@ require_once($ciniki_root . '/ciniki-mods/core/private/init.php');
 require_once($ciniki_root . '/ciniki-mods/core/private/checkModuleFlags.php');
 require_once($ciniki_root . '/ciniki-mods/core/private/dbHashQuery.php');
 require_once($ciniki_root . '/ciniki-mods/core/private/dbQuote.php');
-require_once($ciniki_root . '/ciniki-mods/businesses/private/checkModuleAccess.php');
-require_once($ciniki_root . '/ciniki-mods/businesses/private/reportRun.php');
+require_once($ciniki_root . '/ciniki-mods/tenants/private/checkModuleAccess.php');
+require_once($ciniki_root . '/ciniki-mods/tenants/private/reportRun.php');
 
 $rc = ciniki_core_init($ciniki_root, 'rest');
 if( $rc['stat'] != 'ok' ) {
@@ -37,11 +37,11 @@ $ciniki = $rc['ciniki'];
 //
 // Load the list of reports to run
 //
-$strsql = "SELECT id, business_id, frequency, next_date "
-    . "FROM ciniki_business_reports "
+$strsql = "SELECT id, tnid, frequency, next_date "
+    . "FROM ciniki_tenant_reports "
     . "WHERE next_date <= UTC_TIMESTAMP() "
     . "";
-$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'report');
+$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'report');
 if( $rc['stat'] != 'ok' ) {
     error_log('Unable to get list of reports');
     exit;
@@ -54,14 +54,14 @@ if( !isset($rc['rows']) || count($rc['rows']) < 1 ) {
 $reports = $rc['rows'];
 foreach($reports as $report) {
     //
-    // Setup the defaults for business in ciniki array
+    // Setup the defaults for tenant in ciniki array
     //
-    $ciniki['business'] = array('settings'=>array(), 'modules'=>array(), 'user'=>array('perms'=>0));
+    $ciniki['tenant'] = array('settings'=>array(), 'modules'=>array(), 'user'=>array('perms'=>0));
 
     //
-    // Load the business modules
+    // Load the tenant modules
     //
-    $rc = ciniki_businesses_checkModuleAccess($ciniki, $report['business_id'], 'ciniki', 'businesses');
+    $rc = ciniki_tenants_checkModuleAccess($ciniki, $report['tnid'], 'ciniki', 'tenants');
     if( $rc['stat'] != 'ok' ) {
         error_log('RPTERR: Module not enabled');
         continue;
@@ -70,7 +70,7 @@ foreach($reports as $report) {
     //
     // Run the report
     //
-    $rc = ciniki_businesses_reportRun($ciniki, $report['business_id'], $report['id']);
+    $rc = ciniki_tenants_reportRun($ciniki, $report['tnid'], $report['id']);
     if( $rc['stat'] != 'ok' ) { 
         error_log('RPTERR: ' . print_r($rc, true));
         continue;

@@ -1,7 +1,7 @@
 #
-# This file will upgrade the database table business_subscriptions to version 1.04.
+# This file will upgrade the database table tenant_subscriptions to version 1.04.
 #
-ALTER TABLE ciniki_business_subscriptions ADD COLUMN billing_email varchar(250) not null AFTER discount_amount;
-ALTER TABLE ciniki_business_subscriptions ADD COLUMN stripe_customer_id varchar(100) not null AFTER paypal_amount;
-ALTER TABLE ciniki_business_subscriptions ADD COLUMN stripe_subscription_id varchar(100) not null AFTER stripe_customer_id;
-ALTER TABLE ciniki_business_subscriptions COMMENT='v1.05';
+ALTER TABLE ciniki_tenant_subscriptions ADD COLUMN billing_email varchar(250) not null AFTER discount_amount;
+ALTER TABLE ciniki_tenant_subscriptions ADD COLUMN stripe_customer_id varchar(100) not null AFTER paypal_amount;
+ALTER TABLE ciniki_tenant_subscriptions ADD COLUMN stripe_subscription_id varchar(100) not null AFTER stripe_customer_id;
+ALTER TABLE ciniki_tenant_subscriptions COMMENT='v1.05';

@@ -2,23 +2,23 @@
 //
 // Description
 // -----------
-// This method will return the ID of the image of the business logo.
+// This method will return the ID of the image of the tenant logo.
 //
 // Arguments
 // ---------
-// business_id:         The ID of the business to get the logo for.
+// tnid:         The ID of the tenant to get the logo for.
 //
 // Returns
 // -------
 // <rsp stat="ok" logo_id="32" />
 //
-function ciniki_businesses_logoGet($ciniki) {
+function ciniki_tenants_logoGet($ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'),     
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'),     
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -28,8 +28,8 @@ function ciniki_businesses_logoGet($ciniki) {
     //
     // Check access 
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.logoGet');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.logoGet');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -38,15 +38,15 @@ function ciniki_businesses_logoGet($ciniki) {
     // Get the busines logo_id
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
-    $strsql = "SELECT logo_id FROM ciniki_businesses "
-        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+    $strsql = "SELECT logo_id FROM ciniki_tenants "
+        . "WHERE id = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "";
-    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.businesses', 'business');
+    $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.tenants', 'tenant');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
-    if( isset($rc['business']['logo_id']) ) {
-        $logo_id = $rc['business']['logo_id'];
+    if( isset($rc['tenant']['logo_id']) ) {
+        $logo_id = $rc['tenant']['logo_id'];
     } else {
         $logo_id = 0;
     }
@@ -54,6 +54,6 @@ function ciniki_businesses_logoGet($ciniki) {
     return array('stat'=>'ok', 'logo_id'=>$logo_id);
 
 //  ciniki_core_loadMethod($ciniki, 'ciniki', 'images', 'private', 'getImage');
-//  return ciniki_images_getImage($ciniki, $args['business_id'], $logo_id, $args['version'], $args['maxlength']);
+//  return ciniki_images_getImage($ciniki, $args['tnid'], $logo_id, $args['version'], $args['maxlength']);
 }
 ?>

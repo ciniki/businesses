@@ -7,7 +7,7 @@
 # Fields
 # ------
 # id:                   The ID of the sync
-# business_id:          The ID of the business.
+# tnid:                 The ID of the tenant.
 #
 # flags:                The flags for the syncronization.
 #
@@ -21,7 +21,7 @@
 # 
 # local_private_key:    The local key for this connection to unencrypt response messages.
 #
-# remote_uuid:          The remote business Universal Unique ID.
+# remote_uuid:          The remote tenant Universal Unique ID.
 #
 # remote_name:          The remote server name.  This value is set in the ciniki-api.ini file (sync.name)
 #                       on the remote server.
@@ -42,9 +42,9 @@
 #
 # last_full:            The UTC date and time the last full sync was run.
 #
-create table ciniki_business_syncs (
+create table ciniki_tenant_syncs (
     id int not null auto_increment,
-    business_id int not null,
+    tnid int not null,
     flags tinyint unsigned not null,
     status tinyint unsigned not null,
     local_private_key varchar(5000) not null,
@@ -58,6 +58,6 @@ create table ciniki_business_syncs (
     last_partial datetime not null,
     last_full datetime not null,
     primary key (id),
-    index (business_id),
-    unique index (business_id, remote_url, remote_uuid)
+    index (tnid),
+    unique index (tnid, remote_url, remote_uuid)
 ) ENGINE=InnoDB, COMMENT='v1.02';

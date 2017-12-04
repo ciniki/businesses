@@ -8,19 +8,19 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business the reports is attached to.
+// tnid:         The ID of the tenant the reports is attached to.
 // report_id:          The ID of the reports to get the details for.
 //
 // Returns
 // -------
 //
-function ciniki_businesses_reportPDF(&$ciniki) {
+function ciniki_tenants_reportPDF(&$ciniki) {
     //
     // Find all the required and optional arguments
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'),
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'),
         'report_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Reports'),
         'email'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Email Report'),
         ));
@@ -31,10 +31,10 @@ function ciniki_businesses_reportPDF(&$ciniki) {
 
     //
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'checkAccess');
-    $rc = ciniki_businesses_checkAccess($ciniki, $args['business_id'], 'ciniki.businesses.reportPDF');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'checkAccess');
+    $rc = ciniki_tenants_checkAccess($ciniki, $args['tnid'], 'ciniki.tenants.reportPDF');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -42,8 +42,8 @@ function ciniki_businesses_reportPDF(&$ciniki) {
     //
     // Execute the report
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'reportExec'); 
-    $rc = ciniki_businesses_reportExec($ciniki, $args['business_id'], $args['report_id']);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'reportExec'); 
+    $rc = ciniki_tenants_reportExec($ciniki, $args['tnid'], $args['report_id']);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -66,12 +66,12 @@ function ciniki_businesses_reportPDF(&$ciniki) {
             . "";
         $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.users', 'user');
         if( $rc['stat'] != 'ok' || !isset($rc['user']) ) {
-            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.businesses.118', 'msg'=>'Unable to find email information', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.tenants.118', 'msg'=>'Unable to find email information', 'err'=>$rc['err']));
         }
         $name = $rc['user']['name'];
         $email = $rc['user']['email'];
         ciniki_core_loadMethod($ciniki, 'ciniki', 'mail', 'hooks', 'addMessage');
-        $rc = ciniki_mail_hooks_addMessage($ciniki, $args['business_id'], array(
+        $rc = ciniki_mail_hooks_addMessage($ciniki, $args['tnid'], array(
             'customer_email'=>$email,
             'customer_name'=>$name,
             'subject'=>$report['title'],
@@ -82,7 +82,7 @@ function ciniki_businesses_reportPDF(&$ciniki) {
         if( $rc['stat'] != 'ok' ) {
             return $rc;
         }
-        $ciniki['emailqueue'][] = array('mail_id'=>$rc['id'], 'business_id'=>$args['business_id']);
+        $ciniki['emailqueue'][] = array('mail_id'=>$rc['id'], 'tnid'=>$args['tnid']);
         return array('stat'=>'ok');
     } else {
         $report['pdf']->Output($filename . '.pdf', 'D');

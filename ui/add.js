@@ -1,26 +1,26 @@
 //
-// This class will display the form to allow admins and business owners to 
-// change the details of their business
+// This class will display the form to allow admins and tenant owners to 
+// change the details of their tenant
 //
-function ciniki_businesses_add() {
+function ciniki_tenants_add() {
 
-    this.add = new M.panel('Add business', 'ciniki_businesses_add', 'add', 'mc', 'medium', 'sectioned', 'ciniki.businesses.add');
+    this.add = new M.panel('Add tenant', 'ciniki_tenants_add', 'add', 'mc', 'medium', 'sectioned', 'ciniki.tenants.add');
     this.add.data = null;
     this.add.sections = {
         'general':{'label':'General', 'fields':{
             'plan_id':{'label':'Plan', 'type':'select', 'options':{}},
             'payment_type':{'label':'Payment', 'type':'select', 'options':{'yearlycheque':'Yearly Cheque', 'monthlypaypal':'Monthly Paypal'}},
-            'business.name':{'label':'Name', 'type':'text'},
-            'business.category':{'label':'Category', 'type':'text'},
-            'business.sitename':{'label':'Sitename', 'type':'text'},
-            'business.tagline':{'label':'Tagline', 'type':'text'},
+            'tenant.name':{'label':'Name', 'type':'text'},
+            'tenant.category':{'label':'Category', 'type':'text'},
+            'tenant.sitename':{'label':'Sitename', 'type':'text'},
+            'tenant.tagline':{'label':'Tagline', 'type':'text'},
             }},
         'owner':{'label':'Owner', 'fields':{
-            'owner.name.first':{'label':'First Name', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.updateContact'},
-            'owner.name.last':{'label':'Last Name', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.updateContact'},
+            'owner.name.first':{'label':'First Name', 'type':'text', 'onchangeFn':'M.ciniki_tenants_add.add.updateContact'},
+            'owner.name.last':{'label':'Last Name', 'type':'text', 'onchangeFn':'M.ciniki_tenants_add.add.updateContact'},
             'owner.name.display':{'label':'Display Name', 'type':'text'},
-            'owner.email.address':{'label':'Email', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.updateEmail'},
-            'owner.username':{'label':'Username', 'type':'text', 'onchangeFn':'M.ciniki_businesses_add.add.checkUsername'},
+            'owner.email.address':{'label':'Email', 'type':'text', 'onchangeFn':'M.ciniki_tenants_add.add.updateEmail'},
+            'owner.username':{'label':'Username', 'type':'text', 'onchangeFn':'M.ciniki_tenants_add.add.checkUsername'},
             'owner.password':{'label':'Password', 'type':'text'},
             }},
         'contact':{'label':'Contact', 'fields':{
@@ -41,7 +41,7 @@ function ciniki_businesses_add() {
             }},
         'modules':{'label':'Modules', 'fields':{}},
         '_buttons':{'label':'', 'buttons':{
-            'save':{'label':'Save', 'fn':'M.ciniki_businesses_add.add.save();'},
+            'save':{'label':'Save', 'fn':'M.ciniki_tenants_add.add.save();'},
             }},
         };
     this.add.fieldValue = function(s, i, d) { 
@@ -66,7 +66,7 @@ function ciniki_businesses_add() {
     }
     this.add.checkUsername = function(s, fid) {
         M.api.getJSONBgCb('ciniki.users.checkUsernameAvailable', 
-            {'business_id':0, 'username':this.formValue('owner.username')}, function(rsp) {
+            {'tnid':0, 'username':this.formValue('owner.username')}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -77,12 +77,12 @@ function ciniki_businesses_add() {
             });
     }
     this.add.open = function(cb) {
-        M.api.getJSONCb('ciniki.businesses.getModules', {'business_id':0, 'plans':'yes'}, function(rsp) {
+        M.api.getJSONCb('ciniki.tenants.getModules', {'tnid':0, 'plans':'yes'}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
             }
-            var p = M.ciniki_businesses_add.add;
+            var p = M.ciniki_tenants_add.add;
             //
             // Setup the list of modules into the form fields
             // 
@@ -107,8 +107,8 @@ function ciniki_businesses_add() {
             + this.serializeFormSection('yes', 'contact')
             + this.serializeFormSection('yes', 'address')
             + this.serializeFormSection('yes', 'owner');
-        if( document.getElementById(this.panelUID + '_business.name').value == '' ) {
-            alert("You must specify a business name.");
+        if( document.getElementById(this.panelUID + '_tenant.name').value == '' ) {
+            alert("You must specify a tenant name.");
             return false;
         }
         if( c == '' ) {
@@ -116,31 +116,31 @@ function ciniki_businesses_add() {
             return false;
         } 
         if( c != '' ) {
-            M.api.postJSONCb('ciniki.businesses.add', {}, c, function(rsp) {
+            M.api.postJSONCb('ciniki.tenants.add', {}, c, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
                 }
 
-                var business_id = rsp.id;
-                if( M.ciniki_businesses_add.add.formValue('plan_id') == 0 ) {
-                    var c = M.ciniki_businesses_add.add.serializeFormSection('no', 'modules');
-                    M.api.postJSONCb('ciniki.businesses.updateModules', {'business_id':business_id}, c, function(rsp) {
+                var tnid = rsp.id;
+                if( M.ciniki_tenants_add.add.formValue('plan_id') == 0 ) {
+                    var c = M.ciniki_tenants_add.add.serializeFormSection('no', 'modules');
+                    M.api.postJSONCb('ciniki.tenants.updateModules', {'tnid':tnid}, c, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
                             return false;
                         }
-                        M.ciniki_businesses_add.add.close();
+                        M.ciniki_tenants_add.add.close();
                     });
                 } else {
-                    M.ciniki_businesses_add.add.close();
+                    M.ciniki_tenants_add.add.close();
                 }
             });
         } else {
             this.close();
         }
     }
-    this.add.addButton('save', 'Save', 'M.ciniki_businesses_add.add.save();');
+    this.add.addButton('save', 'Save', 'M.ciniki_tenants_add.add.save();');
     this.add.addClose('Cancel');
 
     this.start = function(cb, appPrefix) {
@@ -148,7 +148,7 @@ function ciniki_businesses_add() {
         // Create the app container if it doesn't exist, and clear it out
         // if it does exist.
         //
-        var appContainer = M.createContainer(appPrefix, 'ciniki_businesses_add', 'yes');
+        var appContainer = M.createContainer(appPrefix, 'ciniki_tenants_add', 'yes');
         if( appContainer == null ) {
             alert('App Error');
             return false;

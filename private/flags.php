@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_businesses_flags($ciniki, $modules) {
+function ciniki_tenants_flags($ciniki, $modules) {
     $flags = array(
 //      0x01
         array('flag'=>array('bit'=>'1', 'name'=>'Employees', 'group'=>'ciniki.employees')),

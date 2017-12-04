@@ -2,33 +2,33 @@
 //
 // Description
 // -----------
-// This function will verify the business is active, and the module is active.
+// This function will verify the tenant is active, and the module is active.
 //
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The business ID to check the session user against.
+// tnid:         The tenant ID to check the session user against.
 // method:              The requested method.
 //
 // Returns
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_businesses_getActiveModules($ciniki, $business_id) {
+function ciniki_tenants_getActiveModules($ciniki, $tnid) {
     //
-    // Check if the module is enabled for this business, don't really care about the ruleset
+    // Check if the module is enabled for this tenant, don't really care about the ruleset
     //
-    $strsql = "SELECT ciniki_businesses.status AS business_status, "
-        . "ciniki_business_modules.status AS module_status, "
-        . "CONCAT_WS('.', ciniki_business_modules.package, ciniki_business_modules.module) AS module_id, "
+    $strsql = "SELECT ciniki_tenants.status AS tenant_status, "
+        . "ciniki_tenant_modules.status AS module_status, "
+        . "CONCAT_WS('.', ciniki_tenant_modules.package, ciniki_tenant_modules.module) AS module_id, "
         . "flags, flags>>32 as flags2, ruleset "
-        . "FROM ciniki_businesses, ciniki_business_modules "
-        . "WHERE ciniki_businesses.id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
-        . "AND ciniki_businesses.id = ciniki_business_modules.business_id "
-        . "AND ciniki_business_modules.status = 1 "
+        . "FROM ciniki_tenants, ciniki_tenant_modules "
+        . "WHERE ciniki_tenants.id = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
+        . "AND ciniki_tenants.id = ciniki_tenant_modules.tnid "
+        . "AND ciniki_tenant_modules.status = 1 "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashIDQuery');
-    $rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.businesses', 'modules', 'module_id');
+    $rc = ciniki_core_dbHashIDQuery($ciniki, $strsql, 'ciniki.tenants', 'modules', 'module_id');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
